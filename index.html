@@ -1,338 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blake's Game Shelf</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<html>
+<head><meta charset="UTF-8"><title>BGG URL Format Test</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg-deep: #1A1510; --bg-mid: #1F1914; --bg-low: #191510;
-    --text: #F5F0E8; --text-dim: rgba(245,240,232,0.38); --text-faint: rgba(245,240,232,0.33);
-    --accent: #C5935A; --accent-dim: rgba(197,147,90,0.55);
-    --green: #7B9E6B; --blue: #6B8DA8; --mech-blue: #8CB4CC;
-    --shelf-top: #5C4A3A; --shelf-bot: #4A3B2E;
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
-  }
-  body { min-height: 100vh; background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 30%, var(--bg-low) 100%); font-family: var(--font-body); color: var(--text); -webkit-font-smoothing: antialiased; }
-  @keyframes fadeUp { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
-
-  .container { max-width: 960px; margin: 0 auto; padding: 26px 18px; }
-  .header { text-align: center; margin-bottom: 20px; }
-  .header h1 { font-family: var(--font-display); font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 2px; }
-  .header .subtitle { font-size: 12.5px; color: var(--text-faint); margin-bottom: 16px; }
-  .header .subtitle .status-loading { color: var(--accent-dim); margin-left: 8px; }
-  .header .subtitle .status-done { color: rgba(123,158,107,0.55); margin-left: 8px; }
-
-  .filters { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
-  .search-input { background: rgba(245,240,232,0.06); border: 1px solid rgba(245,240,232,0.1); border-radius: 8px; padding: 6px 12px; color: var(--text); font-size: 12.5px; font-family: var(--font-body); width: 175px; outline: none; transition: border-color 0.2s; }
-  .search-input:focus { border-color: rgba(197,147,90,0.4); }
-  .search-input::placeholder { color: rgba(245,240,232,0.25); }
-
-  .pill { border-radius: 8px; padding: 5px 10px; font-size: 11.5px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-  .pill-player { background: rgba(245,240,232,0.04); border: 1px solid rgba(245,240,232,0.07); color: rgba(245,240,232,0.4); }
-  .pill-player.active { background: rgba(197,147,90,0.2); border-color: rgba(197,147,90,0.4); color: var(--accent); }
-
-  .mechs-row { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
-  .pill-mech { border-radius: 6px; padding: 4px 9px; font-size: 10.5px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: all 0.2s; background: rgba(245,240,232,0.03); border: 1px solid rgba(245,240,232,0.06); color: rgba(245,240,232,0.33); }
-  .pill-mech.active { background: rgba(107,141,168,0.22); border-color: rgba(107,141,168,0.45); color: var(--mech-blue); }
-  .pill-clear { background: none; border: 1px solid rgba(245,240,232,0.1); border-radius: 6px; padding: 4px 8px; color: rgba(245,240,232,0.35); font-size: 10.5px; font-family: var(--font-body); cursor: pointer; }
-
-  .shelf-section { margin-bottom: 26px; }
-  .shelf-header { margin-bottom: 10px; padding-left: 4px; }
-  .shelf-header h2 { font-family: var(--font-display); font-size: 19px; font-weight: 700; }
-  .shelf-header h2 .dot { margin-right: 6px; font-size: 13px; }
-  .shelf-header .shelf-sub { font-size: 11.5px; color: var(--text-dim); margin-top: 1px; }
-
-  .shelf-track { display: flex; gap: 10px; overflow-x: auto; padding: 4px 4px 12px; scrollbar-width: thin; scrollbar-color: rgba(197,147,90,0.2) transparent; }
-  .shelf-track::-webkit-scrollbar { height: 6px; }
-  .shelf-track::-webkit-scrollbar-track { background: transparent; }
-  .shelf-track::-webkit-scrollbar-thumb { background: rgba(197,147,90,0.2); border-radius: 3px; }
-  .shelf-ledge { height: 7px; background: linear-gradient(to bottom, var(--shelf-top), var(--shelf-bot)); border-radius: 0 0 4px 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); margin-top: -2px; }
-  .shelf-shadow { height: 4px; background: linear-gradient(to bottom, rgba(0,0,0,0.15), transparent); }
-
-  .card { position: relative; display: block; width: 136px; min-width: 136px; height: 184px; border-radius: 10px; overflow: hidden; text-decoration: none; flex-shrink: 0; transition: all 0.3s cubic-bezier(.25,.8,.25,1); box-shadow: 0 4px 12px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2); }
-  .card:hover { transform: translateY(-8px) scale(1.04); box-shadow: 0 14px 28px rgba(0,0,0,0.5), 0 6px 10px rgba(0,0,0,0.3); }
-  .card .card-bg { position: absolute; inset: 0; }
-  .card .card-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.6s; }
-  .card .card-img.loaded { opacity: 1; }
-  .card .card-icon { position: absolute; top: 44%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; opacity: 0.7; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); pointer-events: none; transition: opacity 0.4s; }
-  .card:has(.card-img.loaded) .card-icon { opacity: 0; }
-  .card .card-overlay { position: absolute; inset: 0; pointer-events: none; transition: background 0.3s; }
-  .card .card-overlay.no-img { background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 50%, transparent 75%); }
-  .card .card-overlay.has-img { background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 38%, transparent 62%); }
-  .card:hover .card-overlay { background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, rgba(0,0,0,0.3) 80%, transparent 100%) !important; }
-
-  .card .card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 0 8px 7px; }
-  .card .card-vibe { font-size: 9.5px; color: rgba(245,240,232,0.82); line-height: 1.35; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); animation: fadeUp 0.2s ease; display: none; }
-  .card:hover .card-vibe { display: block; }
-  .card .card-title { font-family: var(--font-display); font-size: 12.5px; font-weight: 700; line-height: 1.2; text-shadow: 0 1px 3px rgba(0,0,0,0.7); color: var(--text); }
-  .card .card-meta { font-size: 9.5px; color: rgba(245,240,232,0.55); display: flex; gap: 4px; margin-top: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-  .card .card-meta .sep { opacity: 0.3; }
-  .card .bgg-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.55); border-radius: 4px; padding: 2px 5px; font-size: 9px; color: rgba(245,240,232,0.7); pointer-events: none; display: none; }
-  .card:hover .bgg-badge { display: block; }
-  .card .card-shine { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%); pointer-events: none; display: none; }
-  .card:hover .card-shine { display: block; }
-
-  .empty { text-align: center; padding: 50px 0; color: rgba(245,240,232,0.35); font-size: 14px; }
+body { background: #1a1714; color: #f0e6d6; font-family: sans-serif; padding: 2rem; }
+.test { margin: 0.8rem 0; padding: 0.8rem; background: #252119; border-radius: 8px; display:flex; gap:1rem; align-items:center; }
+.test img { width: 150px; height: 110px; object-fit: cover; border-radius: 4px; background: #3d3529; }
+.label { font-size: 0.75rem; color: #9b8e7e; flex:1; word-break:break-all; }
+.status { font-size: 0.8rem; min-width:80px; }
+.ok { color: #5a9e6f; }
+.fail { color: #c45d3e; }
 </style>
 </head>
 <body>
-<div class="container" id="app"></div>
-<script>
-const M_LABELS = { ENG:"Engine Building", WP:"Worker Placement", AC:"Area Control", DR:"Drafting", CO:"Co-op", BL:"Bluffing", PL:"Push Your Luck", TL:"Tile Laying", DX:"Dexterity", RC:"Racing", AU:"Auction", TK:"Trick-Taking", AB:"Abstract", AS:"Asymmetric" };
+<h2>BGG CDN URL Format Test</h2>
+<p style="color:#9b8e7e;font-size:0.85rem">Testing URL modifications for Brass Birmingham</p>
 
-const GAMES = [
-  { n:"Brass: Birmingham", p:"3-4", t:"60-120", cat:"heavy", c:["#8B4513","#CD853F"], i:"🏭", bgg:224517, pn:3, px:4, v:"Industrial-era network building. Brutal resource chains, no luck, deeply satisfying economic puzzle.", m:["ENG","AC"] },
-  { n:"Dune: Imperium Uprising", p:"1-4", t:"60-120", cat:"heavy", c:["#C2956B","#3D2B1F"], i:"🏜️", bgg:366013, pn:1, px:4, v:"Deck building meets worker placement with a political edge. Tense decisions every round.", m:["ENG","WP"] },
-  { n:"Food Chain Magnate", p:"2-5", t:"120-240", cat:"heavy", c:["#DC143C","#FFD700"], i:"🍔", bgg:175914, pn:2, px:5, v:"Cutthroat fast-food empire. Zero luck, zero mercy. Every decision is permanent.", m:["ENG","AC"] },
-  { n:"Great Western Trail", p:"1-4", t:"75-150", cat:"heavy", c:["#8B6914","#DEB887"], i:"🤠", bgg:341169, pn:1, px:4, v:"Cattle ranching with hand management and route building. Layered and rewarding.", m:["ENG"] },
-  { n:"Hansa Teutonica", p:"3-5", t:"45-90", cat:"heavy", c:["#4A6741","#C5B358"], i:"🏰", bgg:286749, pn:3, px:5, v:"Clean euro with aggressive blocking. Getting in someone's way IS the strategy.", m:["AC"] },
-  { n:"March of the Ants", p:"2-5", t:"60-90", cat:"heavy", c:["#228B22","#8B4513"], i:"🐜", bgg:219026, pn:2, px:5, v:"Build your ant colony, evolve your species, claim territory. Engine building meets area control.", m:["ENG","AC"] },
-  { n:"Spirit Island", p:"1-4", t:"90-120", cat:"heavy", c:["#2E8B57","#483D8B"], i:"🌿", bgg:162886, pn:1, px:4, v:"Cooperative brain-burner. Asymmetric island spirits defend against colonizers. Gloriously complex.", m:["CO","AS"] },
-  { n:"Star Wars: Rebellion", p:"2-4", t:"180-240", cat:"heavy", c:["#1C1C2E","#4169E1"], i:"⚔️", bgg:187645, pn:2, px:4, v:"Epic galactic wargame. Empire hunts the hidden rebel base while rebels spark hope.", m:["AC","AS"] },
-  { n:"Terraforming Mars", p:"1-5", t:"90-120", cat:"heavy", c:["#CD4500","#8B2500"], i:"🔴", bgg:167791, pn:1, px:5, v:"Engine building with a satisfying arc. Play cards, raise oxygen, grow forests on Mars.", m:["ENG","DR"] },
-  { n:"Viticulture", p:"1-6", t:"45-90", cat:"heavy", c:["#722F37","#C5B358"], i:"🍷", bgg:183394, pn:1, px:6, v:"Elegant worker placement in a vineyard. Accessible gateway into heavier euros.", m:["WP"] },
-  { n:"Clans of Caledonia", p:"1-4", t:"90-120", cat:"heavy", c:["#2F4F4F","#8FBC8F"], i:"🏴", bgg:216132, pn:1, px:4, v:"Scottish economic expansion. Trade goods, produce whisky, claim land.", m:["ENG","AC"] },
-  { n:"The King's Dilemma", p:"3-5", t:"60-90", cat:"heavy", c:["#4B0082","#FFD700"], i:"👑", bgg:245655, pn:3, px:5, v:"Legacy narrative game. Political intrigue with persistent consequences. Every vote matters.", m:["BL"] },
-  { n:"Arcs", p:"2-4", t:"90-120", cat:"heavy", c:["#191970","#87CEEB"], i:"🚀", bgg:358553, pn:2, px:4, v:"Card-driven space opera. Asymmetric factions with an optional epic campaign layer.", m:["AC","AS"] },
-  { n:"Root", p:"2-4", t:"60-90", cat:"heavy", c:["#556B2F","#F4A460"], i:"🦊", bgg:237182, pn:2, px:4, v:"Woodland warfare where every faction plays a completely different game. Chaotic, brilliant.", m:["AC","AS"] },
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__opengraph_left/img/lYAj3vj2GtibZtG_62bVHD5Xy8c=/fit-in/445x445/filters:strip_icc()/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">1. CONTROL: __opengraph_left (known good)</div>
+  <div class="status">⏳</div>
+</div>
 
-  { n:"7 Wonders", p:"2-7", t:"30-45", cat:"medium", c:["#DAA520","#8B6914"], i:"🏛️", bgg:68448, pn:2, px:7, v:"Simultaneous card drafting civilization game. Plays fast, scales beautifully to 7.", m:["DR"] },
-  { n:"7 Wonders Duel", p:"2", t:"30", cat:"medium", c:["#B8860B","#6B4226"], i:"⚖️", bgg:173346, pn:2, px:2, v:"Tight head-to-head card drafting. Multiple win conditions keep both players on edge.", m:["DR"] },
-  { n:"Azul", p:"2-4", t:"30-45", cat:"medium", c:["#1E90FF","#FFB347"], i:"🔷", bgg:230802, pn:2, px:4, v:"Elegant tile drafting. Beautiful Portuguese tiles, simple rules, surprisingly cutthroat.", m:["DR","AB"] },
-  { n:"Carcassonne", p:"2-5", t:"35-45", cat:"medium", c:["#228B22","#DEB887"], i:"🏰", bgg:822, pn:2, px:5, v:"Lay tiles, claim cities, roads and farms. The gateway classic that still holds up.", m:["TL"] },
-  { n:"Catan", p:"3-4", t:"60-120", cat:"medium", c:["#D2691E","#FF8C00"], i:"🐑", bgg:13, pn:3, px:4, v:"Trade resources, build settlements, negotiate with friends. The game that started it all.", m:["AU"] },
-  { n:"Harmonies", p:"1-5", t:"30-45", cat:"medium", c:["#3CB371","#87CEEB"], i:"🌸", bgg:405996, pn:1, px:5, v:"Calm nature-themed tile placement. Thinky but zen — build habitats, attract animals.", m:["TL"] },
-  { n:"Pandemic", p:"2-4", t:"45", cat:"medium", c:["#104E8B","#CD2626"], i:"🦠", bgg:30549, pn:2, px:4, v:"Cooperative classic. Race to cure four diseases before outbreaks overwhelm the world.", m:["CO"] },
-  { n:"Quacks of Quedlinburg", p:"2-4", t:"45", cat:"medium", c:["#8B008B","#FF6347"], i:"🧪", bgg:244521, pn:2, px:4, v:"Push-your-luck bag building. Draw ingredients for your potion — but don't let it explode!", m:["PL","ENG"] },
-  { n:"Ra", p:"2-5", t:"45-60", cat:"medium", c:["#CD950C","#8B6508"], i:"☀️", bgg:12, pn:2, px:5, v:"Knizia's auction masterpiece. Ancient Egypt theme, agonizing push-your-luck bidding.", m:["AU","PL"] },
-  { n:"Takenoko", p:"2-4", t:"45-60", cat:"medium", c:["#90EE90","#FFB6C1"], i:"🐼", bgg:70919, pn:2, px:4, v:"Grow bamboo, feed a panda, complete secret objectives. Light, pretty, family-friendly.", m:["TL"] },
-  { n:"Through the Desert", p:"2-5", t:"45-60", cat:"medium", c:["#F5DEB3","#EDC9AF"], i:"🐫", bgg:503, pn:2, px:5, v:"Abstract area control with pastel camels. Knizia classic — simple rules, deep play.", m:["AC","AB"] },
-  { n:"Tsuro", p:"2-8", t:"15-20", cat:"medium", c:["#8B0000","#FFD700"], i:"🐉", bgg:16992, pn:2, px:8, v:"Lay path tiles and stay on the board. Beautiful, quick, plays up to 8.", m:["TL"] },
-  { n:"Patchwork", p:"2", t:"15-30", cat:"medium", c:["#6495ED","#F0E68C"], i:"🧵", bgg:163412, pn:2, px:2, v:"Tetris-like 2-player puzzle. Draft quilt patches, manage your button economy.", m:["DR","AB"] },
-  { n:"Lost Cities", p:"2", t:"20-30", cat:"medium", c:["#8B7355","#CD853F"], i:"🗺️", bgg:50, pn:2, px:2, v:"Classic 2p card game. Launch expeditions but commit wisely — unfinished trips cost points.", m:["PL"] },
-  { n:"LotR: Duel", p:"2", t:"30", cat:"medium", c:["#2F4F4F","#C5B358"], i:"💍", bgg:397598, pn:2, px:2, v:"2-player card battle for Middle-Earth. Location control meets tactical hand play.", m:["AC"] },
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__thumb/img/lYAj3vj2GtibZtG_62bVHD5Xy8c=/fit-in/200x150/filters:strip_icc()/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">2. __thumb + opengraph hash, 200x150</div>
+  <div class="status">⏳</div>
+</div>
 
-  { n:"Cubitos", p:"2-4", t:"45-75", cat:"light", c:["#FF4500","#FFD700"], i:"🎲", bgg:298108, pn:2, px:4, v:"Dice building + push-your-luck racing. Buy better dice, roll big, bust spectacularly.", m:["PL","RC","ENG"] },
-  { n:"Heat", p:"2-6", t:"30-60", cat:"light", c:["#FF0000","#FF8C00"], i:"🏎️", bgg:376682, pn:2, px:6, v:"Card-driven racing. Manage your engine heat, draft behind rivals, nail the corners.", m:["RC"] },
-  { n:"Magical Athlete", p:"2-6", t:"30-45", cat:"light", c:["#9370DB","#FF69B4"], i:"🧙", bgg:268122, pn:2, px:6, v:"Fantasy racing with wacky character powers. Draft your team, then watch the chaos unfold.", m:["RC","DR"] },
-  { n:"Sea Salt & Paper", p:"2-4", t:"20-30", cat:"light", c:["#5F9EA0","#E0FFFF"], i:"🌊", bgg:367220, pn:2, px:4, v:"Gorgeous origami card game. Collect combos and choose when to end the round.", m:["PL"] },
-  { n:"So Clover!", p:"3-6", t:"30", cat:"light", c:["#32CD32","#ADFF2F"], i:"🍀", bgg:338628, pn:3, px:6, v:"Cooperative word association. Write clues linking pairs of words — harder than it sounds.", m:["CO"] },
-  { n:"Wavelength", p:"2-12", t:"30", cat:"light", c:["#FF1493","#00CED1"], i:"📡", bgg:262543, pn:2, px:12, v:"Team party game. Give a clue on a spectrum — is a hot dog more 'sandwich' or 'not sandwich'?", m:["BL"] },
-  { n:"Scout", p:"2-5", t:"15", cat:"light", c:["#FF8C00","#8B4513"], i:"🎪", bgg:291453, pn:2, px:5, v:"Oink card game — you can't rearrange your hand. Play combos or recruit from the table.", m:["TK"] },
-  { n:"Cat in the Box", p:"2-5", t:"30", cat:"light", c:["#483D8B","#7B68EE"], i:"🐈", bgg:345972, pn:2, px:5, v:"Trick-taking with a quantum twist. Cards have no color until you play them. Mind-bending.", m:["TK"] },
-  { n:"Regicide", p:"1-4", t:"30", cat:"light", c:["#8B0000","#FFD700"], i:"♠️", bgg:307002, pn:1, px:4, v:"Cooperative card game using a standard deck. Defeat the royals — deceptively tricky.", m:["CO"] },
-  { n:"Coup", p:"2-6", t:"15", cat:"light", c:["#1C1C1C","#CD853F"], i:"🗡️", bgg:131357, pn:2, px:6, v:"Bluff, steal, assassinate. Everyone claims to be the Duke. Fast, tense, social.", m:["BL"] },
-  { n:"Codenames", p:"4-8", t:"15-30", cat:"light", c:["#8B0000","#2F4F4F"], i:"🕵️", bgg:178900, pn:4, px:8, v:"Team word association. One-word clues, multiple targets — endlessly replayable party staple.", m:["BL"] },
-  { n:"The Game", p:"1-5", t:"20", cat:"light", c:["#1C1C1C","#FF4500"], i:"💀", bgg:173090, pn:1, px:5, v:"Cooperative number card game. Deceptively hard — play cards in sequence without talking.", m:["CO"] },
-  { n:"Sushi Go", p:"2-5", t:"15", cat:"light", c:["#FF69B4","#98FB98"], i:"🍣", bgg:133473, pn:2, px:5, v:"Adorable card drafting filler. Pick sushi, pass your hand, score combos. Great starter.", m:["DR"] },
-  { n:"Can't Stop", p:"2-4", t:"30", cat:"light", c:["#FF0000","#FFD700"], i:"🎰", bgg:41, pn:2, px:4, v:"Classic push-your-luck dice. Climb columns, but one bad roll loses everything. Addictive.", m:["PL"] },
-  { n:"Cockroach Poker", p:"2-6", t:"20", cat:"light", c:["#556B2F","#8B4513"], i:"🪳", bgg:11971, pn:2, px:6, v:"Pure bluffing card game. Pass a card face-down and lie about what it is. Hilarious.", m:["BL"] },
-  { n:"Hive Pocket", p:"2", t:"20", cat:"light", c:["#1C1C1C","#F5F5DC"], i:"🐝", bgg:154597, pn:2, px:2, v:"Abstract strategy with bug tiles. No board — pieces create the play space. Chess-like depth.", m:["AB"] },
-  { n:"Parks", p:"1-5", t:"30-60", cat:"light", c:["#228B22","#87CEEB"], i:"🏕️", bgg:266524, pn:1, px:5, v:"Hike through national parks, collect memories and resources. Gorgeous WPA-poster art.", m:["WP"] },
-  { n:"Set", p:"2-8", t:"20-30", cat:"light", c:["#9400D3","#FFFFFF"], i:"♦️", bgg:1198, pn:2, px:8, v:"Real-time pattern recognition. Spot sets of three matching cards — brain-melting speed game.", m:["AB"] },
-  { n:"Skull", p:"3-6", t:"20-30", cat:"light", c:["#1C1C1C","#FF4500"], i:"💀", bgg:92415, pn:3, px:6, v:"Bluffing and bidding distilled to its purest form. Dead simple rules, deadly reads.", m:["BL","AU"] },
-  { n:"Land vs Sea", p:"2-4", t:"20-30", cat:"light", c:["#2E8B57","#4682B4"], i:"🗺️", bgg:336498, pn:2, px:4, v:"Competitive tile-laying. One player scores land, the other scores sea. Tug of war.", m:["TL"] },
-  { n:"Rhino Hero", p:"2-5", t:"5-15", cat:"light", c:["#4169E1","#FFD700"], i:"🦏", bgg:91514, pn:2, px:5, v:"Dexterity stacking game. Build a card tower and move the rhino up. Great for all ages.", m:["DX"] },
-  { n:"Tinderblox", p:"1-6", t:"15", cat:"light", c:["#FF4500","#FF8C00"], i:"🔥", bgg:284293, pn:1, px:6, v:"Stack tiny blocks with tweezers to build a campfire. One wrong move and it's over.", m:["DX"] },
-  { n:"Spots", p:"1-4", t:"20-30", cat:"light", c:["#F5DEB3","#8B4513"], i:"🐕", bgg:369158, pn:1, px:4, v:"Roll dice onto dog silhouettes. Push your luck to fill spots — or bust trying.", m:["PL"] },
-  { n:"Startups", p:"3-7", t:"20", cat:"light", c:["#FF6347","#32CD32"], i:"📈", bgg:223770, pn:3, px:7, v:"Oink Games investment card game. Invest in companies, bluff about your holdings.", m:["BL","AU"] },
-  { n:"Insider", p:"4-8", t:"15", cat:"light", c:["#2F4F4F","#B22222"], i:"🔍", bgg:206051, pn:4, px:8, v:"Social deduction + 20 questions. One player secretly guides the group — find the insider.", m:["BL"] },
-  { n:"Fake Artist", p:"5-10", t:"20", cat:"light", c:["#FF69B4","#FFD700"], i:"🎨", bgg:135779, pn:5, px:10, v:"Everyone draws one stroke — except the fake artist who doesn't know the subject.", m:["BL"] },
-  { n:"Bang! Dice", p:"3-8", t:"15", cat:"light", c:["#8B4513","#CD853F"], i:"🤠", bgg:143741, pn:3, px:8, v:"Hidden roles in the Wild West. Roll dice, shoot outlaws (or the sheriff). Quick and rowdy.", m:["BL","PL"] },
-  { n:"Secret Hitler", p:"5-10", t:"45", cat:"light", c:["#8B0000","#1C1C1C"], i:"📜", bgg:188834, pn:5, px:10, v:"Social deduction classic. Liberals vs fascists — trust no one, especially your friends.", m:["BL"] },
-  { n:"Bomb Busters", p:"2-4", t:"30", cat:"light", c:["#FF0000","#1C1C1C"], i:"💣", bgg:416584, pn:2, px:4, v:"Cooperative defusing game. Work together to disarm bombs under pressure.", m:["CO"] },
-];
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__square200/img/lYAj3vj2GtibZtG_62bVHD5Xy8c=/fit-in/200x200/filters:strip_icc()/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">3. __square200 + opengraph hash, 200x200</div>
+  <div class="status">⏳</div>
+</div>
 
-const CAT_META = {
-  heavy: { label:"Strategy & Epics", sub:"Deep decisions · 90+ min", accent:"#C5935A" },
-  medium: { label:"Mid-Weight Favorites", sub:"Engaging strategy · 30–90 min", accent:"#7B9E6B" },
-  light: { label:"Quick & Social", sub:"Easy to teach · Under 45 min", accent:"#6B8DA8" },
-};
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/lYAj3vj2GtibZtG_62bVHD5Xy8c=/0x0/filters:format(jpeg)/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">4. __original + opengraph hash</div>
+  <div class="status">⏳</div>
+</div>
 
-const PF = [
-  { label:"Any #", check:()=>true },
-  { label:"Solo", check:g=>g.pn<=1 },
-  { label:"2p", check:g=>g.pn<=2&&g.px>=2 },
-  { label:"3-4p", check:g=>g.pn<=3&&g.px>=3 },
-  { label:"5+", check:g=>g.px>=5 },
-];
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__micro/img/4Od3GYCiqptga0VbmyumPbJlBsU=/fit-in/200x200/filters:strip_icc()/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">5. __micro + micro hash, but 200x200</div>
+  <div class="status">⏳</div>
+</div>
 
-const ALL_MECHS = [...new Set(GAMES.flatMap(g=>g.m))].sort((a,b)=>M_LABELS[a].localeCompare(M_LABELS[b]));
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__micro/img/4Od3GYCiqptga0VbmyumPbJlBsU=/fit-in/64x64/filters:strip_icc()/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">6. CONTROL: __micro (known good, 64x64)</div>
+  <div class="status">⏳</div>
+</div>
 
-// State
-let state = { search: "", playerFilter: 0, selMechs: [], imageUrls: {}, foundCount: 0, loading: true };
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__imagepage/img/lYAj3vj2GtibZtG_62bVHD5Xy8c=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">7. __imagepage + opengraph hash, 900x600</div>
+  <div class="status">⏳</div>
+</div>
 
-// Image fetching via BGG XML API2
-async function fetchImages() {
-  // Check localStorage cache first
-  try {
-    const cached = localStorage.getItem("bgs_images_v1");
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (parsed && Object.keys(parsed).length > 20) {
-        state.imageUrls = parsed;
-        state.foundCount = Object.keys(parsed).length;
-        state.loading = false;
-        render();
-        // Still refresh in background
-        refreshImages(parsed);
-        return;
-      }
-    }
-  } catch(e) {}
+<div class="test">
+  <img src="https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__itemrep/img/lYAj3vj2GtibZtG_62bVHD5Xy8c=/fit-in/256x256/filters:strip_icc()/pic3490053.jpg"
+    onload="this.parentElement.querySelector('.status').textContent='✅ LOADED'"
+    onerror="this.parentElement.querySelector('.status').textContent='❌ FAIL'">
+  <div class="label">8. __itemrep + opengraph hash, 256x256</div>
+  <div class="status">⏳</div>
+</div>
 
-  await refreshImages({});
-}
-
-async function refreshImages(existing) {
-  const ids = GAMES.map(g => g.bgg);
-  const batchSize = 20;
-  const allUrls = { ...existing };
-
-  for (let i = 0; i < ids.length; i += batchSize) {
-    const batch = ids.slice(i, i + batchSize);
-    const idStr = batch.join(",");
-    try {
-      const resp = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${idStr}`);
-      if (resp.status === 202) {
-        // BGG returns 202 when request is queued, retry after delay
-        await new Promise(r => setTimeout(r, 3000));
-        const retry = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${idStr}`);
-        if (retry.ok) {
-          parseXML(await retry.text(), allUrls);
-        }
-      } else if (resp.ok) {
-        parseXML(await resp.text(), allUrls);
-      }
-    } catch(e) {
-      console.log("BGG API batch error:", e);
-    }
-
-    state.imageUrls = { ...allUrls };
-    state.foundCount = Object.keys(allUrls).length;
-    render();
-    await new Promise(r => setTimeout(r, 1500)); // rate limit
-  }
-
-  state.loading = false;
-  try { localStorage.setItem("bgs_images_v1", JSON.stringify(allUrls)); } catch(e) {}
-  render();
-}
-
-function parseXML(xmlText, urlMap) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(xmlText, "text/xml");
-  const items = doc.querySelectorAll("item");
-  items.forEach(item => {
-    const id = parseInt(item.getAttribute("id"));
-    const thumb = item.querySelector("thumbnail");
-    const img = item.querySelector("image");
-    const url = (img && img.textContent) || (thumb && thumb.textContent);
-    if (url && id) {
-      urlMap[id] = url.trim().replace(/^\/\//, "https://");
-    }
-  });
-}
-
-// Filtering
-function getFiltered() {
-  let g = GAMES;
-  const pf = PF[state.playerFilter];
-  if (pf) g = g.filter(pf.check);
-  if (state.selMechs.length > 0) g = g.filter(x => state.selMechs.some(m => x.m.includes(m)));
-  if (state.search) {
-    const s = state.search.toLowerCase();
-    g = g.filter(x => x.n.toLowerCase().includes(s) || x.v.toLowerCase().includes(s));
-  }
-  return g;
-}
-
-// Rendering
-function renderCard(g) {
-  const url = state.imageUrls[g.bgg] || "";
-  const hasImg = !!url;
-  return `<a class="card" href="https://boardgamegeek.com/boardgame/${g.bgg}" target="_blank" rel="noopener noreferrer">
-    <div class="card-bg" style="background:linear-gradient(145deg,${g.c[0]},${g.c[1]})"></div>
-    ${hasImg ? `<img class="card-img" src="${url}" alt="" onload="this.classList.add('loaded')" onerror="this.style.display='none'">` : ""}
-    <div class="card-icon">${g.i}</div>
-    <div class="card-overlay ${hasImg ? 'has-img' : 'no-img'}"></div>
-    <div class="card-content">
-      <div class="card-vibe">${g.v}</div>
-      <div class="card-title">${g.n}</div>
-      <div class="card-meta"><span>${g.p}p</span><span class="sep">·</span><span>${g.t}m</span></div>
-    </div>
-    <div class="bgg-badge">BGG ↗</div>
-    <div class="card-shine"></div>
-  </a>`;
-}
-
-function renderShelf(cat, games) {
-  const m = CAT_META[cat];
-  if (!games.length) return "";
-  return `<div class="shelf-section">
-    <div class="shelf-header">
-      <h2><span class="dot" style="color:${m.accent}">■</span>${m.label}</h2>
-      <div class="shelf-sub">${m.sub} · ${games.length} games</div>
-    </div>
-    <div style="position:relative">
-      <div class="shelf-track">${games.map(renderCard).join("")}</div>
-      <div class="shelf-ledge"></div>
-      <div class="shelf-shadow"></div>
-    </div>
-  </div>`;
-}
-
-function render() {
-  const filtered = getFiltered();
-  const heavy = filtered.filter(g => g.cat === "heavy");
-  const medium = filtered.filter(g => g.cat === "medium");
-  const light = filtered.filter(g => g.cat === "light");
-
-  const statusHtml = state.loading
-    ? `<span class="status-loading">· loading covers (${state.foundCount})</span>`
-    : state.foundCount > 0
-      ? `<span class="status-done">· ${state.foundCount} covers</span>`
-      : "";
-
-  document.getElementById("app").innerHTML = `
-    <div class="header">
-      <h1>Blake's Game Shelf</h1>
-      <div class="subtitle">${GAMES.length} games ${statusHtml}</div>
-
-      <div class="filters">
-        <input class="search-input" type="text" placeholder="Search games or vibes..." value="${state.search}" oninput="updateSearch(this.value)">
-        ${PF.map((f,i) => `<button class="pill pill-player ${state.playerFilter===i?'active':''}" onclick="setPlayerFilter(${i})">${f.label}</button>`).join("")}
-      </div>
-
-      <div class="mechs-row">
-        ${ALL_MECHS.map(m => `<button class="pill-mech ${state.selMechs.includes(m)?'active':''}" onclick="toggleMech('${m}')">${M_LABELS[m]}</button>`).join("")}
-        ${state.selMechs.length > 0 ? `<button class="pill-clear" onclick="clearMechs()">✕ clear</button>` : ""}
-      </div>
-    </div>
-
-    ${renderShelf("heavy", heavy)}
-    ${renderShelf("medium", medium)}
-    ${renderShelf("light", light)}
-    ${filtered.length === 0 ? '<div class="empty">No games match those filters.</div>' : ""}
-  `;
-}
-
-// Event handlers
-function updateSearch(v) { state.search = v; render(); document.querySelector('.search-input').focus(); }
-function setPlayerFilter(i) { state.playerFilter = i; render(); }
-function toggleMech(m) {
-  state.selMechs = state.selMechs.includes(m) ? state.selMechs.filter(x=>x!==m) : [...state.selMechs, m];
-  render();
-}
-function clearMechs() { state.selMechs = []; render(); }
-
-// Init
-render();
-fetchImages();
-</script>
 </body>
 </html>
