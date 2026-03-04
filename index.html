@@ -38,6 +38,14 @@ body{min-height:100vh;background:linear-gradient(180deg,var(--bg),var(--bg2) 30%
 .pm.on{background:rgba(107,141,168,0.22);border-color:rgba(107,141,168,0.45);color:var(--mb)}
 .pc{background:none;border:1px solid rgba(245,240,232,0.1);border-radius:6px;padding:5px 9px;color:rgba(245,240,232,0.35);font-size:11px;font-family:var(--fb);cursor:pointer;-webkit-tap-highlight-color:transparent}
 
+/* 2p toggle */
+.tgl{display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:8px}
+.tgl .tl{font-size:10.5px;color:rgba(245,240,232,0.3)}
+.tgl .sw{position:relative;width:34px;height:18px;background:rgba(245,240,232,0.1);border-radius:9px;cursor:pointer;transition:background 0.2s;-webkit-tap-highlight-color:transparent}
+.tgl .sw.on{background:rgba(107,141,168,0.4)}
+.tgl .sw::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:rgba(245,240,232,0.5);border-radius:50%;transition:all 0.2s}
+.tgl .sw.on::after{left:16px;background:var(--mb)}
+
 .sr{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:2px;align-items:center}
 .sr .sl2{font-size:10.5px;color:rgba(245,240,232,0.28);margin-right:2px}
 .sbt{border-radius:5px;padding:4px 8px;font-size:10px;font-family:var(--fb);font-weight:500;cursor:pointer;transition:all 0.2s;background:rgba(245,240,232,0.03);border:1px solid rgba(245,240,232,0.05);color:rgba(245,240,232,0.28);-webkit-tap-highlight-color:transparent}
@@ -183,10 +191,16 @@ const G=[
 {n:"Regicide",p:"1-4",t:"30",cat:"gate",c:["#8B0000","#FFD700"],i:"♠️",bgg:307002,pn:1,px:4,w:1.60,v:"Cooperative card game using a standard deck. Defeat the royals — deceptively tricky.",m:["CO"]},
 {n:"Land vs Sea",p:"2-4",t:"20-30",cat:"gate",c:["#2E8B57","#4682B4"],i:"🗺️",bgg:336498,pn:2,px:4,w:1.50,v:"Competitive tile-laying. One player scores land, the other scores sea. Tug of war.",m:["TL"]},
 {n:"Lost Cities",p:"2",t:"20-30",cat:"gate",c:["#8B7355","#CD853F"],i:"🗺️",bgg:50,pn:2,px:2,w:1.50,v:"Classic 2p card game. Launch expeditions but commit wisely — unfinished trips cost points.",m:["PL"]},
+{n:"Sail",p:"2",t:"20",cat:"gate",c:["#1E90FF","#20B2AA"],i:"⛵",bgg:377470,pn:2,px:2,w:1.87,v:"Cooperative trick-taking for two. Navigate your ship through storms and avoid the Kraken.",m:["CO","TK"]},
+{n:"Compile",p:"2",t:"20",cat:"gate",c:["#2C003E","#9B30FF"],i:"💾",bgg:406652,pn:2,px:2,w:2.03,v:"Competing AIs stack themed ideas to compile protocols. Tight 2p card battle from Oink Games.",m:["AB"]},
+{n:"Lacuna",p:"2",t:"15",cat:"gate",c:["#483D8B","#DDA0DD"],i:"🌺",bgg:386937,pn:2,px:2,w:1.48,v:"Abstract flower-collecting on a cloth mat. Draw lines between blooms — cozy mystical geometry.",m:["AB"]},
 
 // QUICK & SOCIAL
 {n:"Sea Salt & Paper",p:"2-4",t:"20-30",cat:"quick",c:["#5F9EA0","#E0FFFF"],i:"🌊",bgg:367220,pn:2,px:4,w:1.38,v:"Gorgeous origami card game. Collect combos and choose when to end the round.",m:["PL"]},
+{n:"Star Fluxx",p:"2-6",t:"10-30",cat:"quick",c:["#191970","#00BFFF"],i:"🛸",bgg:102104,pn:2,px:6,w:1.42,v:"Sci-fi Fluxx — the rules change every turn. Chaotic, silly, and impossible to plan for.",m:["PL"]},
+{n:"Hot Streak",p:"2-9",t:"20",cat:"quick",c:["#FF4500","#FFD700"],i:"🌭",bgg:446497,pn:2,px:9,w:1.10,v:"Bet on mascot races and scream. Draft bets, rig the deck, then watch the chaos unfold.",m:["RC","BL"]},
 {n:"Magical Athlete",p:"2-6",t:"30-45",cat:"quick",c:["#9370DB","#FF69B4"],i:"🧙",bgg:268122,pn:2,px:6,w:1.33,v:"Fantasy racing with wacky character powers. Draft your team, then watch the chaos unfold.",m:["RC","DR"]},
+{n:"Shenanigrams",p:"2-6",t:"15-30",cat:"quick",c:["#FFA500","#FFD700"],i:"🦝",bgg:406037,pn:2,px:6,w:1.30,v:"Mischievous word game. Build words on a shared grid, then steal your opponents' words.",m:["AB"]},
 {n:"Scout",p:"2-5",t:"15",cat:"quick",c:["#FF8C00","#8B4513"],i:"🎪",bgg:291453,pn:2,px:5,w:1.35,v:"Oink card game — you can't rearrange your hand. Play combos or recruit from the table.",m:["TK"]},
 {n:"Sushi Go",p:"2-5",t:"15",cat:"quick",c:["#FF69B4","#98FB98"],i:"🍣",bgg:133473,pn:2,px:5,w:1.29,v:"Adorable card drafting filler. Pick sushi, pass your hand, score combos. Great starter.",m:["DR"]},
 {n:"Codenames",p:"4-8",t:"15-30",cat:"quick",c:["#8B0000","#2F4F4F"],i:"🕵️",bgg:178900,pn:4,px:8,w:1.28,v:"Team word association. One-word clues, multiple targets — endlessly replayable party staple.",m:["BL"]},
@@ -205,6 +219,9 @@ const G=[
 {n:"Fake Artist",p:"5-10",t:"20",cat:"quick",c:["#FF69B4","#FFD700"],i:"🎨",bgg:135779,pn:5,px:10,w:1.06,v:"Everyone draws one stroke — except the fake artist who doesn't know the subject.",m:["BL"]},
 {n:"Set",p:"2-8",t:"20-30",cat:"quick",c:["#9400D3","#FFFFFF"],i:"♦️",bgg:1198,pn:2,px:8,w:1.05,v:"Real-time pattern recognition. Spot sets of three matching cards — brain-melting speed game.",m:["AB"]},
 {n:"Rhino Hero",p:"2-5",t:"5-15",cat:"quick",c:["#4169E1","#FFD700"],i:"🦏",bgg:91514,pn:2,px:5,w:1.03,v:"Dexterity stacking game. Build a card tower and move the rhino up. Great for all ages.",m:["DX"]},
+{n:"Chicken vs Hotdog",p:"2-10",t:"20",cat:"quick",c:["#FF0000","#FFD700"],i:"🍗",bgg:359895,pn:2,px:10,w:1.00,v:"Flip-and-stick party game. Bid on challenges, then flip your chicken or hotdog to nail the landing.",m:["DX"]},
+{n:"Flip 7",p:"3-18",t:"20",cat:"quick",c:["#7B2D8E","#00CED1"],i:"7️⃣",bgg:420087,pn:3,px:18,w:1.05,v:"Push-your-luck card flipping. Don't flip the same number twice — or lose everything.",m:["PL"]},
+{n:"Dro Polter",p:"2-5",t:"15",cat:"quick",c:["#4682B4","#FFD700"],i:"👻",bgg:405537,pn:2,px:5,w:1.10,v:"Oink dexterity game. Hold five items and drop only the right ones — harder than it sounds.",m:["DX"]},
 {n:"Tinderblox",p:"1-6",t:"15",cat:"quick",c:["#FF4500","#FF8C00"],i:"🔥",bgg:284293,pn:1,px:6,w:1.00,v:"Stack tiny blocks with tweezers to build a campfire. One wrong move and it's over.",m:["DX"]},
 ];
 
@@ -218,13 +235,13 @@ const PF=[{l:"Any #",f:()=>true},{l:"Solo",f:g=>g.pn<=1},{l:"2p",f:g=>g.pn<=2&&g
 const AM=[...new Set(G.flatMap(g=>g.m))].sort((a,b)=>ML[a].localeCompare(ML[b]));
 const SORTS=[{l:"Accessible first",f:(a,b)=>a.w-b.w},{l:"A → Z",f:(a,b)=>a.n.localeCompare(b.n)},{l:"Shortest",f:(a,b)=>parseInt(a.t)-parseInt(b.t)},{l:"Most players",f:(a,b)=>b.px-a.px}];
 
-let S={q:"",pf:0,sm:[],imgs:{},fc:0,ld:true,exp:null,sort:0,cmp:[]};
+let S={q:"",pf:0,sm:[],imgs:{},fc:0,ld:true,exp:null,sort:0,cmp:[],show2p:false};
 let isTouch=false;
 window.addEventListener('touchstart',()=>{isTouch=true},{once:true});
 
 // Image fetching
 async function fetchImages(){
-  try{const c=localStorage.getItem("bgs_v4");if(c){const p=JSON.parse(c);if(p&&Object.keys(p).length>20){S.imgs=p;S.fc=Object.keys(p).length;S.ld=false;render();refreshImages(p);return;}}}catch(e){}
+  try{const c=localStorage.getItem("bgs_v5");if(c){const p=JSON.parse(c);if(p&&Object.keys(p).length>20){S.imgs=p;S.fc=Object.keys(p).length;S.ld=false;render();refreshImages(p);return;}}}catch(e){}
   await refreshImages({});
 }
 async function refreshImages(ex){
@@ -240,7 +257,7 @@ async function refreshImages(ex){
     await new Promise(r=>setTimeout(r,1500));
   }
   S.ld=false;
-  try{localStorage.setItem("bgs_v4",JSON.stringify(all));}catch(e){}
+  try{localStorage.setItem("bgs_v5",JSON.stringify(all));}catch(e){}
   updateStatus();renderShelves();
 }
 function parseXML(x,m){
@@ -254,6 +271,8 @@ function parseXML(x,m){
 
 function getFiltered(){
   let r=G;
+  // Hide 2p-only games unless toggled on or "2p Only" filter is active
+  if(!S.show2p && S.pf!==3) r=r.filter(g=>!(g.pn===2&&g.px===2));
   const pf=PF[S.pf];if(pf)r=r.filter(pf.f);
   if(S.sm.length>0)r=r.filter(x=>S.sm.some(m=>x.m.includes(m)));
   if(S.q){const s=S.q.toLowerCase();r=r.filter(x=>x.n.toLowerCase().includes(s)||x.v.toLowerCase().includes(s));}
@@ -299,6 +318,7 @@ function renderHeader(){
     <div class="fr"><input class="si" id="sb" type="text" placeholder="Search games or vibes..." autocomplete="off">
     ${PF.map((f,i)=>`<button class="p ${S.pf===i?'on':''}" onclick="setPF(${i})">${f.l}</button>`).join("")}</div>
     <div class="mr">${AM.map(m=>`<button class="pm ${S.sm.includes(m)?'on':''}" onclick="togM('${m}')">${ML[m]}</button>`).join("")}${S.sm.length>0?`<button class="pc" onclick="clrM()">✕ clear</button>`:""}</div>
+    <div class="tgl"><span class="tl">Show 2p-only games</span><div class="sw${S.show2p?' on':''}" onclick="tog2p()"></div></div>
     <div class="sr"><span class="sl2">Sort:</span>${SORTS.map((s,i)=>`<button class="sbt ${S.sort===i?'on':''}" onclick="setSort(${i})">${s.l}</button>`).join("")}</div></div>`;
   const box=document.getElementById("sb");box.value=S.q;
   box.addEventListener("input",function(e){S.q=e.target.value;renderShelves();});
@@ -368,6 +388,7 @@ document.addEventListener("click",function(e){
 });
 
 function setPF(i){S.pf=i;renderHeader();renderShelves();}
+function tog2p(){S.show2p=!S.show2p;renderHeader();renderShelves();}
 function togM(m){S.sm=S.sm.includes(m)?S.sm.filter(x=>x!==m):[...S.sm,m];renderHeader();renderShelves();}
 function clrM(){S.sm=[];renderHeader();renderShelves();}
 function setSort(i){S.sort=i;renderHeader();renderShelves();}
