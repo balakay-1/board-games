@@ -100,21 +100,18 @@ body{min-height:100vh;background:linear-gradient(180deg,var(--bg),var(--bg2) 30%
 }
 
 /* Compare panel */
-.cpanel{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(to top,#1A1510 0%,#1F1914 100%);border-top:1px solid rgba(197,147,90,0.25);box-shadow:0 -8px 30px rgba(0,0,0,0.6);z-index:100;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.25,.8,.25,1);padding:16px;max-height:60vh;overflow-y:auto}
+.cpanel{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(to top,#1A1510 0%,#1F1914 100%);border-top:1px solid rgba(197,147,90,0.25);box-shadow:0 -8px 30px rgba(0,0,0,0.6);z-index:100;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.25,.8,.25,1);padding:16px;max-height:55vh;overflow-y:auto}
 .cpanel.show{transform:translateY(0)}
-.cpanel .cphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cpanel .cphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .cpanel .cphdr h3{font-family:var(--fd);font-size:16px;font-weight:700}
-.cpanel .cpclear{font-size:11px;color:rgba(245,240,232,0.4);cursor:pointer;background:none;border:1px solid rgba(245,240,232,0.1);border-radius:6px;padding:4px 10px;font-family:var(--fb)}
-.cpanel .cpgrid{display:grid;gap:16px}
-.cpanel .cpcol{min-width:0}
-.cpanel .cpcol .cpname{font-family:var(--fd);font-size:15px;font-weight:700;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cpanel .cpcol .cpvibe{font-size:10.5px;color:rgba(245,240,232,0.65);line-height:1.4;margin-bottom:10px;min-height:30px}
-.cpanel .cprow{display:flex;align-items:center;padding:5px 0;border-bottom:1px solid rgba(245,240,232,0.06)}
-.cpanel .cprow:last-child{border-bottom:none}
-.cpanel .cplbl{font-size:10px;color:rgba(245,240,232,0.35);width:70px;flex-shrink:0;text-transform:uppercase;letter-spacing:0.04em}
-.cpanel .cpval{font-size:12px;color:var(--tx);font-weight:500}
-.cpanel .cpbgg{display:inline-block;margin-top:8px;padding:5px 12px;font-size:10.5px;font-family:var(--fb);font-weight:600;color:var(--ac);text-decoration:none;background:rgba(197,147,90,0.15);border:1px solid rgba(197,147,90,0.3);border-radius:5px}
-/* Weight bar */
+.cpanel .cpclear{font-size:11px;color:rgba(245,240,232,0.4);cursor:pointer;background:none;border:1px solid rgba(245,240,232,0.1);border-radius:6px;padding:4px 10px;font-family:var(--fb);-webkit-tap-highlight-color:transparent}
+.cpanel table{width:100%;border-collapse:collapse;table-layout:fixed}
+.cpanel th,.cpanel td{padding:6px 4px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(245,240,232,0.06)}
+.cpanel th{font-size:10px;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.04em;font-weight:500;width:70px}
+.cpanel td{font-size:11.5px;color:var(--tx);font-weight:500}
+.cpanel .cpname{font-family:var(--fd);font-size:13px;font-weight:700;line-height:1.2;margin-bottom:4px}
+.cpanel .cpvibe{font-size:10px;color:rgba(245,240,232,0.55);line-height:1.35}
+.cpanel .cpbgg{display:inline-block;margin-top:4px;padding:5px 12px;font-size:10.5px;font-family:var(--fb);font-weight:600;color:var(--ac);text-decoration:none;background:rgba(197,147,90,0.15);border:1px solid rgba(197,147,90,0.3);border-radius:5px}
 .wbar{display:inline-block;height:6px;border-radius:3px;vertical-align:middle;margin-left:6px}
 
 .empty{text-align:center;padding:50px 0;color:rgba(245,240,232,0.35);font-size:14px}
@@ -318,8 +315,6 @@ function renderCompare(){
   const panel=document.getElementById("cpanel");
   if(S.cmp.length===0){panel.classList.remove("show");panel.innerHTML="";document.querySelector('.w').style.paddingBottom='20px';return;}
   const games=S.cmp.map(id=>G.find(g=>g.bgg===id)).filter(Boolean);
-  const cols=games.length;
-  const wCol=cols===1?'#C5935A':cols===2?'#C5935A':'#C5935A';
 
   function wBar(w){
     const pct=((w-1)/4)*100;
@@ -327,19 +322,19 @@ function renderCompare(){
     return`${w.toFixed(1)} <span class="wbar" style="width:${Math.max(pct,8)}px;background:${clr}"></span>`;
   }
 
-  function row(lbl,vals){return`<div class="cprow"><span class="cplbl">${lbl}</span>${vals.map(v=>`<span class="cpval" style="flex:1">${v}</span>`).join("")}</div>`;}
+  function tr(lbl,fn){return`<tr><th>${lbl}</th>${games.map(g=>`<td>${fn(g)}</td>`).join("")}</tr>`;}
 
   panel.innerHTML=`
     <div class="cphdr"><h3>Compare ${games.length} game${games.length>1?'s':''}</h3><button class="cpclear" onclick="clearCmp()">✕ Clear all</button></div>
-    <div class="cpgrid" style="grid-template-columns:70px repeat(${cols},1fr)">
-      <div></div>${games.map(g=>`<div class="cpcol"><div class="cpname">${g.n}</div><div class="cpvibe">${g.v}</div></div>`).join("")}
-      ${row("Players",games.map(g=>g.p))}
-      ${row("Time",games.map(g=>g.t+"m"))}
-      ${row("Weight",games.map(g=>wBar(g.w)))}
-      ${row("Mechanics",games.map(g=>g.m.map(m=>ML[m]).join(", ")))}
-      ${row("Category",games.map(g=>{const cat=CATS.find(c=>c.id===g.cat);return cat?cat.l:g.cat;}))}
-      <div class="cprow"><span class="cplbl"></span>${games.map(g=>`<span class="cpval" style="flex:1"><a class="cpbgg" href="https://boardgamegeek.com/boardgame/${g.bgg}" target="_blank" rel="noopener noreferrer">BGG ↗</a></span>`).join("")}</div>
-    </div>`;
+    <table>
+      <tr><th></th>${games.map(g=>`<td><div class="cpname">${g.n}</div><div class="cpvibe">${g.v}</div></td>`).join("")}</tr>
+      ${tr("Players",g=>g.p)}
+      ${tr("Time",g=>g.t+"m")}
+      ${tr("Weight",g=>wBar(g.w))}
+      ${tr("Mechanics",g=>g.m.map(m=>ML[m]).join(", "))}
+      ${tr("Shelf",g=>{const cat=CATS.find(c=>c.id===g.cat);return cat?cat.l:g.cat;})}
+      <tr><th></th>${games.map(g=>`<td><a class="cpbgg" href="https://boardgamegeek.com/boardgame/${g.bgg}" target="_blank" rel="noopener noreferrer">BGG ↗</a></td>`).join("")}</tr>
+    </table>`;
   panel.classList.add("show");
   document.querySelector('.w').style.paddingBottom=(panel.offsetHeight+20)+'px';
 }
