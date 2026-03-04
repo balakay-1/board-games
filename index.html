@@ -4,244 +4,619 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blake's Game Shelf</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,700;0,800;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#1A1510;--bg2:#1F1914;--bg3:#191510;
-  --tx:#F5F0E8;--txd:rgba(245,240,232,0.38);--txf:rgba(245,240,232,0.33);
-  --ac:#C5935A;--acd:rgba(197,147,90,0.55);
-  --gr:#7B9E6B;--bl:#6B8DA8;--mb:#8CB4CC;
-  --st:#5C4A3A;--sb:#4A3B2E;
-  --fd:'Playfair Display',Georgia,serif;
-  --fb:'DM Sans','Helvetica Neue',sans-serif;
+:root {
+  --bg:#161210;--bg2:#1c1814;--card:#221e19;
+  --tx:#e0d8cc;--txd:rgba(224,216,204,0.4);--txm:rgba(224,216,204,0.6);
+  --gold:#c9a24d;--rust:#c75a30;--forest:#5a8a5a;--slate:#8a9aaa;
+  --border:rgba(224,216,204,0.1);--bordlt:rgba(224,216,204,0.06);
+  --fd:'Bitter',Georgia,serif;--fb:'DM Sans',sans-serif;
 }
-body{min-height:100vh;background:linear-gradient(180deg,var(--bg),var(--bg2) 30%,var(--bg3));font-family:var(--fb);color:var(--tx);-webkit-font-smoothing:antialiased}
-@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-weight:400;min-height:100vh;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-.w{max-width:960px;margin:0 auto;padding:24px 16px;padding-bottom:20px}
-.hd{text-align:center;margin-bottom:18px}
-.hd h1{font-family:var(--fd);font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:2px}
-.hd .su{font-size:12px;color:var(--txf);margin-bottom:14px}
-.hd .su .sl{color:var(--acd);margin-left:6px}
-.hd .su .sd{color:rgba(123,158,107,0.55);margin-left:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px 80px}
 
-.fr{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
-.si{background:rgba(245,240,232,0.06);border:1px solid rgba(245,240,232,0.1);border-radius:8px;padding:7px 12px;color:var(--tx);font-size:14px;font-family:var(--fb);width:160px;outline:none}
-.si:focus{border-color:rgba(197,147,90,0.4)}.si::placeholder{color:rgba(245,240,232,0.25)}
+header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin-bottom:24px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hl h1{font-family:var(--fd);font-size:clamp(2rem,5vw,3rem);font-weight:800;line-height:1;letter-spacing:-0.02em}
+.hl h1 span{color:var(--gold);font-style:italic}
+.hl p{margin-top:6px;color:var(--txd);font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase}
+.badge{background:rgba(224,216,204,0.06);border:1px solid var(--border);font-family:var(--fd);font-size:2rem;font-weight:700;padding:10px 20px;text-align:center;line-height:1;color:var(--gold);border-radius:4px}
+.badge small{display:block;font-family:var(--fb);font-size:0.6rem;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;color:var(--txd)}
 
-.p{border-radius:8px;padding:6px 11px;font-size:12px;font-family:var(--fb);font-weight:500;cursor:pointer;transition:all 0.2s;white-space:nowrap;-webkit-tap-highlight-color:transparent;border:1px solid rgba(245,240,232,0.07);background:rgba(245,240,232,0.04);color:rgba(245,240,232,0.4)}
-.p.on{background:rgba(197,147,90,0.2);border-color:rgba(197,147,90,0.4);color:var(--ac)}
-.mr{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
-.pm{border-radius:6px;padding:5px 10px;font-size:11px;font-family:var(--fb);font-weight:500;cursor:pointer;transition:all 0.2s;background:rgba(245,240,232,0.03);border:1px solid rgba(245,240,232,0.06);color:rgba(245,240,232,0.33);-webkit-tap-highlight-color:transparent}
-.pm.on{background:rgba(107,141,168,0.22);border-color:rgba(107,141,168,0.45);color:var(--mb)}
-.pc{background:none;border:1px solid rgba(245,240,232,0.1);border-radius:6px;padding:5px 9px;color:rgba(245,240,232,0.35);font-size:11px;font-family:var(--fb);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fbar{background:var(--card);border:1px solid var(--border);padding:14px 16px;margin-bottom:24px;border-radius:4px}
+.frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.frow+.frow{margin-top:10px;padding-top:10px;border-top:1px solid var(--bordlt)}
+.flbl{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--txd);font-weight:600;margin-right:4px;flex-shrink:0}
+.si{border:1px solid var(--border);background:rgba(224,216,204,0.05);padding:7px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);width:200px;outline:none;border-radius:3px}
+.si:focus{border-color:rgba(201,162,77,0.5)}.si::placeholder{color:var(--txd)}
 
-/* 2p toggle */
-.tgl{display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:8px}
-.tgl .tl{font-size:10.5px;color:rgba(245,240,232,0.3)}
-.tgl .sw{position:relative;width:34px;height:18px;background:rgba(245,240,232,0.1);border-radius:9px;cursor:pointer;transition:background 0.2s;-webkit-tap-highlight-color:transparent}
-.tgl .sw.on{background:rgba(107,141,168,0.4)}
-.tgl .sw::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:rgba(245,240,232,0.5);border-radius:50%;transition:all 0.2s}
-.tgl .sw.on::after{left:16px;background:var(--mb)}
+.pill{padding:5px 12px;border:1px solid var(--border);background:rgba(224,216,204,0.03);font-size:0.72rem;font-family:var(--fb);font-weight:500;cursor:pointer;transition:all 0.12s;white-space:nowrap;color:var(--txd);border-radius:4px}
+.pill:hover{border-color:rgba(224,216,204,0.25);color:var(--txm)}
+.pill.on{background:rgba(201,162,77,0.2);border-color:rgba(201,162,77,0.4);color:var(--gold)}
+.pm-party.on{background:rgba(199,90,48,0.2);border-color:rgba(199,90,48,0.45);color:#e07050}
+.pm-euro.on{background:rgba(90,138,90,0.2);border-color:rgba(90,138,90,0.45);color:#7ab07a}
+.pm-mid.on{background:rgba(90,120,160,0.2);border-color:rgba(90,120,160,0.45);color:#8ab0d0}
+.pm-epic.on{background:rgba(140,80,170,0.2);border-color:rgba(140,80,170,0.45);color:#b88ae0}
+.pm-family.on{background:rgba(60,140,80,0.2);border-color:rgba(60,140,80,0.45);color:#60c080}
+.pm-solo.on{background:rgba(140,120,60,0.2);border-color:rgba(140,120,60,0.45);color:#c0a850}
+.pc{background:none;border:1px solid var(--border);padding:4px 10px;color:var(--txd);font-size:0.68rem;font-family:var(--fb);cursor:pointer;border-radius:4px}
+.pc:hover{color:var(--tx);border-color:rgba(224,216,204,0.25)}
 
-.sr{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:2px;align-items:center}
-.sr .sl2{font-size:10.5px;color:rgba(245,240,232,0.28);margin-right:2px}
-.sbt{border-radius:5px;padding:4px 8px;font-size:10px;font-family:var(--fb);font-weight:500;cursor:pointer;transition:all 0.2s;background:rgba(245,240,232,0.03);border:1px solid rgba(245,240,232,0.05);color:rgba(245,240,232,0.28);-webkit-tap-highlight-color:transparent}
-.sbt.on{background:rgba(197,147,90,0.12);border-color:rgba(197,147,90,0.3);color:var(--ac)}
+.status{font-size:0.78rem;color:var(--txd);margin-bottom:20px;min-height:18px}
 
-.ss{margin-bottom:24px}
-.sh{margin-bottom:10px;padding-left:4px}
-.sh h2{font-family:var(--fd);font-size:18px;font-weight:700}
-.sh .dt{margin-right:6px;font-size:12px}
-.sh .ssb{font-size:11px;color:var(--txd);margin-top:1px}
+.shelf{margin-bottom:32px}
+.shelf-hdr{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.shelf-title{font-family:var(--fd);font-size:1.15rem;font-weight:800;color:var(--tx)}
+.shelf-count{font-size:0.72rem;color:var(--txd);font-weight:500}
+.shelf-desc{font-size:0.75rem;color:var(--txd);font-style:italic;margin-left:auto}
 
-.stk{display:flex;gap:10px;overflow-x:auto;padding:4px 4px 12px;scrollbar-width:thin;scrollbar-color:rgba(197,147,90,0.2) transparent;-webkit-overflow-scrolling:touch}
-.stk::-webkit-scrollbar{height:5px}.stk::-webkit-scrollbar-track{background:transparent}.stk::-webkit-scrollbar-thumb{background:rgba(197,147,90,0.2);border-radius:3px}
-.sld{height:7px;background:linear-gradient(to bottom,var(--st),var(--sb));border-radius:0 0 4px 4px;box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);margin-top:-2px}
-.ssw{height:4px;background:linear-gradient(to bottom,rgba(0,0,0,0.15),transparent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
 
-/* Card */
-.c{position:relative;width:136px;min-width:136px;height:184px;border-radius:10px;overflow:hidden;flex-shrink:0;transition:all 0.3s cubic-bezier(.25,.8,.25,1);box-shadow:0 4px 12px rgba(0,0,0,0.35),0 2px 4px rgba(0,0,0,0.2);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
-.c .bg{position:absolute;inset:0}
-.c .im{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.6s}
-.c .im.ld{opacity:1}
-.c .ik{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);font-size:36px;opacity:0.7;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));pointer-events:none;transition:opacity 0.4s}
-.c:has(.im.ld) .ik{opacity:0}
-.c .ov{position:absolute;inset:0;pointer-events:none;transition:background 0.3s}
-.c .ov.ni{background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.1) 50%,transparent 75%)}
-.c .ov.hi{background:linear-gradient(to top,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.4) 38%,transparent 62%)}
-.c .cn{position:absolute;bottom:0;left:0;right:0;padding:0 8px 7px}
-.c .vb{font-size:9.5px;color:rgba(245,240,232,0.85);line-height:1.35;margin-bottom:4px;text-shadow:0 1px 2px rgba(0,0,0,0.8);display:none}
-.c .tt{font-family:var(--fd);font-size:12.5px;font-weight:700;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,0.7);color:var(--tx)}
-.c .mt{font-size:9.5px;color:rgba(245,240,232,0.55);display:flex;gap:4px;margin-top:2px;text-shadow:0 1px 2px rgba(0,0,0,0.5)}
-.c .mt .sp{opacity:0.3}
-.c .bl{display:none;margin-top:6px;padding:5px 0;text-align:center;font-size:10.5px;font-family:var(--fb);font-weight:600;color:var(--ac);text-decoration:none;background:rgba(197,147,90,0.18);border:1px solid rgba(197,147,90,0.35);border-radius:5px}
-.c .bb{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.55);border-radius:4px;padding:2px 5px;font-size:9px;color:rgba(245,240,232,0.7);pointer-events:none;display:none}
-.c .cs{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,transparent 50%);pointer-events:none;display:none}
+.card{background:var(--card);border:1px solid var(--border);padding:12px 12px 12px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.12s,box-shadow 0.12s,border-color 0.12s;border-radius:4px}
+.card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
+.card:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,0.4);border-color:rgba(224,216,204,0.15)}
+.card.cmp{box-shadow:0 0 0 2px var(--slate);border-color:transparent}
+.card[data-wc="5"]::before{background:var(--rust)}
+.card[data-wc="4"]::before{background:var(--gold)}
+.card[data-wc="3"]::before{background:var(--forest)}
+.card[data-wc="2"]::before{background:#5a9e7a}
+.card[data-wc="1"]::before{background:#9e9a5e}
 
-/* Compare flag */
-.c .cf{position:absolute;top:5px;left:5px;width:26px;height:26px;border-radius:6px;display:none;align-items:center;justify-content:center;font-size:14px;cursor:pointer;z-index:5;-webkit-tap-highlight-color:transparent;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.15);transition:all 0.2s}
-.c .cf:active{transform:scale(1.2)}
-.c .cf.sel{display:flex !important;background:rgba(107,141,168,0.5);border-color:rgba(107,141,168,0.7)}
-.c.ex .cf,.c:hover .cf{display:flex}
+.card-thumb{flex-shrink:0;width:56px;height:56px;overflow:hidden;border-radius:3px;position:relative;background:rgba(224,216,204,0.06)}
+.card-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 0.3s}
+.card-thumb img.ld{opacity:1}
+.card-thumb .av{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;position:absolute;inset:0;pointer-events:none;transition:opacity 0.3s}
+.card-thumb:has(img.ld) .av{opacity:0}
 
-/* Card ring for compared games */
-.c.cmp{box-shadow:0 4px 12px rgba(0,0,0,0.35),0 2px 4px rgba(0,0,0,0.2),0 0 0 2px var(--mb)}
+.card-body{flex:1;min-width:0}
+.card-title{font-family:var(--fd);font-size:0.9rem;font-weight:700;line-height:1.2;margin-bottom:3px}
+.card-stats{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}
+.tag{font-size:0.62rem;letter-spacing:0.04em;text-transform:uppercase;padding:2px 6px;font-weight:600;border-radius:2px}
+.tag-p{background:rgba(90,138,90,0.15);color:var(--forest)}
+.tag-t{background:rgba(201,162,77,0.12);color:rgba(201,162,77,0.7)}
+.tag-w{background:rgba(224,216,204,0.06);color:var(--txd)}
+.card-vibe{font-size:0.76rem;color:var(--txm);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-mechs{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.mech{font-size:0.56rem;letter-spacing:0.03em;text-transform:uppercase;padding:1px 5px;border:1px solid var(--bordlt);color:var(--txd);border-radius:2px;font-weight:500}
 
-.c.ex{transform:translateY(-8px) scale(1.04);box-shadow:0 14px 28px rgba(0,0,0,0.5),0 6px 10px rgba(0,0,0,0.3);z-index:10}
-.c.ex.cmp{box-shadow:0 14px 28px rgba(0,0,0,0.5),0 6px 10px rgba(0,0,0,0.3),0 0 0 2px var(--mb)}
-.c.ex .ov{background:linear-gradient(to top,rgba(0,0,0,0.96) 0%,rgba(0,0,0,0.75) 55%,rgba(0,0,0,0.35) 80%,transparent 100%) !important}
-.c.ex .vb{display:block;animation:fadeUp 0.2s ease}
-.c.ex .bl{display:block;animation:fadeUp 0.2s ease}
-.c.ex .cs{display:block}
+.empty{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--txd)}
+.empty h3{font-family:var(--fd);font-size:1.2rem;margin-bottom:6px}
 
-@media(hover:hover) and (pointer:fine){
-  .c:hover{transform:translateY(-8px) scale(1.04);box-shadow:0 14px 28px rgba(0,0,0,0.5),0 6px 10px rgba(0,0,0,0.3);z-index:10}
-  .c:hover.cmp{box-shadow:0 14px 28px rgba(0,0,0,0.5),0 6px 10px rgba(0,0,0,0.3),0 0 0 2px var(--mb)}
-  .c:hover .ov{background:linear-gradient(to top,rgba(0,0,0,0.96) 0%,rgba(0,0,0,0.75) 55%,rgba(0,0,0,0.35) 80%,transparent 100%) !important}
-  .c:hover .vb{display:block;animation:fadeUp 0.2s ease}
-  .c:hover .bb{display:block}
-  .c:hover .cs{display:block}
-  .c:hover .bl{display:block;animation:fadeUp 0.15s ease}
-}
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(10,8,5,0.75);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.2s}
+.overlay.on{opacity:1}
+.modal{background:var(--bg2);border:1px solid rgba(224,216,204,0.15);max-width:540px;width:100%;max-height:85vh;overflow-y:auto;padding:28px;position:relative;transform:translateY(8px);transition:transform 0.2s;border-radius:6px}
+.overlay.on .modal{transform:translateY(0)}
+.modal-x{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--txd);padding:4px 8px;z-index:5}
+.modal-x:hover{color:var(--tx)}
+.modal-top{display:flex;gap:16px;margin-bottom:16px}
+.modal-thumb{flex-shrink:0;width:88px;height:88px;overflow:hidden;border-radius:3px;position:relative;background:rgba(224,216,204,0.06)}
+.modal-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-thumb .av{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.modal-thumb img.ld+.av{display:none}
+.modal-info h2{font-family:var(--fd);font-size:1.25rem;font-weight:800;line-height:1.2;margin-bottom:8px}
+.modal-stats{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.modal-stats .tag{font-size:0.72rem;padding:3px 8px}
+.modal-shelf{font-size:0.7rem;color:var(--txd);font-style:italic}
+.modal-section{margin-bottom:14px}
+.modal-section h3{font-family:var(--fd);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--txd);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--bordlt)}
+.modal-vibe{font-size:0.88rem;color:var(--txm);line-height:1.6}
+.modal-mechs{display:flex;flex-wrap:wrap;gap:5px}
+.modal-mechs .mech{font-size:0.7rem;padding:3px 8px;background:rgba(224,216,204,0.06);border:1px solid var(--border)}
+.modal-moods{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:0.62rem;letter-spacing:0.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:600}
+.chip-party{background:rgba(199,90,48,0.15);color:#e07050}
+.chip-euro{background:rgba(90,138,90,0.15);color:#7ab07a}
+.chip-mid{background:rgba(90,120,160,0.15);color:#8ab0d0}
+.chip-epic{background:rgba(140,80,170,0.15);color:#b88ae0}
+.chip-family{background:rgba(60,140,80,0.15);color:#60c080}
+.chip-solo{background:rgba(140,120,60,0.15);color:#c0a850}
+.likedis{margin-top:4px}
+.likedis .ld-title{font-size:0.76rem;font-weight:700;margin-bottom:4px;color:var(--txm)}
+.likedis .ld-title.like{color:#7ab07a}
+.likedis .ld-title.dislike{color:#d08070}
+.likedis ul{margin:0 0 10px 16px;padding:0}
+.likedis li{font-size:0.82rem;color:var(--txm);line-height:1.5;margin-bottom:2px}
+.bgg-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--bg);padding:11px 24px;font-family:var(--fb);font-size:0.85rem;font-weight:700;letter-spacing:0.03em;text-decoration:none;transition:background 0.15s;margin-top:6px;border-radius:4px}
+.bgg-btn:hover{background:#d4ad58}
 
 /* Compare panel */
-.cpanel{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(to top,#1A1510 0%,#1F1914 100%);border-top:1px solid rgba(197,147,90,0.25);box-shadow:0 -8px 30px rgba(0,0,0,0.6);z-index:100;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.25,.8,.25,1);padding:16px;max-height:55vh;overflow-y:auto}
+.cpanel{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid rgba(224,216,204,0.15);box-shadow:0 -8px 30px rgba(0,0,0,0.5);z-index:100;transform:translateY(100%);transition:transform 0.3s;padding:14px 20px;max-height:50vh;overflow-y:auto}
 .cpanel.show{transform:translateY(0)}
-.cpanel .cphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.cpanel .cphdr h3{font-family:var(--fd);font-size:16px;font-weight:700}
-.cpanel .cpclear{font-size:11px;color:rgba(245,240,232,0.4);cursor:pointer;background:none;border:1px solid rgba(245,240,232,0.1);border-radius:6px;padding:4px 10px;font-family:var(--fb);-webkit-tap-highlight-color:transparent}
+.cphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cphdr h3{font-family:var(--fd);font-size:0.95rem;font-weight:700}
+.cpclear{font-size:0.7rem;color:var(--txd);cursor:pointer;background:none;border:1px solid var(--border);padding:4px 10px;font-family:var(--fb);border-radius:4px}
 .cpanel table{width:100%;border-collapse:collapse;table-layout:fixed}
-.cpanel th,.cpanel td{padding:6px 4px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(245,240,232,0.06)}
-.cpanel th{font-size:10px;color:rgba(245,240,232,0.3);text-transform:uppercase;letter-spacing:0.04em;font-weight:500;width:70px}
-.cpanel td{font-size:11.5px;color:var(--tx);font-weight:500}
-.cpanel .cpname{font-family:var(--fd);font-size:13px;font-weight:700;line-height:1.2;margin-bottom:4px}
-.cpanel .cpvibe{font-size:10px;color:rgba(245,240,232,0.55);line-height:1.35}
-.cpanel .cpbgg{display:inline-block;margin-top:4px;padding:5px 12px;font-size:10.5px;font-family:var(--fb);font-weight:600;color:var(--ac);text-decoration:none;background:rgba(197,147,90,0.15);border:1px solid rgba(197,147,90,0.3);border-radius:5px}
-.wbar{display:inline-block;height:6px;border-radius:3px;vertical-align:middle;margin-left:6px}
+.cpanel th,.cpanel td{padding:5px 6px;text-align:left;vertical-align:top;border-bottom:1px solid var(--bordlt)}
+.cpanel th{font-size:0.62rem;color:var(--txd);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;width:70px}
+.cpanel td{font-size:0.76rem;color:var(--tx)}
+.cpname{font-family:var(--fd);font-size:0.82rem;font-weight:700;line-height:1.2;margin-bottom:2px}
+.cpvibe{font-size:0.68rem;color:var(--txd);line-height:1.3;font-style:italic}
+.cpbgg{display:inline-block;padding:4px 10px;font-size:0.7rem;font-weight:600;color:var(--gold);text-decoration:none;background:rgba(201,162,77,0.1);border:1px solid rgba(201,162,77,0.3);border-radius:3px}
+.wbar{display:inline-block;height:5px;border-radius:3px;vertical-align:middle;margin-left:4px}
 
-.empty{text-align:center;padding:50px 0;color:rgba(245,240,232,0.35);font-size:14px}
+.card .cf{position:absolute;top:5px;right:5px;width:22px;height:22px;display:none;align-items:center;justify-content:center;font-size:11px;cursor:pointer;z-index:5;background:var(--card);border:1px solid var(--border);border-radius:3px;transition:all 0.12s}
+.card .cf.sel{display:flex!important;background:rgba(138,154,170,0.3);border-color:var(--slate)}
+.card:hover .cf{display:flex}
+
+.legend{margin-top:36px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:14px;font-size:0.7rem;color:var(--txd);align-items:center}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-bar{width:10px;height:10px;flex-shrink:0;border-radius:2px}
 
 @media(max-width:600px){
-  .w{padding:20px 12px}
-  .hd h1{font-size:24px}
-  .c{width:128px;min-width:128px;height:174px}
-  .c .tt{font-size:11.5px}.c .vb{font-size:9px}
-  .p{padding:7px 12px;font-size:12px}
-  .pm{padding:6px 10px;font-size:11px}
-  .si{width:140px}
-  .sh h2{font-size:16px}
-  .cpanel{max-height:70vh}
-  .cpanel .cpcol .cpname{font-size:13px}
+  header{flex-direction:column;align-items:flex-start}
+  .grid{grid-template-columns:1fr}
+  .si{width:100%}
+  .shelf-desc{display:none}
+  .modal{padding:20px}
+  .cpanel{max-height:60vh}
 }
 </style>
 </head>
 <body>
-<div class="w">
-  <div id="hdr"></div>
+<div class="wrap">
+  <header>
+    <div class="hl">
+      <h1>Blake's <span>Game Shelf</span></h1>
+      <p>Browse · Filter · Pick something to play</p>
+    </div>
+    <div class="badge"><span id="total">0</span><small>games owned</small></div>
+  </header>
+  <div class="fbar" id="filters"></div>
+  <div class="status" id="status"></div>
   <div id="shelves"></div>
+  <div class="legend">
+    <strong style="font-size:.7rem;color:var(--tx)">Weight:</strong>
+    <div class="legend-item"><div class="legend-bar" style="background:var(--rust)"></div>Heavy</div>
+    <div class="legend-item"><div class="legend-bar" style="background:var(--gold)"></div>Med-Heavy</div>
+    <div class="legend-item"><div class="legend-bar" style="background:var(--forest)"></div>Medium</div>
+    <div class="legend-item"><div class="legend-bar" style="background:#5a9e7a"></div>Med-Light</div>
+    <div class="legend-item"><div class="legend-bar" style="background:#9e9a5e"></div>Light</div>
+  </div>
 </div>
 <div class="cpanel" id="cpanel"></div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="modal-top">
+      <div class="modal-thumb" id="m-thumb">
+        <img id="m-img" src="" alt="" onload="this.classList.add('ld')">
+        <div class="av" id="m-av"></div>
+      </div>
+      <div class="modal-info">
+        <h2 id="m-title"></h2>
+        <div class="modal-stats" id="m-stats"></div>
+        <div class="modal-shelf" id="m-shelf"></div>
+      </div>
+    </div>
+    <div class="modal-section"><h3>About This Game</h3><div class="modal-vibe" id="m-vibe"></div></div>
+    <div class="modal-section" id="m-ld-section"></div>
+    <div class="modal-section"><h3>Mechanics</h3><div class="modal-mechs" id="m-mechs"></div></div>
+    <div class="modal-section"><h3>Vibes</h3><div class="modal-moods" id="m-moods"></div></div>
+    <a class="bgg-btn" id="m-btn" href="#" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Open on BoardGameGeek
+    </a>
+  </div>
+</div>
+
 <script>
+const BGG_API_TOKEN = "";
 const ML={ENG:"Engine Building",WP:"Worker Placement",AC:"Area Control",DR:"Drafting",CO:"Co-op",BL:"Bluffing",PL:"Push Your Luck",TL:"Tile Laying",DX:"Dexterity",RC:"Racing",AU:"Auction",TK:"Trick-Taking",AB:"Abstract",AS:"Asymmetric"};
+const MOODS={party:"Party",euro:"Thinky Euro",mid:"Mid-Weight",epic:"Epic",family:"Family",solo:"Solo"};
+function wCat(w){return w>=3.5?5:w>=2.8?4:w>=2.1?3:w>=1.5?2:1;}
+const WLABELS={5:"Heavy",4:"Med-Heavy",3:"Medium",2:"Med-Light",1:"Light"};
+function maxTime(t){const n=t.match(/\d+/g);return n?Math.max(...n.map(Number)):30;}
+function timeGroup(t){const m=maxTime(t);return m<=20?"quick":m<=45?"short":m<=90?"medium":"long";}
 
-// w = real BGG community weight rating (1-5 scale)
 const G=[
-// EPIC STRATEGY
-{n:"Food Chain Magnate",p:"2-5",t:"120-240",cat:"epic",c:["#DC143C","#FFD700"],i:"🍔",bgg:175914,pn:2,px:5,w:4.21,v:"Cutthroat fast-food empire. Zero luck, zero mercy. Every decision is permanent.",m:["ENG","AC"]},
-{n:"Spirit Island",p:"1-4",t:"90-120",cat:"epic",c:["#2E8B57","#483D8B"],i:"🌿",bgg:162886,pn:1,px:4,w:4.06,v:"Cooperative brain-burner. Asymmetric island spirits defend against colonizers. Gloriously complex.",m:["CO","AS"]},
-{n:"Brass: Birmingham",p:"3-4",t:"60-120",cat:"epic",c:["#8B4513","#CD853F"],i:"🏭",bgg:224517,pn:3,px:4,w:3.93,v:"Industrial-era network building. Brutal resource chains, no luck, deeply satisfying economic puzzle.",m:["ENG","AC"]},
-{n:"Great Western Trail",p:"1-4",t:"75-150",cat:"epic",c:["#8B6914","#DEB887"],i:"🤠",bgg:341169,pn:1,px:4,w:3.71,v:"Cattle ranching with hand management and route building. Layered and rewarding.",m:["ENG"]},
-{n:"Star Wars: Rebellion",p:"2-4",t:"180-240",cat:"epic",c:["#1C1C2E","#4169E1"],i:"⚔️",bgg:187645,pn:2,px:4,w:3.65,v:"Epic galactic wargame. Empire hunts the hidden rebel base while rebels spark hope.",m:["AC","AS"]},
-{n:"Root",p:"2-4",t:"60-90",cat:"epic",c:["#556B2F","#F4A460"],i:"🦊",bgg:237182,pn:2,px:4,w:3.62,v:"Woodland warfare where every faction plays a completely different game. Chaotic, brilliant.",m:["AC","AS"]},
-{n:"Arcs",p:"2-4",t:"90-120",cat:"epic",c:["#191970","#87CEEB"],i:"🚀",bgg:358553,pn:2,px:4,w:3.57,v:"Card-driven space opera. Asymmetric factions with an optional epic campaign layer.",m:["AC","AS"]},
-{n:"Clans of Caledonia",p:"1-4",t:"90-120",cat:"epic",c:["#2F4F4F","#8FBC8F"],i:"🏴",bgg:216132,pn:1,px:4,w:3.55,v:"Scottish economic expansion. Trade goods, produce whisky, claim land.",m:["ENG","AC"]},
+// ── EPIC STRATEGY ─────────────────────────────────────────────────
+{n:"Food Chain Magnate",p:"2-5",t:"120-240",shelf:"epic",i:"🍔",bgg:175914,pn:2,px:5,w:4.21,
+ v:"Build a fast-food empire from scratch — hire staff, set prices, run ad campaigns, and ruthlessly undercut your rivals. No luck, no safety net. Every decision is permanent and every mistake is yours. The most punishing economic game ever made, and people keep coming back for more.",
+ m:["ENG","AC"],md:["epic","euro"],
+ pro:["You love zero-luck games where the better player wins every time","You want an economic sandbox with unlimited strategic depth","You enjoy cutthroat competition where nothing is forgiven"],
+ con:["You can fall behind early and spend 3 hours losing slowly","The learning curve is brutal — expect to get crushed your first few games","Games run 3-4 hours and demand full attention the entire time"]},
+{n:"Spirit Island",p:"1-4",t:"90-120",shelf:"epic",i:"🌿",bgg:162886,pn:1,px:4,w:4.06,
+ v:"Play as elemental spirits defending your island from colonizers. Each spirit has wildly different powers, and you'll need to coordinate devastating combos to push the invaders back. A cooperative brain-burner that makes you feel genuinely powerful once it clicks.",
+ m:["CO","AS"],md:["epic","solo"],
+ pro:["You want a co-op that treats you like an adult and never holds your hand","You love discovering combos between wildly asymmetric characters","You enjoy solo gaming — this is one of the best solo experiences in the hobby"],
+ con:["Analysis paralysis hits hard, especially with 4 players","Setup and rules overhead is significant — not a quick teach","The anti-colonial theme, while well-handled, isn't for every group"]},
+{n:"Brass: Birmingham",p:"3-4",t:"60-120",shelf:"epic",i:"🏭",bgg:224517,pn:3,px:4,w:3.93,
+ v:"Build canals and railways across industrial England, connecting cotton mills, iron works, and breweries into an economic network. Two distinct eras mean the whole board resets halfway through. Deeply interlocking systems that reward long-term planning.",
+ m:["ENG","AC"],md:["epic","euro"],
+ pro:["You love tightly designed economic systems where everything connects","The two-era structure creates a unique mid-game pivot point","Consistently rated #1 on BGG for a reason — the depth is extraordinary"],
+ con:["Only plays 3-4, and really shines at 3-4 specifically","The card system can feel limiting when you can't build where you want","First game is rough — you won't understand the strategy until round 2 of your second play"]},
+{n:"Great Western Trail",p:"1-4",t:"75-150",shelf:"epic",i:"🤠",bgg:341169,pn:1,px:4,w:3.71,
+ v:"Drive cattle to Kansas City, improving your deck and building along the trail. Every trip you upgrade your cowboys, craftsmen, and engineers to make the next delivery more lucrative. A beautifully layered euro that unfolds more each play.",
+ m:["ENG"],md:["epic","euro","solo"],
+ pro:["Multiple viable strategies keep it fresh game after game","The deck-thinning mechanic is incredibly satisfying as your herd improves","Excellent solo mode with the 2nd edition"],
+ con:["The teach takes a while — lots of interlocking systems to explain","Can feel like multiplayer solitaire with minimal direct interaction","Visual design is busy and hard to parse at first glance"]},
+{n:"Star Wars: Rebellion",p:"2-4",t:"180-240",shelf:"epic",i:"⚔️",bgg:187645,pn:2,px:4,w:3.65,
+ v:"One player controls the Galactic Empire hunting for the hidden rebel base. The other is the Rebellion, stalling for time and inspiring hope across the galaxy. An epic cat-and-mouse that genuinely feels like the original trilogy.",
+ m:["AC","AS"],md:["epic"],
+ pro:["The most thematic Star Wars experience in any medium — you'll get chills","Asymmetric gameplay is perfectly balanced between Empire and Rebellion","Diplomatic missions create incredible narrative moments"],
+ con:["3-4 hour commitment minimum, and it's really a 2-player game","The combat system is clunky and luck-dependent compared to the rest","You need a partner equally willing to commit to learning both sides"]},
+{n:"Root",p:"2-4",t:"60-90",shelf:"epic",i:"🦊",bgg:237182,pn:2,px:4,w:3.62,
+ v:"A woodland war game where every faction plays by completely different rules. The Cats build an engine, the Birds follow a decree, the Alliance hides in the forest, and the Vagabond plays everyone. Endlessly replayable and unlike anything else.",
+ m:["AC","AS"],md:["epic","mid"],
+ pro:["Every faction feels like playing a completely different game","The cute art hides one of the most aggressive games in the hobby","Once everyone knows their faction, games fly by in 60-90 minutes"],
+ con:["Everyone needs to understand ALL factions to play well, not just their own","Balance issues when mixing experienced and new players at the same table","The Vagabond can feel like they're playing a different game entirely"]},
+{n:"Arcs",p:"2-4",t:"90-120",shelf:"epic",i:"🚀",bgg:358553,pn:2,px:4,w:3.57,
+ v:"A card-driven space opera where you lead a faction vying for galactic influence. The trick-taking card play forces painful choices every round, and the optional campaign layer adds persistent consequences across sessions.",
+ m:["AC","AS"],md:["epic"],
+ pro:["Cole Wehrle's best card system — every hand is a painful puzzle","The campaign mode adds a legacy-like arc without destroying components","Packs a heavy-game feeling into a surprisingly tight 2-hour window"],
+ con:["Very aggressive — if you don't like direct conflict, this isn't for you","The base game without campaign can feel like an appetizer","Requires exactly the right group who enjoy political card play"]},
+{n:"Clans of Caledonia",p:"1-4",t:"90-120",shelf:"epic",i:"🏴",bgg:216132,pn:1,px:4,w:3.55,
+ v:"Lead a Scottish clan through the industrial age — produce whisky, trade goods, export cattle, and expand your territory on a shared market. The dynamic pricing system means every move ripples across the table.",
+ m:["ENG","AC"],md:["epic","euro","solo"],
+ pro:["The dynamic market creates genuine interaction in an otherwise euro-style game","Variable clan powers give each player a unique economic angle","Excellent solo mode and great at 2 players"],
+ con:["Feels like a Terra Mystica derivative to some players","Can trigger analysis paralysis with the market price calculations","The Scottish theme is pasted on — it's really an abstract economic game"]},
+{n:"Terraforming Mars",p:"1-5",t:"90-120",shelf:"epic",i:"🔴",bgg:167791,pn:1,px:5,w:3.26,
+ v:"Play cards to build an engine that terraforms Mars — raise the temperature, create oceans, plant forests. Hundreds of unique project cards mean every game tells a different story. Long but deeply satisfying when your engine finally hums.",
+ m:["ENG","DR"],md:["epic","euro","solo"],
+ pro:["Hundreds of unique cards mean you'll never play the same game twice","The engine-building arc is one of the most satisfying in all of gaming","Great solo mode and scales well from 1-5"],
+ con:["Component quality is famously bad for a game this expensive","At 4-5 players it drags past 3 hours easily","Card draw luck can feel swingy — sometimes you just don't get what you need"]},
+{n:"Hansa Teutonica",p:"3-5",t:"45-90",shelf:"epic",i:"🏰",bgg:286749,pn:3,px:5,w:3.13,
+ v:"A clean, mean euro where getting in someone else's way IS the strategy. Establish trade routes, upgrade abilities, and block opponents' plans. No theme to hide behind — pure interactive strategy.",
+ m:["AC"],md:["euro"],
+ pro:["One of the most interactive euros ever made — blocking is a core mechanism","Plays in 60-90 min once everyone knows it, which is incredible for the depth","The upgrade paths create real strategic variety between games"],
+ con:["Ugly as sin — the board looks like a spreadsheet and the theme is nonexistent","Very aggressive blocking can feel personal and frustrating","Needs at least 3 players and really wants 4-5"]},
+{n:"Dune: Imperium Uprising",p:"1-4",t:"60-120",shelf:"epic",i:"🏜️",bgg:366013,pn:1,px:4,w:3.04,
+ v:"Deck building meets worker placement on Arrakis. Send agents to harvest spice, forge alliances, and scheme for political power. Every round builds tension as conflicts escalate and the Sandworm looms.",
+ m:["ENG","WP"],md:["epic","solo"],
+ pro:["The deck building and worker placement blend is seamless and elegant","Conflict escalation creates genuine tension every round","The solo AI (Rival system) is excellent"],
+ con:["Combat outcomes can feel luck-dependent with the reveal mechanism","Requires Dune knowledge to fully appreciate the theme","At 4 players the downtime between turns can drag"]},
+{n:"The King's Dilemma",p:"3-5",t:"60-90",shelf:"epic",i:"👑",bgg:245655,pn:3,px:5,w:2.71,
+ v:"A legacy negotiation game where your council votes on the kingdom's fate. Every decision has long-term consequences, secret agendas clash, and alliances shift. The story you create together is unique to your group.",
+ m:["BL"],md:["epic"],
+ pro:["Creates genuinely difficult moral choices that spark real debate","The legacy narrative is one of the best in any board game","Secret agendas create delicious tension between allies"],
+ con:["It's legacy — once played through, you're done (12-15 sessions)","You need a consistent group of 4-5 for the entire campaign","Some chapters are more engaging than others — pacing can be uneven"]},
+{n:"March of the Ants",p:"2-5",t:"60-90",shelf:"epic",i:"🐜",bgg:219026,pn:2,px:5,w:2.71,
+ v:"Build and evolve your ant colony, exploring tunnels and battling rivals for territory. The evolution cards let you customize your species with unique abilities each game. A crunchy area-control game in a tiny package.",
+ m:["ENG","AC"],md:["mid","epic"],
+ pro:["Unique theme executed with real love — the evolution mechanic is great","Packs a lot of strategic depth into a 60-90 minute window","Less punishing than other area control games — good entry point to the genre"],
+ con:["Combat resolution can feel random at critical moments","Art style is functional rather than gorgeous","Hard to find — it's out of print and underseen"]},
 
-// STRATEGY
-{n:"Terraforming Mars",p:"1-5",t:"90-120",cat:"strat",c:["#CD4500","#8B2500"],i:"🔴",bgg:167791,pn:1,px:5,w:3.26,v:"Engine building with a satisfying arc. Play cards, raise oxygen, grow forests on Mars.",m:["ENG","DR"]},
-{n:"Hansa Teutonica",p:"3-5",t:"45-90",cat:"strat",c:["#4A6741","#C5B358"],i:"🏰",bgg:286749,pn:3,px:5,w:3.13,v:"Clean euro with aggressive blocking. Getting in someone's way IS the strategy.",m:["AC"]},
-{n:"Dune: Imperium Uprising",p:"1-4",t:"60-120",cat:"strat",c:["#C2956B","#3D2B1F"],i:"🏜️",bgg:366013,pn:1,px:4,w:3.04,v:"Deck building meets worker placement with a political edge. Tense decisions every round.",m:["ENG","WP"]},
-{n:"Viticulture",p:"1-6",t:"45-90",cat:"strat",c:["#722F37","#C5B358"],i:"🍷",bgg:183394,pn:1,px:6,w:2.90,v:"Elegant worker placement in a vineyard. Accessible gateway into heavier euros.",m:["WP"]},
-{n:"March of the Ants",p:"2-5",t:"60-90",cat:"strat",c:["#228B22","#8B4513"],i:"🐜",bgg:219026,pn:2,px:5,w:2.71,v:"Build your ant colony, evolve your species, claim territory. Engine building meets area control.",m:["ENG","AC"]},
-{n:"The King's Dilemma",p:"3-5",t:"60-90",cat:"strat",c:["#4B0082","#FFD700"],i:"👑",bgg:245655,pn:3,px:5,w:2.71,v:"Legacy narrative game. Political intrigue with persistent consequences. Every vote matters.",m:["BL"]},
+// ── STRATEGY ──────────────────────────────────────────────────────
+{n:"Viticulture",p:"1-6",t:"45-90",shelf:"strat",i:"🍷",bgg:183394,pn:1,px:6,w:2.90,
+ v:"Run a vineyard through the seasons — plant vines, harvest grapes, make wine, and fill orders. Worker placement with a Grande Worker who can squeeze into full spots. A warm, beautiful gateway into heavier strategy.",
+ m:["WP"],md:["euro","solo"],
+ pro:["The theme is warm and inviting — great for introducing people to worker placement","The Grande Worker mechanic elegantly solves the blocking frustration","Beautiful Tuscany expansion adds a brilliant expanded board"],
+ con:["Visitor cards can be wildly imbalanced — some are much stronger than others","Can feel like multiplayer solitaire at lower player counts","Once you've played heavier euros, it can feel a bit light"]},
+{n:"Ra",p:"2-5",t:"45-60",shelf:"strat",i:"☀️",bgg:12,pn:2,px:5,w:2.45,
+ v:"Knizia's auction masterpiece in ancient Egypt. Push your luck on when to call \"Ra!\" and force everyone to bid. Three epochs of agonizing decisions with limited sun tokens. Plays fast, stays in your head for days.",
+ m:["AU","PL"],md:["euro","mid"],
+ pro:["Perfectly elegant auction system — one of Knizia's absolute best","Plays in under an hour but creates incredibly tense moments","Every 'Ra!' call is a delicious gamble that affects the whole table"],
+ con:["New players struggle to value tiles correctly — first game can feel random","The Egyptian theme is completely pasted on","Can feel punishing if you mismanage your sun tokens early"]},
+{n:"Pandemic",p:"2-4",t:"45",shelf:"strat",i:"🦠",bgg:30549,pn:2,px:4,w:2.42,
+ v:"Work together to cure four diseases before outbreaks overwhelm the world. Each role has unique abilities, and the infection deck guarantees escalating tension. The cooperative game that launched a thousand imitators — still one of the best.",
+ m:["CO"],md:["mid","family","solo"],
+ pro:["The escalating tension is perfectly tuned — every game feels like a thriller","Accessible enough for non-gamers but has real strategic depth","Variable roles and difficulty levels keep it fresh for dozens of plays"],
+ con:["Quarterbacking is a real problem — one experienced player can dominate decisions","After many plays, the optimal strategies become formulaic","The luck of card draws can make some games unwinnable from the start"]},
+{n:"Hive Pocket",p:"2",t:"20",shelf:"strat",i:"🐝",bgg:154597,pn:2,px:2,w:2.36,
+ v:"Abstract strategy with insect tiles — no board, no setup, plays anywhere. Surround the enemy Queen Bee while protecting yours. Each bug moves differently. Chess depth in a drawstring bag.",
+ m:["AB"],md:["mid"],
+ pro:["Perfect information strategy that you can play anywhere — even a bar or park","No setup time and plays in 20 minutes with incredible depth","The Mosquito and Ladybug expansions add excellent tactical variety"],
+ con:["Very abstract — if you need theme, this won't do it for you","Like chess, a much better player will always crush a weaker one","The opening moves can feel rote once you know the standard lines"]},
+{n:"7 Wonders",p:"2-7",t:"30-45",shelf:"strat",i:"🏛️",bgg:68448,pn:2,px:7,w:2.34,
+ v:"Everyone drafts cards simultaneously — pick one, pass the rest. Build your ancient civilization across three ages with military, science, commerce, and wonder stages. Plays 7 people in 30 minutes with zero downtime.",
+ m:["DR"],md:["mid","party"],
+ pro:["Simultaneous play means zero downtime even at 7 players","30 minutes for this much depth is remarkable — perfect weeknight game","The drafting creates real tension about what to take vs. what to deny"],
+ con:["Hard to track what opponents are building, especially with 5+","Science strategy feels overpowered when unchecked","The 2-player variant with a dummy hand is awkward"]},
+{n:"Catan",p:"3-4",t:"60-120",shelf:"strat",i:"🐑",bgg:13,pn:3,px:4,w:2.32,
+ v:"Trade sheep for brick, build roads and settlements, argue about who's winning. The dice decide which resources flow, and the robber makes sure nobody gets too comfortable. The gateway game that started it all for a reason.",
+ m:["AU"],md:["mid","family"],
+ pro:["The negotiation and trading creates natural social interaction","Everyone knows it, making it the easiest game to get to the table","Initial placement creates meaningful strategic decisions from turn one"],
+ con:["Dice luck can leave you resourceless for multiple rounds","Experienced players can kingmake by choosing who to trade with","Feels dated compared to modern gateway games"]},
+{n:"7 Wonders Duel",p:"2",t:"30",shelf:"strat",i:"⚖️",bgg:173346,pn:2,px:2,w:2.22,
+ v:"Two-player card drafting from a shared pyramid display. Three ways to win — military supremacy, scientific dominance, or most points. Every card you take is one your opponent can't have. Razor-tight in 30 minutes.",
+ m:["DR"],md:["mid"],
+ pro:["Three win conditions create constant tension and multiple viable strategies","The card pyramid display makes every pick agonizing","Pantheon expansion adds another layer without bloating the playtime"],
+ con:["A science rush can feel cheap when it works — hard to stop once it starts","Some starting wonders are significantly stronger than others","The hidden cards in the pyramid can create frustrating luck swings"]},
+{n:"Through the Desert",p:"2-5",t:"45-60",shelf:"strat",i:"🐫",bgg:503,pn:2,px:5,w:2.19,
+ v:"Place pastel-colored camels to build caravan routes across the desert. Claim oases, enclose territory, connect watering holes. Knizia at his most elegant — simple rules that create agonizing spatial puzzles.",
+ m:["AC","AB"],md:["euro","mid"],
+ pro:["Incredibly elegant — teach it in 5 minutes, think about it for hours","The spatial puzzle of enclosing areas creates beautiful tension","Pastel camel components are genuinely delightful"],
+ con:["Very abstract — the desert theme doesn't come through at all","Quiet, thinky gameplay won't work for groups that want interaction","Can feel deterministic at 2 players once you know the patterns"]},
+{n:"Parks",p:"1-5",t:"30-60",shelf:"strat",i:"🏕️",bgg:266524,pn:1,px:5,w:2.16,
+ v:"Hike through a trail that changes each season, collecting memories and resources to visit national parks. Light worker placement with satisfying set collection and the most beautiful cards in gaming.",
+ m:["WP"],md:["mid","solo"],
+ pro:["The national park art by Fifty-Nine Parks is genuinely stunning","Relaxing theme and pace make it a great wind-down game","Seasons changing the trail creates nice variety between rounds"],
+ con:["Too light for experienced gamers — decisions rarely feel consequential","Limited player interaction beyond occasionally blocking a trail spot","The 'memories' photos mechanic feels like an afterthought"]},
+{n:"Cat in the Box",p:"2-5",t:"30",shelf:"strat",i:"🐈",bgg:345972,pn:2,px:5,w:2.10,
+ v:"Trick-taking where cards have no color until you play them — you declare the suit. But claim a combo someone already claimed and you cause a paradox. Schrödinger's card game, and it's brilliant.",
+ m:["TK"],md:["mid","party"],
+ pro:["The quantum mechanic twist makes trick-taking feel completely new","Creating paradoxes is both hilarious and strategically deep","Quick to play, endlessly replayable, and easy to teach the basics"],
+ con:["People who don't know trick-taking will struggle with the added layer","Scoring with the board can be confusing the first game","Works best at 4 — the 2 and 5 player variants feel compromised"]},
+{n:"LotR: Duel for Middle-Earth",p:"2",t:"30",shelf:"strat",i:"💍",bgg:397598,pn:2,px:2,w:2.08,
+ v:"A head-to-head card battle across Middle-Earth locations. Control key battlefields, play iconic characters, and leverage the Ring's temptation. Great for Tolkien fans who want a quick strategic duel.",
+ m:["AC"],md:["mid"],
+ pro:["Dripping with Tolkien theme — every card feels meaningful","Quick enough to play twice in a row, deep enough to want to","The Ring temptation mechanic adds a wonderful risk-reward layer"],
+ con:["Niche appeal — non-Tolkien fans will be less engaged","Card luck can determine outcomes in close games","Somewhat derivative of 7 Wonders Duel's formula"]},
+{n:"Cubitos",p:"2-4",t:"45-75",shelf:"strat",i:"🎲",bgg:298108,pn:2,px:4,w:2.05,
+ v:"A dice-building racing game. Buy custom dice, roll them all at once, and push your luck to activate more — but bust and you lose your turn. Loud, chaotic, strategic, and almost always comes down to the wire.",
+ m:["PL","RC","ENG"],md:["mid","party"],
+ pro:["Rolling a huge handful of dice and pushing your luck is inherently exciting","Variable setup with different dice abilities keeps every game fresh","The racing element adds genuine tension that pure engine builders lack"],
+ con:["Busting at a critical moment can feel terrible and luck-driven","Setup with all the dice boards takes longer than it should","At 4 players the downtime between turns can drag"]},
+{n:"Compile",p:"2",t:"20",shelf:"strat",i:"💾",bgg:406652,pn:2,px:2,w:2.03,
+ v:"A tight 2-player card game from Oink Games. Draft and stack cards to build programs, compete for control of protocols. Small box, surprising depth, quick enough to play three times in a row.",
+ m:["AB"],md:["mid"],
+ pro:["Incredible depth-to-time ratio — 20 minutes of real strategic thinking","Oink Games' tiny box means you can take it anywhere","The stacking mechanic creates satisfying combos as you learn the cards"],
+ con:["Abstract theme won't click with everyone","Takes 2-3 plays to understand the strategy space","Very niche — only works at exactly 2 players"]},
+{n:"Bomb Busters",p:"2-5",t:"30",shelf:"strat",i:"💣",bgg:416584,pn:2,px:5,w:1.99,
+ v:"Cooperative deduction — figure out which wires to cut before the bomb goes off. Limited communication rules create delicious tension. Spiel des Jahres 2025 winner and it earns it.",
+ m:["CO"],md:["party","family"],
+ pro:["Accessible enough for families but creates genuine cooperative tension","The communication restrictions make every clue feel important","Spiel des Jahres winner for a reason — impeccably designed"],
+ con:["Once you've solved the communication puzzle, replay value drops","Very light for experienced gamers looking for depth","Can feel solvable with an experienced group"]},
+{n:"Harmonies",p:"1-5",t:"30-45",shelf:"strat",i:"🌸",bgg:405996,pn:1,px:5,w:1.97,
+ v:"Stack colorful tokens to create landscapes and attract animals to your habitat. Calming nature theme hides genuinely thinky spatial puzzles. Zone out for 40 minutes and emerge smiling.",
+ m:["TL"],md:["mid","solo"],
+ pro:["Calming, beautiful, and genuinely meditative — perfect end-of-night game","The spatial stacking puzzle is more interesting than it first appears","Excellent solo mode for a relaxing challenge"],
+ con:["Very low interaction — essentially a multiplayer solitaire puzzle","Scoring can feel opaque until you've played a few times","May feel too gentle for people who want tension or conflict"]},
 
-// GATEWAY FAVORITES
-{n:"Ra",p:"2-5",t:"45-60",cat:"gate",c:["#CD950C","#8B6508"],i:"☀️",bgg:12,pn:2,px:5,w:2.45,v:"Knizia's auction masterpiece. Ancient Egypt theme, agonizing push-your-luck bidding.",m:["AU","PL"]},
-{n:"Pandemic",p:"2-4",t:"45",cat:"gate",c:["#104E8B","#CD2626"],i:"🦠",bgg:30549,pn:2,px:4,w:2.42,v:"Cooperative classic. Race to cure four diseases before outbreaks overwhelm the world.",m:["CO"]},
-{n:"Hive Pocket",p:"2",t:"20",cat:"gate",c:["#1C1C1C","#F5F5DC"],i:"🐝",bgg:154597,pn:2,px:2,w:2.36,v:"Abstract strategy with bug tiles. No board — pieces create the play space. Chess-like depth.",m:["AB"]},
-{n:"7 Wonders",p:"2-7",t:"30-45",cat:"gate",c:["#DAA520","#8B6914"],i:"🏛️",bgg:68448,pn:2,px:7,w:2.34,v:"Simultaneous card drafting civilization game. Plays fast, scales beautifully to 7.",m:["DR"]},
-{n:"Catan",p:"3-4",t:"60-120",cat:"gate",c:["#D2691E","#FF8C00"],i:"🐑",bgg:13,pn:3,px:4,w:2.32,v:"Trade resources, build settlements, negotiate with friends. The game that started it all.",m:["AU"]},
-{n:"7 Wonders Duel",p:"2",t:"30",cat:"gate",c:["#B8860B","#6B4226"],i:"⚖️",bgg:173346,pn:2,px:2,w:2.22,v:"Tight head-to-head card drafting. Multiple win conditions keep both players on edge.",m:["DR"]},
-{n:"Through the Desert",p:"2-5",t:"45-60",cat:"gate",c:["#F5DEB3","#EDC9AF"],i:"🐫",bgg:503,pn:2,px:5,w:2.19,v:"Abstract area control with pastel camels. Knizia classic — simple rules, deep play.",m:["AC","AB"]},
-{n:"Heat",p:"2-6",t:"30-60",cat:"gate",c:["#FF0000","#FF8C00"],i:"🏎️",bgg:376682,pn:2,px:6,w:2.18,v:"Card-driven racing. Manage your engine heat, draft behind rivals, nail the corners.",m:["RC"]},
-{n:"Parks",p:"1-5",t:"30-60",cat:"gate",c:["#228B22","#87CEEB"],i:"🏕️",bgg:266524,pn:1,px:5,w:2.16,v:"Hike through national parks, collect memories and resources. Gorgeous WPA-poster art.",m:["WP"]},
-{n:"Cat in the Box",p:"2-5",t:"30",cat:"gate",c:["#483D8B","#7B68EE"],i:"🐈",bgg:345972,pn:2,px:5,w:2.10,v:"Trick-taking with a quantum twist. Cards have no color until you play them. Mind-bending.",m:["TK"]},
-{n:"LotR: Duel for Middle-Earth",p:"2",t:"30",cat:"gate",c:["#2F4F4F","#C5B358"],i:"💍",bgg:397598,pn:2,px:2,w:2.08,v:"2-player card battle for Middle-Earth. Location control meets tactical hand play.",m:["AC"]},
-{n:"Cubitos",p:"2-4",t:"45-75",cat:"gate",c:["#FF4500","#FFD700"],i:"🎲",bgg:298108,pn:2,px:4,w:2.05,v:"Dice building + push-your-luck racing. Buy better dice, roll big, bust spectacularly.",m:["PL","RC","ENG"]},
-{n:"Bomb Busters",p:"2-5",t:"30",cat:"gate",c:["#FF0000","#1C1C1C"],i:"💣",bgg:416584,pn:2,px:5,w:1.99,v:"Cooperative deduction game. Deduce and cut the right wires before time runs out.",m:["CO"]},
-{n:"Harmonies",p:"1-5",t:"30-45",cat:"gate",c:["#3CB371","#87CEEB"],i:"🌸",bgg:405996,pn:1,px:5,w:1.97,v:"Calm nature-themed tile placement. Thinky but zen — build habitats, attract animals.",m:["TL"]},
-{n:"Quacks of Quedlinburg",p:"2-4",t:"45",cat:"gate",c:["#8B008B","#FF6347"],i:"🧪",bgg:244521,pn:2,px:4,w:1.95,v:"Push-your-luck bag building. Draw ingredients for your potion — but don't let it explode!",m:["PL","ENG"]},
-{n:"Takenoko",p:"2-4",t:"45-60",cat:"gate",c:["#90EE90","#FFB6C1"],i:"🐼",bgg:70919,pn:2,px:4,w:1.95,v:"Grow bamboo, feed a panda, complete secret objectives. Light, pretty, family-friendly.",m:["TL"]},
-{n:"Carcassonne",p:"2-5",t:"35-45",cat:"gate",c:["#228B22","#DEB887"],i:"🏰",bgg:822,pn:2,px:5,w:1.94,v:"Lay tiles, claim cities, roads and farms. The gateway classic that still holds up.",m:["TL"]},
-{n:"Azul",p:"2-4",t:"30-45",cat:"gate",c:["#1E90FF","#FFB347"],i:"🔷",bgg:230802,pn:2,px:4,w:1.78,v:"Elegant tile drafting. Beautiful Portuguese tiles, simple rules, surprisingly cutthroat.",m:["DR","AB"]},
-{n:"Secret Hitler",p:"5-10",t:"45",cat:"gate",c:["#8B0000","#1C1C1C"],i:"📜",bgg:188834,pn:5,px:10,w:1.67,v:"Social deduction classic. Liberals vs fascists — trust no one, especially your friends.",m:["BL"]},
-{n:"Patchwork",p:"2",t:"15-30",cat:"gate",c:["#6495ED","#F0E68C"],i:"🧵",bgg:163412,pn:2,px:2,w:1.64,v:"Tetris-like 2-player puzzle. Draft quilt patches, manage your button economy.",m:["DR","AB"]},
-{n:"Regicide",p:"1-4",t:"30",cat:"gate",c:["#8B0000","#FFD700"],i:"♠️",bgg:307002,pn:1,px:4,w:1.60,v:"Cooperative card game using a standard deck. Defeat the royals — deceptively tricky.",m:["CO"]},
-{n:"Land vs Sea",p:"2-4",t:"20-30",cat:"gate",c:["#2E8B57","#4682B4"],i:"🗺️",bgg:336498,pn:2,px:4,w:1.50,v:"Competitive tile-laying. One player scores land, the other scores sea. Tug of war.",m:["TL"]},
-{n:"Lost Cities",p:"2",t:"20-30",cat:"gate",c:["#8B7355","#CD853F"],i:"🗺️",bgg:50,pn:2,px:2,w:1.50,v:"Classic 2p card game. Launch expeditions but commit wisely — unfinished trips cost points.",m:["PL"]},
-{n:"Sail",p:"2",t:"20",cat:"gate",c:["#1E90FF","#20B2AA"],i:"⛵",bgg:377470,pn:2,px:2,w:1.87,v:"Cooperative trick-taking for two. Navigate your ship through storms and avoid the Kraken.",m:["CO","TK"]},
-{n:"Compile",p:"2",t:"20",cat:"gate",c:["#2C003E","#9B30FF"],i:"💾",bgg:406652,pn:2,px:2,w:2.03,v:"Competing AIs stack themed ideas to compile protocols. Tight 2p card battle from Oink Games.",m:["AB"]},
-{n:"Lacuna",p:"2",t:"15",cat:"gate",c:["#483D8B","#DDA0DD"],i:"🌺",bgg:386937,pn:2,px:2,w:1.48,v:"Abstract flower-collecting on a cloth mat. Draw lines between blooms — cozy mystical geometry.",m:["AB"]},
+// ── GATEWAY & FAMILY ──────────────────────────────────────────────
+{n:"Heat",p:"2-6",t:"30-60",shelf:"gate",i:"🏎️",bgg:376682,pn:2,px:6,w:2.18,
+ v:"Card-driven Formula 1 racing. Manage your engine's heat — push hard into corners and risk overheating, or play it safe and get overtaken. Drafting behind rivals is a real mechanic. Best racing game on the market.",
+ m:["RC"],md:["mid","party","family"],
+ pro:["The heat management system makes every corner a genuine decision","Drafting behind other racers is a brilliantly thematic mechanic","Scales beautifully from 2-6 and plays quickly at any count"],
+ con:["Card luck can occasionally decide tight races","Once someone gets far ahead, catching up is very difficult","The upgrade module adds complexity without proportional depth"]},
+{n:"Quacks of Quedlinburg",p:"2-4",t:"45",shelf:"gate",i:"🧪",bgg:244521,pn:2,px:4,w:1.95,
+ v:"Reach into your bag and pull ingredients for your potion — but draw too many white chips and it explodes! Buy better chips each round to push further next time. Equal parts strategy and screaming.",
+ m:["PL","ENG"],md:["mid","party","family"],
+ pro:["The simultaneous push-your-luck creates incredible group energy","Catch-up mechanism (rat tails) keeps losers in the game","Buying ingredient upgrades adds real engine-building decisions"],
+ con:["Despite the strategy, the best player doesn't always win — luck is significant","The white chip ratio can make some bags feel doomed","Setup with all the ingredient books takes a while"]},
+{n:"Takenoko",p:"2-4",t:"45-60",shelf:"gate",i:"🐼",bgg:70919,pn:2,px:4,w:1.95,
+ v:"Grow bamboo gardens, irrigate plots, and feed a hungry panda — all while completing secret objective cards. Adorable miniatures, approachable rules, and just enough strategy to keep adults engaged.",
+ m:["TL"],md:["mid","family"],
+ pro:["The panda miniature alone sells the game — incredible table presence","Perfect weight for mixed groups of gamers and non-gamers","Secret objectives add just enough strategy without analysis paralysis"],
+ con:["Too light for experienced gamers — outgrown quickly","Random objective draws can make games feel lopsided","The panda objectives are generally much easier than gardener ones"]},
+{n:"Carcassonne",p:"2-5",t:"35-45",shelf:"gate",i:"🏰",bgg:822,pn:2,px:5,w:1.94,
+ v:"Draw a tile, place it, optionally claim it with a meeple. Build cities, roads, monasteries, and farms across a growing medieval landscape. Twenty years old and still the perfect 'one more game' game.",
+ m:["TL"],md:["mid","family"],
+ pro:["Tile-laying is inherently satisfying — watching the map grow never gets old","Simple enough for anyone, but farming strategy adds depth for experienced players","Dozens of expansions if you want more variety"],
+ con:["Farming scoring rules confuse literally every new player","Tile draws are random — sometimes you just don't get what you need","Can feel passive with limited direct interaction beyond tile placement"]},
+{n:"Sail",p:"2",t:"20",shelf:"gate",i:"⛵",bgg:377470,pn:2,px:2,w:1.87,
+ v:"Cooperative trick-taking for exactly two players. Navigate your ship through storms, dodge the Kraken, and manage a shared threat. Limited communication means you're reading your partner's plays like a mind reader.",
+ m:["CO","TK"],md:["mid"],
+ pro:["Unique co-op trick-taking fills a niche no other game does","Limited communication creates amazing 'aha' moments when you sync up","20 minutes means you can play 3 games in one sitting"],
+ con:["Requires trick-taking familiarity — bad intro for people who don't know the genre","Communication restriction can be more frustrating than fun for some pairs","Very niche — exactly 2 players, no more, no less"]},
+{n:"Azul",p:"2-4",t:"30-45",shelf:"gate",i:"🔷",bgg:230802,pn:2,px:4,w:1.78,
+ v:"Draft Portuguese tiles from shared factory displays and slot them into your palace wall. Elegant rules, gorgeous components, and a sneaky competitive edge — taking tiles you need often dumps garbage on opponents.",
+ m:["DR","AB"],md:["mid"],
+ pro:["Gorgeous production — the weighted Bakelite tiles feel amazing in your hand","Drafting creates natural interaction without direct aggression","Elegant enough to play with anyone, deep enough to reward repeated plays"],
+ con:["Can be surprisingly mean — experienced players will hate-draft aggressively","At 4 players, analysis paralysis can slow things down significantly","The wall-building phase can feel procedural after many plays"]},
+{n:"Secret Hitler",p:"5-10",t:"45",shelf:"gate",i:"📜",bgg:188834,pn:5,px:10,w:1.67,
+ v:"Hidden-role chaos. Liberals try to pass liberal policies while fascists infiltrate the government. Accusations fly, trust evaporates, and the quiet players are always the most suspicious.",
+ m:["BL"],md:["party"],
+ pro:["Creates incredible table moments — the accusations and reveals are unforgettable","The policy deck mechanism forces genuine dilemmas for both teams","Best at 7-8 players where the uncertainty is maximized"],
+ con:["Player elimination means someone sits out — feels bad in a social game","Requires a specific group that enjoys confrontation and lying","The theme can make some people uncomfortable"]},
+{n:"Patchwork",p:"2",t:"15-30",shelf:"gate",i:"🧵",bgg:163412,pn:2,px:2,w:1.64,
+ v:"A Tetris-like puzzle for two. Draft oddly-shaped quilt patches from a shared market using buttons as currency. Every piece you take changes what's available next. Simple to learn, surprisingly tactical.",
+ m:["DR","AB"],md:["mid"],
+ pro:["The spatial puzzle of fitting pieces is inherently satisfying","Button economy adds genuine strategic depth to what seems simple","Quick enough to play on a weeknight, deep enough to replay endlessly"],
+ con:["Experienced players tend to dominate — the skill gap shows quickly","Can feel like a solitaire puzzle once you know the optimal patterns","Very abstract — quilting theme barely registers"]},
+{n:"Regicide",p:"1-4",t:"30",shelf:"gate",i:"♠️",bgg:307002,pn:1,px:4,w:1.60,
+ v:"Use a standard poker deck to cooperatively defeat the Jacks, Queens, and Kings. Each suit has a special power, and you must coordinate without revealing your hand. A free card game that punches way above its weight.",
+ m:["CO"],md:["party","solo"],
+ pro:["Uses a standard poker deck — literally free if you have cards","The suit powers create real cooperative strategy in a tiny package","Difficulty scales beautifully from easy to nearly impossible"],
+ con:["Very luck-dependent — sometimes the card order makes winning impossible","Limited communication rules can frustrate people who want to strategize openly","The difficulty spike from Kings can feel unfair"]},
+{n:"Land vs Sea",p:"2-4",t:"20-30",shelf:"gate",i:"🗺️",bgg:336498,pn:2,px:4,w:1.50,
+ v:"Lay hex tiles where one player scores land and the other scores sea. Every tile placement is a negotiation — your mountain is their ocean. Elegant tug-of-war that plays beautifully at 2.",
+ m:["TL"],md:["family","mid"],
+ pro:["The core scoring duality is brilliant — simple concept, real depth","Plays great at 2 where the tug-of-war is sharpest","Beautiful art and components for the price point"],
+ con:["At 3-4 players the dynamics change and it loses some elegance","Tile draws are random — sometimes you can't fight the current","Forgettable after a few plays — lacks the staying power of deeper games"]},
+{n:"Lost Cities",p:"2",t:"20-30",shelf:"gate",i:"🗺️",bgg:50,pn:2,px:2,w:1.50,
+ v:"Start expeditions by playing numbered cards in ascending order — but launching an expedition that doesn't pay off costs you points. Do you commit early or wait? Knizia's most tense 2-player card game.",
+ m:["PL"],md:["family"],
+ pro:["Creates genuine tension from incredibly simple rules","The discard pile adds a wonderful push-pull — do you feed your opponent?","Portable, quick, and perfect for couples or travel"],
+ con:["Card luck can make or break a game — sometimes you just don't draw your color","Strategies become rote after many plays","Very simple — experienced gamers may want more"]},
+{n:"Lacuna",p:"2",t:"15",shelf:"gate",i:"🌺",bgg:386937,pn:2,px:2,w:1.48,
+ v:"Abstract flower-collecting on a cloth mat — place tiles to create paths between matching flowers and claim them. Beautiful, cozy, and finished in 15 minutes. Perfect coffee-shop game.",
+ m:["AB"],md:["family"],
+ pro:["Stunning cloth mat and acrylic flowers make it a joy to look at","15 minutes of light strategic thinking — perfect filler","The spatial element is satisfying without being overwhelming"],
+ con:["Too light for anyone wanting a real strategic challenge","Limited replayability — the decision space is narrow","Niche 2-player-only audience"]},
+{n:"Sea Salt & Paper",p:"2-4",t:"20-30",shelf:"gate",i:"🌊",bgg:367220,pn:2,px:4,w:1.38,
+ v:"Collect card combos with an origami sea theme. When you think you're ahead, you can end the round — but give everyone one last chance to catch up. Gorgeous art, fast play, real decisions every turn.",
+ m:["PL"],md:["party","family"],
+ pro:["The end-round decision ('stop' vs 'last chance') is a genuinely clever mechanism","Origami art style is unique and beautiful","Fast enough for filler, deep enough to feel meaningful"],
+ con:["Card combos can feel random — sometimes you just don't draw synergies","The scoring threshold for round-ending feels arbitrary","Forgettable in a crowded small-card-game market"]},
+{n:"Sushi Go",p:"2-5",t:"15",shelf:"gate",i:"🍣",bgg:133473,pn:2,px:5,w:1.29,
+ v:"Card drafting in its purest, cutest form. Pick a sushi card, pass the rest. Collect sets of tempura, dumplings, and sashimi for points. Plays in 15 minutes, teaches in 2, and even non-gamers love it.",
+ m:["DR"],md:["family","party"],
+ pro:["Literally the best introduction to card drafting ever made","Adorable art makes it appealing to people who think they don't like games","15 minutes including teach — zero barrier to entry"],
+ con:["Outgrown quickly — once you know drafting, there's not much depth here","The pudding endgame scoring confuses some new players","Better as a teaching tool than a game you return to regularly"]},
+{n:"Spots",p:"1-4",t:"20-30",shelf:"gate",i:"🐕",bgg:369158,pn:1,px:4,w:1.20,
+ v:"Roll dice and place them on adorable dog silhouettes — fill all the spots to score the card. Push your luck by rolling extras, but busting means starting over. Cuter than it has any right to be.",
+ m:["PL"],md:["family","solo"],
+ pro:["The dog art is genuinely delightful — appeals to non-gamers instantly","Push-your-luck tension is perfectly calibrated","Solid solo mode with the burying mechanism"],
+ con:["Very light — decisions feel limited for experienced gamers","Dice luck dominates — the better player won't consistently win","Repetitive after several plays"]},
 
-// QUICK & SOCIAL
-{n:"Sea Salt & Paper",p:"2-4",t:"20-30",cat:"quick",c:["#5F9EA0","#E0FFFF"],i:"🌊",bgg:367220,pn:2,px:4,w:1.38,v:"Gorgeous origami card game. Collect combos and choose when to end the round.",m:["PL"]},
-{n:"Star Fluxx",p:"2-6",t:"10-30",cat:"quick",c:["#191970","#00BFFF"],i:"🛸",bgg:102104,pn:2,px:6,w:1.42,v:"Sci-fi Fluxx — the rules change every turn. Chaotic, silly, and impossible to plan for.",m:["PL"]},
-{n:"Hot Streak",p:"2-9",t:"20",cat:"quick",c:["#FF4500","#FFD700"],i:"🌭",bgg:446497,pn:2,px:9,w:1.10,v:"Bet on mascot races and scream. Draft bets, rig the deck, then watch the chaos unfold.",m:["RC","BL"]},
-{n:"Magical Athlete",p:"2-6",t:"30-45",cat:"quick",c:["#9370DB","#FF69B4"],i:"🧙",bgg:268122,pn:2,px:6,w:1.33,v:"Fantasy racing with wacky character powers. Draft your team, then watch the chaos unfold.",m:["RC","DR"]},
-{n:"Shenanigrams",p:"2-6",t:"15-30",cat:"quick",c:["#FFA500","#FFD700"],i:"🦝",bgg:406037,pn:2,px:6,w:1.30,v:"Mischievous word game. Build words on a shared grid, then steal your opponents' words.",m:["AB"]},
-{n:"Scout",p:"2-5",t:"15",cat:"quick",c:["#FF8C00","#8B4513"],i:"🎪",bgg:291453,pn:2,px:5,w:1.35,v:"Oink card game — you can't rearrange your hand. Play combos or recruit from the table.",m:["TK"]},
-{n:"Sushi Go",p:"2-5",t:"15",cat:"quick",c:["#FF69B4","#98FB98"],i:"🍣",bgg:133473,pn:2,px:5,w:1.29,v:"Adorable card drafting filler. Pick sushi, pass your hand, score combos. Great starter.",m:["DR"]},
-{n:"Codenames",p:"4-8",t:"15-30",cat:"quick",c:["#8B0000","#2F4F4F"],i:"🕵️",bgg:178900,pn:4,px:8,w:1.28,v:"Team word association. One-word clues, multiple targets — endlessly replayable party staple.",m:["BL"]},
-{n:"Can't Stop",p:"2-4",t:"30",cat:"quick",c:["#FF0000","#FFD700"],i:"🎰",bgg:41,pn:2,px:4,w:1.24,v:"Classic push-your-luck dice. Climb columns, but one bad roll loses everything. Addictive.",m:["PL"]},
-{n:"Coup",p:"2-6",t:"15",cat:"quick",c:["#1C1C1C","#CD853F"],i:"🗡️",bgg:131357,pn:2,px:6,w:1.22,v:"Bluff, steal, assassinate. Everyone claims to be the Duke. Fast, tense, social.",m:["BL"]},
-{n:"Spots",p:"1-4",t:"20-30",cat:"quick",c:["#F5DEB3","#8B4513"],i:"🐕",bgg:369158,pn:1,px:4,w:1.20,v:"Roll dice onto dog silhouettes. Push your luck to fill spots — or bust trying.",m:["PL"]},
-{n:"Skull",p:"3-6",t:"20-30",cat:"quick",c:["#1C1C1C","#FF4500"],i:"💀",bgg:92415,pn:3,px:6,w:1.18,v:"Bluffing and bidding distilled to its purest form. Dead simple rules, deadly reads.",m:["BL","AU"]},
-{n:"So Clover!",p:"3-6",t:"30",cat:"quick",c:["#32CD32","#ADFF2F"],i:"🍀",bgg:338628,pn:3,px:6,w:1.17,v:"Cooperative word association. Write clues linking pairs of words — harder than it sounds.",m:["CO"]},
-{n:"Wavelength",p:"2-12",t:"30",cat:"quick",c:["#FF1493","#00CED1"],i:"📡",bgg:262543,pn:2,px:12,w:1.15,v:"Team party game. Give a clue on a spectrum — is a hot dog more 'sandwich' or 'not sandwich'?",m:["BL"]},
-{n:"Tsuro",p:"2-8",t:"15-20",cat:"quick",c:["#8B0000","#FFD700"],i:"🐉",bgg:16992,pn:2,px:8,w:1.15,v:"Lay path tiles and stay on the board. Beautiful, quick, plays up to 8.",m:["TL"]},
-{n:"The Game",p:"1-5",t:"20",cat:"quick",c:["#1C1C1C","#FF4500"],i:"💀",bgg:173090,pn:1,px:5,w:1.12,v:"Cooperative number card game. Deceptively hard — play cards in sequence without talking.",m:["CO"]},
-{n:"Cockroach Poker",p:"2-6",t:"20",cat:"quick",c:["#556B2F","#8B4513"],i:"🪳",bgg:11971,pn:2,px:6,w:1.11,v:"Pure bluffing card game. Pass a card face-down and lie about what it is. Hilarious.",m:["BL"]},
-{n:"Startups",p:"3-7",t:"20",cat:"quick",c:["#FF6347","#32CD32"],i:"📈",bgg:223770,pn:3,px:7,w:1.10,v:"Oink Games investment card game. Invest in companies, bluff about your holdings.",m:["BL","AU"]},
-{n:"Insider",p:"4-8",t:"15",cat:"quick",c:["#2F4F4F","#B22222"],i:"🔍",bgg:206051,pn:4,px:8,w:1.08,v:"Social deduction + 20 questions. One player secretly guides the group — find the insider.",m:["BL"]},
-{n:"Bang! Dice",p:"3-8",t:"15",cat:"quick",c:["#8B4513","#CD853F"],i:"🤠",bgg:143741,pn:3,px:8,w:1.08,v:"Hidden roles in the Wild West. Roll dice, shoot outlaws (or the sheriff). Quick and rowdy.",m:["BL","PL"]},
-{n:"Fake Artist",p:"5-10",t:"20",cat:"quick",c:["#FF69B4","#FFD700"],i:"🎨",bgg:135779,pn:5,px:10,w:1.06,v:"Everyone draws one stroke — except the fake artist who doesn't know the subject.",m:["BL"]},
-{n:"Set",p:"2-8",t:"20-30",cat:"quick",c:["#9400D3","#FFFFFF"],i:"♦️",bgg:1198,pn:2,px:8,w:1.05,v:"Real-time pattern recognition. Spot sets of three matching cards — brain-melting speed game.",m:["AB"]},
-{n:"Rhino Hero",p:"2-5",t:"5-15",cat:"quick",c:["#4169E1","#FFD700"],i:"🦏",bgg:91514,pn:2,px:5,w:1.03,v:"Dexterity stacking game. Build a card tower and move the rhino up. Great for all ages.",m:["DX"]},
-{n:"Chicken vs Hotdog",p:"2-10",t:"20",cat:"quick",c:["#FF0000","#FFD700"],i:"🍗",bgg:359895,pn:2,px:10,w:1.00,v:"Flip-and-stick party game. Bid on challenges, then flip your chicken or hotdog to nail the landing.",m:["DX"]},
-{n:"Flip 7",p:"3-18",t:"20",cat:"quick",c:["#7B2D8E","#00CED1"],i:"7️⃣",bgg:420087,pn:3,px:18,w:1.05,v:"Push-your-luck card flipping. Don't flip the same number twice — or lose everything.",m:["PL"]},
-{n:"Dro Polter",p:"2-5",t:"15",cat:"quick",c:["#4682B4","#FFD700"],i:"👻",bgg:405537,pn:2,px:5,w:1.10,v:"Oink dexterity game. Hold five items and drop only the right ones — harder than it sounds.",m:["DX"]},
-{n:"Tinderblox",p:"1-6",t:"15",cat:"quick",c:["#FF4500","#FF8C00"],i:"🔥",bgg:284293,pn:1,px:6,w:1.00,v:"Stack tiny blocks with tweezers to build a campfire. One wrong move and it's over.",m:["DX"]},
+// ── PARTY & SOCIAL ────────────────────────────────────────────────
+{n:"Wavelength",p:"2-12",t:"30",shelf:"party",i:"📡",bgg:262543,pn:2,px:12,w:1.15,
+ v:"Give a clue on a spectrum — is a hot dog more 'sandwich' or 'not a sandwich'? Your team debates where the hidden target sits. Sparks genuine arguments, reveals how your friends think, and never gets old.",
+ m:["BL"],md:["party"],
+ pro:["Sparks real conversations and reveals how people actually think","Works at every player count from 2-12 — incredibly flexible","The physical device is tactile and satisfying to use"],
+ con:["Quality depends entirely on your group — quiet tables kill it","Some spectrums are boring or too easy","One-note — after many sessions the novelty wears off"]},
+{n:"Codenames",p:"4-8",t:"15-30",shelf:"party",i:"🕵️",bgg:178900,pn:4,px:8,w:1.28,
+ v:"Two spymasters give one-word clues to help their team guess words from a grid. 'Kitchen: 3' could mean plate, fork, and sink — or trigger the assassin. Endlessly replayable and works at any skill level.",
+ m:["BL"],md:["party"],
+ pro:["The asymmetry between clue-giver and guesser is perfectly balanced","Every game is different — the grid guarantees unique puzzles","Works with gamers and non-gamers at the same table"],
+ con:["Bad spymasters can make the game drag with overly cautious 1-clues","The assassin card can end games anti-climactically","Needs at least 4 and really wants 6+ to shine"]},
+{n:"Star Fluxx",p:"2-6",t:"10-30",shelf:"party",i:"🛸",bgg:102104,pn:2,px:6,w:1.42,
+ v:"The rules change every turn — draw 2 becomes draw 5, play 1 becomes play all. Collect Keepers to match the current Goal, which also keeps changing. Sci-fi themed chaos that rewards going with the flow.",
+ m:["PL"],md:["party","family"],
+ pro:["The constantly changing rules create genuine surprises and laughs","Zero strategic pressure — it's a social experience, not a competition","Sci-fi references make it fun for nerdy groups"],
+ con:["Experienced gamers will hate the total lack of strategic control","Games can either end in 5 minutes or drag for 45 with no middle ground","The randomness means the winner is essentially arbitrary"]},
+{n:"Scout",p:"2-5",t:"15",shelf:"party",i:"🎪",bgg:291453,pn:2,px:5,w:1.35,
+ v:"You can't rearrange your hand — play combos from cards as dealt, or recruit one card from the table. This constraint creates an Oink-sized card game with surprising depth. Spiel des Jahres nominated for good reason.",
+ m:["TK"],md:["party","mid"],
+ pro:["The 'no rearranging' constraint makes every hand a unique puzzle","Tiny box with genuine strategic depth — exceptional for travel","Plays fast enough to immediately deal another round"],
+ con:["The constraint can frustrate people who like optimizing their hand","Scoring can be confusing the first game","At 2 players it loses the group energy that makes it special"]},
+{n:"Magical Athlete",p:"2-6",t:"30-45",shelf:"party",i:"🧙",bgg:268122,pn:2,px:6,w:1.33,
+ v:"Draft a team of fantasy characters, then race them. The Witch teleports, the Demon drags others back, and the Cupid makes people fall in love. Draft strategy meets absurd outcomes. Best experienced loud.",
+ m:["RC","DR"],md:["party","family"],
+ pro:["Character interactions create hilarious, unpredictable race moments","The draft phase adds real strategy before the chaos begins","Great with families — kids understand it instantly and love the characters"],
+ con:["Race outcomes are largely random once the draft is done","Some character combos are much stronger than others","Can drag slightly with 6 players in later rounds"]},
+{n:"Shenanigrams",p:"2-6",t:"15-30",shelf:"party",i:"🦝",bgg:406037,pn:2,px:6,w:1.30,
+ v:"Competitive word game where you build words and steal opponents' words by rearranging their letters. Part Scrabble, part heist. The 'aha' moment when you see a steal is electric.",
+ m:["AB"],md:["party","family"],
+ pro:["Stealing words from opponents is incredibly satisfying and competitive","Accessible to anyone who knows words — no complex rules needed","The 'aha' moment of spotting a steal creates genuine excitement"],
+ con:["Strong vocabulary gives a massive advantage — can feel unfair","People who dislike word games will dislike this one too","The tile components are basic for the price"]},
+{n:"Can't Stop",p:"2-4",t:"30",shelf:"party",i:"🎰",bgg:41,pn:2,px:4,w:1.24,
+ v:"Roll four dice, split them into pairs, and climb numbered columns. Keep rolling to go further — but one bad roll loses ALL progress this turn. The purest push-your-luck game ever designed. You will always roll one more time.",
+ m:["PL"],md:["party","family"],
+ pro:["The most perfectly distilled push-your-luck mechanism in gaming","Everyone understands it instantly — zero teach time","Creates incredible table moments when someone pushes too far"],
+ con:["Very luck-heavy — strategy is minimal beyond the obvious","Can feel repetitive after many plays","The components in most editions are cheap"]},
+{n:"Coup",p:"2-6",t:"15",shelf:"party",i:"🗡️",bgg:131357,pn:2,px:6,w:1.22,
+ v:"Two hidden role cards each. Claim to be the Duke, the Assassin, or the Captain — but anyone can claim anything. Call someone's bluff and you're a hero; get it wrong and you lose a life. Fast, tense, ruthless.",
+ m:["BL"],md:["party"],
+ pro:["The bluffing is pure and immediate — no complex rules between you and the lie","Games are so fast that elimination doesn't feel bad","Perfect warm-up game that gets everyone talking and laughing"],
+ con:["Player elimination means some people watch for the last few rounds","Aggressive players can bully quieter ones with constant challenges","Feels random at 2 players — really needs 4-6"]},
+{n:"Skull",p:"3-6",t:"20-30",shelf:"party",i:"💀",bgg:92415,pn:3,px:6,w:1.18,
+ v:"Place discs face-down — flowers or skulls. Then bid on how many flowers you can flip without hitting a skull. Bluffing distilled to its purest form. Teach it in 30 seconds, read souls for the next hour.",
+ m:["BL","AU"],md:["party"],
+ pro:["Can literally teach the rules in 30 seconds — zero barrier to entry","The psychological reads get deeper the more you play with the same group","Playable with coasters in a bar — no components strictly necessary"],
+ con:["Needs a specific group energy — quiet tables make it fall flat","The skull placement can feel binary — limited strategic options","Player elimination can knock someone out early"]},
+{n:"So Clover!",p:"3-6",t:"30",shelf:"party",i:"🍀",bgg:338628,pn:3,px:6,w:1.17,
+ v:"Write one-word clues linking pairs of random words on your clover board. Your team reconstructs which words were paired. Sounds simple — then 'OCEAN' has to connect 'desk' and 'whale' and your brain short-circuits.",
+ m:["CO"],md:["party","family"],
+ pro:["Cooperative word association creates great shared moments","No competition pressure — everyone wants everyone to succeed","Reveals how differently people's brains work in delightful ways"],
+ con:["Scoring feels unnecessary — it's fun without tracking points","Random word pairs can be either too easy or impossibly hard","Less exciting after many plays once you know common linking strategies"]},
+{n:"Tsuro",p:"2-8",t:"15-20",shelf:"party",i:"🐉",bgg:16992,pn:2,px:8,w:1.15,
+ v:"Place path tiles and follow where they lead — stay on the board while sending others off the edge. Beautiful components, plays up to 8, finishes in 15 minutes. The perfect 'while we wait for everyone' game.",
+ m:["TL"],md:["family","party"],
+ pro:["Plays up to 8 in 15 minutes — perfect filler for any group size","Beautiful components and board create immediate table appeal","Zero rules overhead — anyone can play after seeing one turn"],
+ con:["Almost no strategic depth — decisions feel arbitrary until the endgame","Early game is essentially random tile placement","Forgettable — serves a function but isn't anyone's favorite game"]},
+{n:"The Game",p:"1-5",t:"20",shelf:"party",i:"💀",bgg:173090,pn:1,px:5,w:1.12,
+ v:"Cooperatively play number cards onto four piles — two ascending, two descending. You can barely communicate about your hand. Sounds boring. It is not boring. It is agonizing. The most tension per dollar in gaming.",
+ m:["CO"],md:["party","solo"],
+ pro:["Creates more tension than games ten times its complexity","The communication restriction forces genuine cooperative agony","Excellent solo game — one of the cheapest, best solo experiences"],
+ con:["Sometimes the card order makes winning mathematically impossible","Can feel repetitive — the mechanism never changes","The generic name and ugly box art undersell it dramatically"]},
+{n:"Cockroach Poker",p:"2-6",t:"20",shelf:"party",i:"🪳",bgg:11971,pn:2,px:6,w:1.11,
+ v:"Pass a card face-down and say what it is — or lie. The receiver must call truth or lie, or pass it on with a new claim. Collect four of a kind and you lose. Pure bluffing with zero complexity and maximum laughter.",
+ m:["BL"],md:["party","family"],
+ pro:["The simplest possible bluffing game — teach it in 20 seconds","Passing mechanism creates hilarious chains of uncertainty","Cheap, portable, and works in any social setting"],
+ con:["One player always ends up as the target — can feel unfair","Very luck-dependent on what cards you're passed","Experienced players can meta-game the card counting"]},
+{n:"Hot Streak",p:"2-9",t:"20",shelf:"party",i:"🌭",bgg:446497,pn:2,px:9,w:1.10,
+ v:"Bet on mascot races, then rig the deck to make your picks win. The crowd energy builds as everyone screams for their horse-dog-banana hybrid to cross the finish line. Pure joy in a box.",
+ m:["RC","BL"],md:["party","family"],
+ pro:["The energy at the table during races is unlike any other game","Betting and rigging creates real strategic decisions within the chaos","Plays up to 9 and scales well — more people means more energy"],
+ con:["Very luck-dependent — your rigging can backfire spectacularly","Not for groups that want serious strategy","The novelty might wear off after many sessions"]},
+{n:"Startups",p:"3-7",t:"20",shelf:"party",i:"📈",bgg:223770,pn:3,px:7,w:1.10,
+ v:"Invest in startups by collecting matching cards — but anyone can poach your investments with the right play. An Oink Games micro-game with a surprising amount of backstabbing in 20 minutes.",
+ m:["BL","AU"],md:["party"],
+ pro:["Incredible depth for a game with fewer than 40 cards","Poaching mechanism creates real tension and interaction","Oink Games' tiny box makes it perfect for travel"],
+ con:["At 3 players it loses the interaction that makes it shine","Card draws can determine winners regardless of strategy","The theme doesn't come through — it's really an abstract set collection game"]},
+{n:"Dro Polter",p:"2-5",t:"15",shelf:"party",i:"👻",bgg:405537,pn:2,px:5,w:1.10,
+ v:"Hold five random objects, then drop ONLY the ones the ghost demands — without dropping the others. Oink Games dexterity at its silliest. You haven't lived until you've tried to drop a key but not a marble.",
+ m:["DX"],md:["family","party"],
+ pro:["Unique dexterity concept — dropping things instead of stacking them","The objects feel great and the challenges are hilarious","Perfect icebreaker for groups who don't know each other well"],
+ con:["Very silly — not for groups that want serious gaming","Hands come in different sizes, creating an unfair advantage","Limited long-term replay — the joke is the game"]},
+{n:"Insider",p:"4-8",t:"15",shelf:"party",i:"🔍",bgg:206051,pn:4,px:8,w:1.08,
+ v:"Play 20 Questions, but one player secretly knows the answer and subtly steers the group. After guessing correctly, figure out who the Insider was. Social deduction meets trivia — the Insider always sweats.",
+ m:["BL"],md:["party"],
+ pro:["The Insider role creates genuine tension — subtle manipulation is thrilling","Combines trivia and social deduction in a way that feels fresh","Quick, accessible, and works with non-gamer groups"],
+ con:["The word list can make or break the game — some words are too easy or obscure","The Insider is sometimes too obvious or impossible to detect","At 4 players the deduction phase feels pointless"]},
+{n:"Bang! Dice",p:"3-8",t:"15",shelf:"party",i:"🤠",bgg:143741,pn:3,px:8,w:1.08,
+ v:"Roll dice to shoot, heal, or dynamite in a Wild West showdown with hidden roles. The Sheriff is known, but who are the Outlaws and Deputies? Quick, rowdy, and great at 5-6 players.",
+ m:["BL","PL"],md:["party","family"],
+ pro:["Hidden roles create genuine table talk and accusations","Quick dice rolling keeps the energy high","Great with casual groups who enjoy Wild West themes"],
+ con:["Player elimination means someone watches — painful in a 15-minute game","Dice luck overwhelms any strategy","Renegade role can feel impossible to win"]},
+{n:"Fake Artist",p:"5-10",t:"20",shelf:"party",i:"🎨",bgg:135779,pn:5,px:10,w:1.06,
+ v:"Everyone adds one stroke to a group drawing — except the fake artist, who doesn't know the subject. Real artists try to be helpful but not too obvious. Results in hilariously vague doodles and wild accusations.",
+ m:["BL"],md:["party"],
+ pro:["Creates genuinely funny moments from the art alone","Social deduction through drawing is a unique and brilliant concept","Minimal components — you can play with paper and markers"],
+ con:["Non-artists feel self-conscious about drawing in front of others","The fake artist is sometimes obvious or impossible to detect","Needs exactly the right group energy — quiet tables kill it"]},
+{n:"Flip 7",p:"3-18",t:"20",shelf:"party",i:"7️⃣",bgg:420087,pn:3,px:18,w:1.05,
+ v:"Flip cards one at a time — stop whenever you want to lock in your score, but flip a duplicate number and you bust. Plays up to 18 people, teaches in 2 minutes, and creates genuine drama every round.",
+ m:["PL"],md:["party"],
+ pro:["Plays 18 people — nothing else handles that count this well","The bust tension is immediate and creates shared gasps","Literally 2 minutes to teach, playable by anyone"],
+ con:["Almost zero strategy — it's barely more than flipping coins","At lower player counts it loses the spectacle","One trick that wears thin after repeated plays"]},
+{n:"Set",p:"2-8",t:"20-30",shelf:"party",i:"♦️",bgg:1198,pn:2,px:8,w:1.05,
+ v:"Twelve cards on the table, four attributes each. Spot sets of three where each attribute is all same or all different. Real-time pattern recognition that turns your brain inside out. Fiercely competitive.",
+ m:["AB"],md:["party","family"],
+ pro:["The pattern recognition challenge is uniquely brain-melting","Real-time gameplay creates natural excitement without turn structure","Skills improve with practice — you can feel yourself getting better"],
+ con:["One fast spotter will dominate and ruin it for everyone else","Can feel frustrating for people whose brains don't click with it","Not really a social game — everyone stares at cards in silence"]},
+{n:"Rhino Hero",p:"2-5",t:"5-15",shelf:"party",i:"🦏",bgg:91514,pn:2,px:5,w:1.03,
+ v:"Build a card tower and move a wooden rhino up it. Each floor gets wobblier. Play cards that reverse direction, skip turns, or force double-builds. Kids love it. Adults get way too invested. Someone always screams.",
+ m:["DX"],md:["family","party"],
+ pro:["Kids and adults are equally engaged — rare for a family game","The tension of a wobbling tower is universally thrilling","Take-that cards add just enough strategy to the dexterity"],
+ con:["Tower collapses can end the game abruptly and unsatisfyingly","Very light — more of an activity than a game for serious players","The card quality degrades with use and repeated bending"]},
+{n:"Chicken vs Hotdog",p:"2-10",t:"20",shelf:"party",i:"🍗",bgg:359895,pn:2,px:10,w:1.00,
+ v:"Bid on whether you can complete absurd physical challenges — flip a chicken, stick a hotdog to your forehead. The perfect icebreaker for people who don't think they like board games.",
+ m:["DX"],md:["party","family"],
+ pro:["Gets literally everyone laughing within 30 seconds","The bidding system adds surprising strategy to the physical chaos","Perfect for parties with non-gamers — nobody needs to learn rules"],
+ con:["Not really a 'board game' — more of a party activity","Physical challenges can exclude people with mobility issues","The novelty wears off after a few sessions"]},
+{n:"Tinderblox",p:"1-6",t:"15",shelf:"party",i:"🔥",bgg:284293,pn:1,px:6,w:1.00,
+ v:"Stack tiny wooden blocks with tweezers to build a campfire. Draw a card that says which shape goes where. Drop anything and you're out. Pocket-sized dexterity that creates table-shaking tension.",
+ m:["DX"],md:["party","family"],
+ pro:["Tiny box creates disproportionate tension — the tweezers are evil","Plays in minutes and works as a warm-up for any game night","The campfire theme is cute and the components are quality"],
+ con:["Player elimination in a 15-minute game can feel abrupt","Very light on strategy — it's almost pure dexterity","The tiny blocks can be frustrating for people with larger hands"]},
 ];
 
-const CATS=[
-  {id:"epic",l:"Epic Strategy",s:"Deep, complex, all-in · 2–4 hrs",a:"#C5935A"},
-  {id:"strat",l:"Strategy",s:"Meaty decisions, more accessible · 1–2 hrs",a:"#B8865B"},
-  {id:"gate",l:"Gateway Favorites",s:"Great entry points · 30–90 min",a:"#7B9E6B"},
-  {id:"quick",l:"Quick & Social",s:"Easy to teach, fast to play · Under 30 min",a:"#6B8DA8"},
+const SHELVES=[
+  {id:"epic",name:"Epic Strategy",desc:"Heavy hitters and brain-burning depth"},
+  {id:"strat",name:"Strategy",desc:"Thinky games for a focused game night"},
+  {id:"gate",name:"Gateway & Family",desc:"Accessible crowd-pleasers for any group"},
+  {id:"party",name:"Party & Social",desc:"Quick energy, big laughs, no rules headaches"},
 ];
-const PF=[{l:"Any #",f:()=>true},{l:"Solo",f:g=>g.pn<=1},{l:"2p",f:g=>g.pn<=2&&g.px>=2},{l:"2p Only",f:g=>g.pn===2&&g.px===2},{l:"3-4p",f:g=>g.pn<=3&&g.px>=3},{l:"5+",f:g=>g.px>=5}];
-const AM=[...new Set(G.flatMap(g=>g.m))].sort((a,b)=>ML[a].localeCompare(ML[b]));
-const SORTS=[{l:"Accessible first",f:(a,b)=>a.w-b.w},{l:"A → Z",f:(a,b)=>a.n.localeCompare(b.n)},{l:"Shortest",f:(a,b)=>parseInt(a.t)-parseInt(b.t)},{l:"Most players",f:(a,b)=>b.px-a.px}];
+const WEIGHT_GROUPS=[
+  {id:5,name:"Heavy",desc:"Plan your evening around these"},
+  {id:4,name:"Medium-Heavy",desc:"Meaty but manageable"},
+  {id:3,name:"Medium",desc:"The sweet spot for most game nights"},
+  {id:2,name:"Medium-Light",desc:"Easy to teach, satisfying to play"},
+  {id:1,name:"Light",desc:"Grab-and-go with zero rules overhead"},
+];
+const MOOD_GROUPS=[
+  {id:"epic",name:"Epic",desc:"Big commitment, big payoff"},
+  {id:"euro",name:"Thinky Euro",desc:"Elegant systems and economic puzzles"},
+  {id:"mid",name:"Mid-Weight",desc:"Accessible strategy with real depth"},
+  {id:"party",name:"Party",desc:"Social energy over strategic depth"},
+  {id:"family",name:"Family",desc:"Works for all ages and experience levels"},
+  {id:"solo",name:"Solo",desc:"Excellent alone"},
+];
+const TIME_GROUPS=[
+  {id:"quick",name:"Quick Games",desc:"20 minutes or less",max:20},
+  {id:"short",name:"Short Games",desc:"Under 45 minutes",max:45},
+  {id:"medium",name:"Medium Games",desc:"45-90 minutes",max:90},
+  {id:"long",name:"Long Games",desc:"90+ minute commitment",max:999},
+];
 
-let S={q:"",pf:0,sm:[],imgs:{},fc:0,ld:true,exp:null,sort:0,cmp:[],show2p:false};
-let isTouch=false;
-window.addEventListener('touchstart',()=>{isTouch=true},{once:true});
+const PF=[
+  {l:"Any #",f:()=>true},
+  {l:"Solo",f:g=>g.pn<=1},
+  {l:"2p",f:g=>g.pn<=2&&g.px>=2},
+  {l:"2p Only",f:g=>g.pn===2&&g.px===2},
+  {l:"3-4",f:g=>g.pn<=3&&g.px>=3},
+  {l:"5+",f:g=>g.px>=5},
+];
 
-// Image fetching
+const GROUPS=[
+  {l:"Shelf",id:"shelf"},
+  {l:"Weight",id:"weight"},
+  {l:"Mood",id:"mood"},
+  {l:"Play Time",id:"time"},
+];
+const SORTS=[
+  {l:"Lightest first",f:(a,b)=>a.w-b.w},
+  {l:"Heaviest first",f:(a,b)=>b.w-a.w},
+  {l:"A → Z",f:(a,b)=>a.n.localeCompare(b.n)},
+];
+
+let S={q:"",pf:0,mood:null,cmp:[],sort:0,group:0};
+const imgCache={};
+
+function avColor(str){
+  const pal=['#9e4e28','#b87820','#2d5a2d','#4a6080','#6a3080','#5a5020','#357060','#705030'];
+  let h=0;for(let i=0;i<str.length;i++)h=(str.charCodeAt(i)+((h<<5)-h))|0;
+  return pal[Math.abs(h)%pal.length];
+}
+
 async function fetchImages(){
-  try{const c=localStorage.getItem("bgs_v5");if(c){const p=JSON.parse(c);if(p&&Object.keys(p).length>20){S.imgs=p;S.fc=Object.keys(p).length;S.ld=false;render();refreshImages(p);return;}}}catch(e){}
+  try{const c=localStorage.getItem("bgs_v8");if(c){const p=JSON.parse(c);if(p&&Object.keys(p).length>20){Object.assign(imgCache,p);updateThumbsInPlace();refreshImages(p);return;}}}catch(e){}
   await refreshImages({});
 }
 async function refreshImages(ex){
@@ -249,152 +624,211 @@ async function refreshImages(ex){
   for(let i=0;i<ids.length;i+=bs){
     const batch=ids.slice(i,i+bs);
     try{
-      let r=await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${batch.join(",")}`);
-      if(r.status===202){await new Promise(r=>setTimeout(r,3000));r=await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${batch.join(",")}`);}
-      if(r.ok)parseXML(await r.text(),all);
+      const url=`https://boardgamegeek.com/xmlapi2/thing?id=${batch.join(",")}`;
+      const opts={};
+      if(BGG_API_TOKEN)opts.headers={"Authorization":"Bearer "+BGG_API_TOKEN};
+      let r=await fetch(url,opts);
+      if(r.status===202){await new Promise(r=>setTimeout(r,3000));r=await fetch(url,opts);}
+      if(r.ok){
+        const xml=new DOMParser().parseFromString(await r.text(),"text/xml");
+        xml.querySelectorAll("item").forEach(it=>{
+          const id=parseInt(it.getAttribute("id")),im=it.querySelector("image"),th=it.querySelector("thumbnail");
+          const u=(im&&im.textContent)||(th&&th.textContent);
+          if(u&&id){all[id]=u.trim().replace(/^\/\//,"https://");imgCache[id]=all[id];}
+        });
+      }
     }catch(e){}
-    S.imgs={...all};S.fc=Object.keys(all).length;updateStatus();renderShelves();
+    updateThumbsInPlace();
     await new Promise(r=>setTimeout(r,1500));
   }
-  S.ld=false;
-  try{localStorage.setItem("bgs_v5",JSON.stringify(all));}catch(e){}
-  updateStatus();renderShelves();
+  try{localStorage.setItem("bgs_v8",JSON.stringify(all));}catch(e){}
+  updateThumbsInPlace();
 }
-function parseXML(x,m){
-  const p=new DOMParser(),d=p.parseFromString(x,"text/xml");
-  d.querySelectorAll("item").forEach(it=>{
-    const id=parseInt(it.getAttribute("id")),th=it.querySelector("thumbnail"),im=it.querySelector("image");
-    const u=(im&&im.textContent)||(th&&th.textContent);
-    if(u&&id)m[id]=u.trim().replace(/^\/\//,"https://");
+function updateThumbsInPlace(){
+  document.querySelectorAll('.card-thumb[data-id]').forEach(el=>{
+    const src=imgCache[el.dataset.id];
+    if(src){const img=el.querySelector('img');if(img&&!img.classList.contains('ld')){img.src=src;img.style.display='';}}
   });
 }
 
 function getFiltered(){
-  let r=G;
-  // Hide 2p-only games unless toggled on or "2p Only" filter is active
-  if(!S.show2p && S.pf!==3) r=r.filter(g=>!(g.pn===2&&g.px===2));
-  const pf=PF[S.pf];if(pf)r=r.filter(pf.f);
-  if(S.sm.length>0)r=r.filter(x=>S.sm.some(m=>x.m.includes(m)));
-  if(S.q){const s=S.q.toLowerCase();r=r.filter(x=>x.n.toLowerCase().includes(s)||x.v.toLowerCase().includes(s));}
+  let r=[...G];
+  const pf=PF[S.pf];if(pf&&S.pf>0)r=r.filter(pf.f);
+  if(S.mood)r=r.filter(g=>g.md.includes(S.mood));
+  if(S.q){const s=S.q.toLowerCase();r=r.filter(x=>x.n.toLowerCase().includes(s)||x.v.toLowerCase().includes(s)||x.m.some(m=>ML[m].toLowerCase().includes(s)));}
   return r;
 }
 
-function sortGames(games){return[...games].sort(SORTS[S.sort].f);}
-
-function cardHTML(g){
-  const url=S.imgs[g.bgg]||"",hi=!!url,isCmp=S.cmp.includes(g.bgg),isSel=isCmp;
-  return`<div class="c${S.exp===g.bgg?' ex':''}${isCmp?' cmp':''}" data-bgg="${g.bgg}" onclick="cardTap(event,${g.bgg})">
-    <div class="bg" style="background:linear-gradient(145deg,${g.c[0]},${g.c[1]})"></div>
-    ${hi?`<img class="im" src="${url}" alt="" onload="this.classList.add('ld')" onerror="this.style.display='none'">`:""}
-    <div class="ik">${g.i}</div>
-    <div class="ov ${hi?'hi':'ni'}"></div>
-    <div class="cf${isSel?' sel':''}" onclick="toggleCmp(event,${g.bgg})" title="Compare">${isSel?'⚖️':'➕'}</div>
-    <div class="cn">
-      <div class="vb">${g.v}</div>
-      <div class="tt">${g.n}</div>
-      <div class="mt"><span>${g.p}p</span><span class="sp">·</span><span>${g.t}m</span></div>
-      <a class="bl" href="https://boardgamegeek.com/boardgame/${g.bgg}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View on BGG ↗</a>
+function renderFilters(){
+  document.getElementById("filters").innerHTML=`
+    <div class="frow">
+      <input class="si" id="sb" type="text" placeholder="Search games, vibes, mechanics..." autocomplete="off" value="${S.q.replace(/"/g,'&quot;')}">
+      <span class="flbl">Players</span>
+      ${PF.map((f,i)=>`<button class="pill${S.pf===i?' on':''}" onclick="setPF(${i})">${f.l}</button>`).join("")}
     </div>
-    <div class="bb">BGG ↗</div>
-    <div class="cs"></div>
-  </div>`;
+    <div class="frow">
+      <span class="flbl">Mood</span>
+      ${Object.keys(MOODS).map(k=>`<button class="pill pm-${k}${S.mood===k?' on':''}" onclick="setMood('${k}')">${MOODS[k]}</button>`).join("")}
+      ${S.mood?`<button class="pc" onclick="setMood(null)">✕</button>`:""}
+    </div>
+    <div class="frow">
+      <span class="flbl">Group by</span>
+      ${GROUPS.map((g,i)=>`<button class="pill${S.group===i?' on':''}" onclick="setGroup(${i})">${g.l}</button>`).join("")}
+      <span style="flex:1"></span>
+      <span class="flbl">Sort</span>
+      ${SORTS.map((s,i)=>`<button class="pill${S.sort===i?' on':''}" onclick="setSort(${i})" style="font-size:0.68rem">${s.l}</button>`).join("")}
+    </div>`;
+  document.getElementById("sb").addEventListener("input",function(e){S.q=e.target.value;renderShelves();});
 }
 
-function shelfHTML(cat,allFiltered){
-  const games=sortGames(allFiltered.filter(g=>g.cat===cat.id));
-  if(!games.length)return"";
-  return`<div class="ss"><div class="sh"><h2><span class="dt" style="color:${cat.a}">■</span>${cat.l}</h2><div class="ssb">${cat.s} · ${games.length} games</div></div><div style="position:relative"><div class="stk">${games.map(cardHTML).join("")}</div><div class="sld"></div><div class="ssw"></div></div></div>`;
+function getGroups(list){
+  const gid=GROUPS[S.group].id;
+  if(gid==="shelf"){
+    return SHELVES.map(s=>({name:s.name,desc:s.desc,games:list.filter(g=>g.shelf===s.id)})).filter(s=>s.games.length);
+  }
+  if(gid==="weight"){
+    return WEIGHT_GROUPS.map(w=>({name:w.name,desc:w.desc,games:list.filter(g=>wCat(g.w)===w.id)})).filter(s=>s.games.length);
+  }
+  if(gid==="mood"){
+    return MOOD_GROUPS.map(m=>({name:m.name,desc:m.desc,games:list.filter(g=>g.md.includes(m.id))})).filter(s=>s.games.length);
+  }
+  if(gid==="time"){
+    return TIME_GROUPS.map(t=>({name:t.name,desc:t.desc,games:list.filter(g=>timeGroup(g.t)===t.id)})).filter(s=>s.games.length);
+  }
+  return [{name:"All Games",desc:"",games:list}];
 }
 
 function renderShelves(){
-  const f=getFiltered();
-  document.getElementById("shelves").innerHTML=CATS.map(c=>shelfHTML(c,f)).join("")+(f.length===0?'<div class="empty">No games match those filters.</div>':"");
-  renderCompare();
-}
+  const list=getFiltered();
+  const container=document.getElementById("shelves");
+  const st=document.getElementById("status");
+  st.textContent=list.length===G.length?`Showing all ${G.length} games`:`Showing ${list.length} of ${G.length} games`;
 
-function renderHeader(){
-  const st=S.ld?`<span class="sl">· loading covers (${S.fc})</span>`:S.fc>0?`<span class="sd">· ${S.fc} covers</span>`:"";
-  document.getElementById("hdr").innerHTML=`<div class="hd"><h1>Blake's Game Shelf</h1><div class="su">${G.length} games ${st}</div>
-    <div class="fr"><input class="si" id="sb" type="text" placeholder="Search games or vibes..." autocomplete="off">
-    ${PF.map((f,i)=>`<button class="p ${S.pf===i?'on':''}" onclick="setPF(${i})">${f.l}</button>`).join("")}</div>
-    <div class="mr">${AM.map(m=>`<button class="pm ${S.sm.includes(m)?'on':''}" onclick="togM('${m}')">${ML[m]}</button>`).join("")}${S.sm.length>0?`<button class="pc" onclick="clrM()">✕ clear</button>`:""}</div>
-    <div class="tgl"><span class="tl">Show 2p-only games</span><div class="sw${S.show2p?' on':''}" onclick="tog2p()"></div></div>
-    <div class="sr"><span class="sl2">Sort:</span>${SORTS.map((s,i)=>`<button class="sbt ${S.sort===i?'on':''}" onclick="setSort(${i})">${s.l}</button>`).join("")}</div></div>`;
-  const box=document.getElementById("sb");box.value=S.q;
-  box.addEventListener("input",function(e){S.q=e.target.value;renderShelves();});
-}
-
-function updateStatus(){
-  const el=document.querySelector(".su");if(!el)return;
-  const st=S.ld?`<span class="sl">· loading covers (${S.fc})</span>`:S.fc>0?`<span class="sd">· ${S.fc} covers</span>`:"";
-  el.innerHTML=`${G.length} games ${st}`;
-}
-
-// Compare panel
-function renderCompare(){
-  const panel=document.getElementById("cpanel");
-  if(S.cmp.length===0){panel.classList.remove("show");panel.innerHTML="";document.querySelector('.w').style.paddingBottom='20px';return;}
-  const games=S.cmp.map(id=>G.find(g=>g.bgg===id)).filter(Boolean);
-
-  function wBar(w){
-    const pct=((w-1)/4)*100;
-    const clr=w<1.5?'#6B8DA8':w<2.5?'#7B9E6B':w<3.5?'#C5935A':'#c0392b';
-    return`${w.toFixed(1)} <span class="wbar" style="width:${Math.max(pct,8)}px;background:${clr}"></span>`;
+  if(!list.length){
+    container.innerHTML='<div class="empty"><h3>No games found</h3><p>Try adjusting your filters</p></div>';
+    renderCompare();return;
   }
 
-  function tr(lbl,fn){return`<tr><th>${lbl}</th>${games.map(g=>`<td>${fn(g)}</td>`).join("")}</tr>`;}
-
-  panel.innerHTML=`
-    <div class="cphdr"><h3>Compare ${games.length} game${games.length>1?'s':''}</h3><button class="cpclear" onclick="clearCmp()">✕ Clear all</button></div>
-    <table>
-      <tr><th></th>${games.map(g=>`<td><div class="cpname">${g.n}</div><div class="cpvibe">${g.v}</div></td>`).join("")}</tr>
-      ${tr("Players",g=>g.p)}
-      ${tr("Time",g=>g.t+"m")}
-      ${tr("Weight",g=>wBar(g.w))}
-      ${tr("Mechanics",g=>g.m.map(m=>ML[m]).join(", "))}
-      ${tr("Shelf",g=>{const cat=CATS.find(c=>c.id===g.cat);return cat?cat.l:g.cat;})}
-      <tr><th></th>${games.map(g=>`<td><a class="cpbgg" href="https://boardgamegeek.com/boardgame/${g.bgg}" target="_blank" rel="noopener noreferrer">BGG ↗</a></td>`).join("")}</tr>
-    </table>`;
-  panel.classList.add("show");
-  document.querySelector('.w').style.paddingBottom=(panel.offsetHeight+20)+'px';
+  const groups=getGroups(list);
+  const sortFn=SORTS[S.sort].f;
+  let html='';
+  groups.forEach(grp=>{
+    const sorted=[...grp.games].sort(sortFn);
+    html+=`<div class="shelf">
+      <div class="shelf-hdr">
+        <div class="shelf-title">${grp.name}</div>
+        <div class="shelf-count">${sorted.length} game${sorted.length!==1?'s':''}</div>
+        ${grp.desc?`<div class="shelf-desc">${grp.desc}</div>`:''}
+      </div>
+      <div class="grid">${sorted.map(g=>cardHTML(g)).join("")}</div>
+    </div>`;
+  });
+  container.innerHTML=html;
+  attachCardListeners();renderCompare();
 }
 
-function render(){renderHeader();renderShelves();}
+function cardHTML(g){
+  const wc=wCat(g.w);const color=avColor(g.n);const cached=imgCache[g.bgg];const isCmp=S.cmp.includes(g.bgg);
+  return`<div class="card${isCmp?' cmp':''}" data-wc="${wc}" data-bgg="${g.bgg}">
+    <div class="card-thumb" data-id="${g.bgg}">
+      <img src="${cached||''}" alt="${g.n}" onload="this.classList.add('ld')" onerror="this.style.display='none'" ${cached?'':'style="display:none"'}>
+      <div class="av" style="background:${color}">${g.i}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${g.n}</div>
+      <div class="card-stats">
+        <span class="tag tag-p">👥 ${g.p}</span>
+        <span class="tag tag-t">⏱ ${g.t}m</span>
+        <span class="tag tag-w">${WLABELS[wc]} · ${g.w.toFixed(1)}</span>
+      </div>
+      <div class="card-vibe">${g.v}</div>
+      <div class="card-mechs">${g.m.map(m=>`<span class="mech">${ML[m]}</span>`).join("")}</div>
+    </div>
+    <div class="cf${isCmp?' sel':''}" data-cmp="${g.bgg}" title="Compare">${isCmp?'⚖️':'➕'}</div>
+  </div>`;
+}
 
-function cardTap(e,bgg){
-  if(e.target.closest(".cf")||e.target.closest(".bl"))return;
-  if(isTouch){
-    e.preventDefault();
-    if(S.exp===bgg)S.exp=null;else S.exp=bgg;
-    document.querySelectorAll(".c.ex").forEach(el=>el.classList.remove("ex"));
-    if(S.exp){const el=document.querySelector(`.c[data-bgg="${bgg}"]`);if(el)el.classList.add("ex");}
-  }else{
-    window.open(`https://boardgamegeek.com/boardgame/${bgg}`,"_blank");
+function attachCardListeners(){
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click',function(e){
+      if(e.target.closest('.cf'))return;
+      const bgg=parseInt(this.dataset.bgg);const g=G.find(x=>x.bgg===bgg);if(g)openModal(g);
+    });
+  });
+  document.querySelectorAll('.cf').forEach(btn=>{
+    btn.addEventListener('click',function(e){e.stopPropagation();toggleCmp(parseInt(this.dataset.cmp));});
+  });
+}
+
+function openModal(g){
+  const color=avColor(g.n);const wc=wCat(g.w);const shelf=SHELVES.find(s=>s.id===g.shelf);
+  const img=document.getElementById('m-img');img.classList.remove('ld');
+  const cached=imgCache[g.bgg];
+  if(cached){img.src=cached;img.style.display='';}else{img.src='';img.style.display='none';}
+  document.getElementById('m-av').textContent=g.i;document.getElementById('m-av').style.background=color;
+  document.getElementById('m-title').textContent=g.n;
+  document.getElementById('m-stats').innerHTML=`
+    <span class="tag tag-p">👥 ${g.p} players</span>
+    <span class="tag tag-t">⏱ ${g.t} min</span>
+    <span class="tag tag-w">${WLABELS[wc]} · ${g.w.toFixed(2)}</span>`;
+  document.getElementById('m-shelf').textContent=shelf?`📚 ${shelf.name}`:'';
+  document.getElementById('m-vibe').textContent=g.v;
+  // Like / Dislike
+  let ldHTML='<h3>What Players Say</h3><div class="likedis">';
+  if(g.pro&&g.pro.length){
+    ldHTML+=`<div class="ld-title like">👍 You might like this game if...</div><ul>${g.pro.map(p=>`<li>${p}</li>`).join('')}</ul>`;
   }
+  if(g.con&&g.con.length){
+    ldHTML+=`<div class="ld-title dislike">👎 You might not like this game if...</div><ul>${g.con.map(c=>`<li>${c}</li>`).join('')}</ul>`;
+  }
+  ldHTML+='</div>';
+  document.getElementById('m-ld-section').innerHTML=ldHTML;
+  document.getElementById('m-mechs').innerHTML=g.m.map(m=>`<span class="mech">${ML[m]}</span>`).join('');
+  document.getElementById('m-moods').innerHTML=g.md.map(m=>`<span class="chip chip-${m}">${MOODS[m]||m}</span>`).join('');
+  document.getElementById('m-btn').href=`https://boardgamegeek.com/boardgame/${g.bgg}`;
+  const ov=document.getElementById('overlay');ov.style.display='flex';
+  requestAnimationFrame(()=>ov.classList.add('on'));
 }
 
-function toggleCmp(e,bgg){
-  e.stopPropagation();e.preventDefault();
-  if(S.cmp.includes(bgg)){S.cmp=S.cmp.filter(x=>x!==bgg);}
-  else if(S.cmp.length<3){S.cmp.push(bgg);}
+function closeModal(){const ov=document.getElementById('overlay');ov.classList.remove('on');setTimeout(()=>{ov.style.display='none';},200);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+function toggleCmp(bgg){
+  if(S.cmp.includes(bgg))S.cmp=S.cmp.filter(x=>x!==bgg);
+  else if(S.cmp.length<3)S.cmp.push(bgg);
   renderShelves();
 }
 function clearCmp(){S.cmp=[];renderShelves();}
 
-document.addEventListener("click",function(e){
-  if(isTouch&&S.exp&&!e.target.closest(".c")){
-    S.exp=null;document.querySelectorAll(".c.ex").forEach(el=>el.classList.remove("ex"));
-  }
-});
+function renderCompare(){
+  const panel=document.getElementById("cpanel");
+  if(S.cmp.length===0){panel.classList.remove("show");panel.innerHTML="";document.querySelector('.wrap').style.paddingBottom='80px';return;}
+  const games=S.cmp.map(id=>G.find(g=>g.bgg===id)).filter(Boolean);
+  function wBar(w){const pct=((w-1)/4)*100;const clr=w<1.5?'#5a6e8c':w<2.5?'#5a9e7a':w<3.5?'var(--gold)':'var(--rust)';return`${w.toFixed(1)} <span class="wbar" style="width:${Math.max(pct,8)}px;background:${clr}"></span>`;}
+  function tr(lbl,fn){return`<tr><th>${lbl}</th>${games.map(g=>`<td>${fn(g)}</td>`).join("")}</tr>`;}
+  panel.innerHTML=`
+    <div class="cphdr"><h3>Compare ${games.length} game${games.length>1?'s':''}</h3><button class="cpclear" onclick="clearCmp()">✕ Clear</button></div>
+    <table>
+      <tr><th></th>${games.map(g=>`<td><div class="cpname">${g.n}</div><div class="cpvibe">${g.v.slice(0,80)}...</div></td>`).join("")}</tr>
+      ${tr("Players",g=>g.p)}
+      ${tr("Time",g=>g.t+"m")}
+      ${tr("Weight",g=>wBar(g.w))}
+      ${tr("Mechanics",g=>g.m.map(m=>ML[m]).join(", "))}
+      ${tr("Mood",g=>g.md.map(d=>MOODS[d]||d).join(", "))}
+      ${tr("Shelf",g=>{const s=SHELVES.find(c=>c.id===g.shelf);return s?s.name:g.shelf;})}
+      <tr><th></th>${games.map(g=>`<td><a class="cpbgg" href="https://boardgamegeek.com/boardgame/${g.bgg}" target="_blank">BGG ↗</a></td>`).join("")}</tr>
+    </table>`;
+  panel.classList.add("show");
+  document.querySelector('.wrap').style.paddingBottom=(panel.offsetHeight+20)+'px';
+}
 
-function setPF(i){S.pf=i;renderHeader();renderShelves();}
-function tog2p(){S.show2p=!S.show2p;renderHeader();renderShelves();}
-function togM(m){S.sm=S.sm.includes(m)?S.sm.filter(x=>x!==m):[...S.sm,m];renderHeader();renderShelves();}
-function clrM(){S.sm=[];renderHeader();renderShelves();}
-function setSort(i){S.sort=i;renderHeader();renderShelves();}
+function setPF(i){S.pf=i;renderFilters();renderShelves();}
+function setMood(m){S.mood=S.mood===m?null:m;renderFilters();renderShelves();}
+function setGroup(i){S.group=i;renderFilters();renderShelves();}
+function setSort(i){S.sort=i;renderFilters();renderShelves();}
 
-render();
-fetchImages();
+document.getElementById("total").textContent=G.length;
+renderFilters();renderShelves();fetchImages();
 </script>
 </body>
 </html>
