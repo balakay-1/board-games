@@ -40,7 +40,6 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .pm-mid.on{background:rgba(90,120,160,0.12);border-color:rgba(90,120,160,0.3);color:#8ab0d0}
 .pm-epic.on{background:rgba(140,80,170,0.12);border-color:rgba(140,80,170,0.3);color:#b88ae0}
 .pm-family.on{background:rgba(60,140,80,0.12);border-color:rgba(60,140,80,0.3);color:#60c080}
-.pm-solo.on{background:rgba(140,120,60,0.12);border-color:rgba(140,120,60,0.3);color:#c0a850}
 .pc{background:none;border:1px solid var(--border);padding:4px 10px;color:var(--txd);font-size:0.68rem;font-family:var(--fb);cursor:pointer;border-radius:4px}
 .pc:hover{color:var(--tx);border-color:rgba(224,216,204,0.25)}
 
@@ -118,7 +117,6 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .chip-mid{background:rgba(90,120,160,0.15);color:#8ab0d0}
 .chip-epic{background:rgba(140,80,170,0.15);color:#b88ae0}
 .chip-family{background:rgba(60,140,80,0.15);color:#60c080}
-.chip-solo{background:rgba(140,120,60,0.15);color:#c0a850}
 .likedis{margin-top:4px}
 .likedis .ld-title{font-size:0.76rem;font-weight:700;margin-bottom:4px;color:var(--txm)}
 .likedis .ld-title.like{color:#7ab07a}
@@ -253,7 +251,7 @@ const CONFIG = {
   ],
 };
 const ML={ENG:"Engine Building",WP:"Worker Placement",AC:"Area Control",DR:"Drafting",CO:"Co-op",BL:"Bluffing",PL:"Push Your Luck",TL:"Tile Laying",DX:"Dexterity",RC:"Racing",AU:"Auction",TK:"Trick-Taking",AB:"Abstract",AS:"Asymmetric"};
-const MOODS={party:"Party",euro:"Thinky Euro",mid:"Mid-Weight",epic:"Epic",family:"Family",solo:"Solo"};
+const MOODS={party:"Party",euro:"Thinky Euro",mid:"Mid-Weight",epic:"Epic",family:"Family"};
 function wCat(w){const t=CONFIG.weight;return w>=t.heavy?5:w>=t.medHeavy?4:w>=t.medium?3:w>=t.medLight?2:1;}
 const WLABELS={5:"Heavy",4:"Med-Heavy",3:"Medium",2:"Med-Light",1:"Light"};
 function maxTime(t){const n=t.match(/\d+/g);return n?Math.max(...n.map(Number)):30;}
@@ -268,8 +266,8 @@ const G=[
  con:["You can fall behind early and spend 3 hours losing slowly","The learning curve is brutal — expect to get crushed your first few games","Games run 3-4 hours and demand full attention the entire time"]},
 {n:"Spirit Island",p:"1-4",t:"90-120",shelf:"epic",i:"🌿",bgg:162886,pn:1,px:4,w:4.06,
  v:"Play as elemental spirits defending your island from colonizers. Each spirit has wildly different powers, and you'll need to coordinate devastating combos to push the invaders back. A cooperative brain-burner that makes you feel genuinely powerful once it clicks.",
- m:["CO","AS"],md:["epic","solo"],
- pro:["You want a co-op that treats you like an adult and never holds your hand","You love discovering combos between wildly asymmetric characters","You enjoy solo gaming — this is one of the best solo experiences in the hobby"],
+ m:["CO","AS"],md:["epic"],
+ pro:["You want a co-op that treats you like an adult and never holds your hand","You love discovering combos between wildly asymmetric characters","The escalating difficulty levels keep even veteran groups challenged"],
  con:["Analysis paralysis hits hard, especially with 4 players","Setup and rules overhead is significant — not a quick teach","The anti-colonial theme, while well-handled, isn't for every group"]},
 {n:"Brass: Birmingham",p:"3-4",t:"60-120",shelf:"epic",i:"🏭",bgg:224517,pn:3,px:4,w:3.93,
  v:"Build canals and railways across industrial England, connecting cotton mills, iron works, and breweries into an economic network. Two distinct eras mean the whole board resets halfway through. Deeply interlocking systems that reward long-term planning.",
@@ -278,8 +276,8 @@ const G=[
  con:["Only plays 3-4, and really shines at 3-4 specifically","The card system can feel limiting when you can't build where you want","First game is rough — you won't understand the strategy until round 2 of your second play"]},
 {n:"Great Western Trail",p:"1-4",t:"75-150",shelf:"epic",i:"🤠",bgg:341169,pn:1,px:4,w:3.71,
  v:"Drive cattle to Kansas City, improving your deck and building along the trail. Every trip you upgrade your cowboys, craftsmen, and engineers to make the next delivery more lucrative. A beautifully layered euro that unfolds more each play.",
- m:["ENG"],md:["epic","euro","solo"],
- pro:["Multiple viable strategies keep it fresh game after game","The deck-thinning mechanic is incredibly satisfying as your herd improves","Excellent solo mode with the 2nd edition"],
+ m:["ENG"],md:["epic","euro"],
+ pro:["Multiple viable strategies keep it fresh game after game","The deck-thinning mechanic is incredibly satisfying as your herd improves","The branching trail map rewards replaying with new routes"],
  con:["The teach takes a while — lots of interlocking systems to explain","Can feel like multiplayer solitaire with minimal direct interaction","Visual design is busy and hard to parse at first glance"]},
 {n:"Star Wars: Rebellion",p:"2-4",t:"180-240",shelf:"epic",i:"⚔️",bgg:187645,pn:2,px:4,w:3.65,
  v:"One player controls the Galactic Empire hunting for the hidden rebel base. The other is the Rebellion, stalling for time and inspiring hope across the galaxy. An epic cat-and-mouse that genuinely feels like the original trilogy.",
@@ -298,13 +296,13 @@ const G=[
  con:["Very aggressive — if you don't like direct conflict, this isn't for you","The base game without campaign can feel like an appetizer","Requires exactly the right group who enjoy political card play"]},
 {n:"Clans of Caledonia",p:"1-4",t:"90-120",shelf:"epic",i:"🏴",bgg:216132,pn:1,px:4,w:3.55,
  v:"Lead a Scottish clan through the industrial age — produce whisky, trade goods, export cattle, and expand your territory on a shared market. The dynamic pricing system means every move ripples across the table.",
- m:["ENG","AC"],md:["epic","euro","solo"],
- pro:["The dynamic market creates genuine interaction in an otherwise euro-style game","Variable clan powers give each player a unique economic angle","Excellent solo mode and great at 2 players"],
+ m:["ENG","AC"],md:["epic","euro"],
+ pro:["The dynamic market creates genuine interaction in an otherwise euro-style game","Variable clan powers give each player a unique economic angle","Plays especially well at 2 players if your group is small"],
  con:["Feels like a Terra Mystica derivative to some players","Can trigger analysis paralysis with the market price calculations","The Scottish theme is pasted on — it's really an abstract economic game"]},
 {n:"Terraforming Mars",p:"1-5",t:"90-120",shelf:"epic",i:"🔴",bgg:167791,pn:1,px:5,w:3.26,
  v:"Play cards to build an engine that terraforms Mars — raise the temperature, create oceans, plant forests. Hundreds of unique project cards mean every game tells a different story. Long but deeply satisfying when your engine finally hums.",
- m:["ENG","DR"],md:["epic","euro","solo"],
- pro:["Hundreds of unique cards mean you'll never play the same game twice","The engine-building arc is one of the most satisfying in all of gaming","Great solo mode and scales well from 1-5"],
+ m:["ENG","DR"],md:["epic","euro"],
+ pro:["Hundreds of unique cards mean you'll never play the same game twice","The engine-building arc is one of the most satisfying in all of gaming","Scales well across the full 1-5 player range"],
  con:["Component quality is famously bad for a game this expensive","At 4-5 players it drags past 3 hours easily","Card draw luck can feel swingy — sometimes you just don't get what you need"]},
 {n:"Hansa Teutonica",p:"3-5",t:"45-90",shelf:"epic",i:"🏰",bgg:286749,pn:3,px:5,w:3.13,
  v:"A clean, mean euro where getting in someone else's way IS the strategy. Establish trade routes, upgrade abilities, and block opponents' plans. No theme to hide behind — pure interactive strategy.",
@@ -313,8 +311,8 @@ const G=[
  con:["Ugly as sin — the board looks like a spreadsheet and the theme is nonexistent","Very aggressive blocking can feel personal and frustrating","Needs at least 3 players and really wants 4-5"]},
 {n:"Dune: Imperium Uprising",p:"1-4",t:"60-120",shelf:"epic",i:"🏜️",bgg:366013,pn:1,px:4,w:3.04,
  v:"Deck building meets worker placement on Arrakis. Send agents to harvest spice, forge alliances, and scheme for political power. Every round builds tension as conflicts escalate and the Sandworm looms.",
- m:["ENG","WP"],md:["epic","solo"],
- pro:["The deck building and worker placement blend is seamless and elegant","Conflict escalation creates genuine tension every round","The solo AI (Rival system) is excellent"],
+ m:["ENG","WP"],md:["epic"],
+ pro:["The deck building and worker placement blend is seamless and elegant","Conflict escalation creates genuine tension every round","The Uprising expansion adds great asymmetric leader powers"],
  con:["Combat outcomes can feel luck-dependent with the reveal mechanism","Requires Dune knowledge to fully appreciate the theme","At 4 players the downtime between turns can drag"]},
 {n:"The King's Dilemma",p:"3-5",t:"60-90",shelf:"epic",i:"👑",bgg:245655,pn:3,px:5,w:2.71,
  v:"A legacy negotiation game where your council votes on the kingdom's fate. Every decision has long-term consequences, secret agendas clash, and alliances shift. The story you create together is unique to your group.",
@@ -330,7 +328,7 @@ const G=[
 // ── STRATEGY ──────────────────────────────────────────────────────
 {n:"Viticulture",p:"1-6",t:"45-90",shelf:"strat",i:"🍷",bgg:183394,pn:1,px:6,w:2.90,
  v:"Run a vineyard through the seasons — plant vines, harvest grapes, make wine, and fill orders. Worker placement with a Grande Worker who can squeeze into full spots. A warm, beautiful gateway into heavier strategy.",
- m:["WP"],md:["euro","solo"],
+ m:["WP"],md:["euro"],
  pro:["The theme is warm and inviting — great for introducing people to worker placement","The Grande Worker mechanic elegantly solves the blocking frustration","Beautiful Tuscany expansion adds a brilliant expanded board"],
  con:["Visitor cards can be wildly imbalanced — some are much stronger than others","Can feel like multiplayer solitaire at lower player counts","Once you've played heavier euros, it can feel a bit light"]},
 {n:"Ra",p:"2-5",t:"45-60",shelf:"strat",i:"☀️",bgg:12,pn:2,px:5,w:2.45,
@@ -340,7 +338,7 @@ const G=[
  con:["New players struggle to value tiles correctly — first game can feel random","The Egyptian theme is completely pasted on","Can feel punishing if you mismanage your sun tokens early"]},
 {n:"Pandemic",p:"2-4",t:"45",shelf:"strat",i:"🦠",bgg:30549,pn:2,px:4,w:2.42,
  v:"Work together to cure four diseases before outbreaks overwhelm the world. Each role has unique abilities, and the infection deck guarantees escalating tension. The cooperative game that launched a thousand imitators — still one of the best.",
- m:["CO"],md:["mid","family","solo"],
+ m:["CO"],md:["mid","family"],
  pro:["The escalating tension is perfectly tuned — every game feels like a thriller","Accessible enough for non-gamers but has real strategic depth","Variable roles and difficulty levels keep it fresh for dozens of plays"],
  con:["Quarterbacking is a real problem — one experienced player can dominate decisions","After many plays, the optimal strategies become formulaic","The luck of card draws can make some games unwinnable from the start"]},
 {n:"Hive Pocket",p:"2",t:"20",shelf:"strat",i:"🐝",bgg:154597,pn:2,px:2,w:2.36,
@@ -370,7 +368,7 @@ const G=[
  con:["Very abstract — the desert theme doesn't come through at all","Quiet, thinky gameplay won't work for groups that want interaction","Can feel deterministic at 2 players once you know the patterns"]},
 {n:"Parks",p:"1-5",t:"30-60",shelf:"strat",i:"🏕️",bgg:266524,pn:1,px:5,w:2.16,
  v:"Hike through a trail that changes each season, collecting memories and resources to visit national parks. Light worker placement with satisfying set collection and the most beautiful cards in gaming.",
- m:["WP"],md:["mid","solo"],
+ m:["WP"],md:["mid"],
  pro:["The national park art by Fifty-Nine Parks is genuinely stunning","Relaxing theme and pace make it a great wind-down game","Seasons changing the trail creates nice variety between rounds"],
  con:["Too light for experienced gamers — decisions rarely feel consequential","Limited player interaction beyond occasionally blocking a trail spot","The 'memories' photos mechanic feels like an afterthought"]},
 {n:"Cat in the Box",p:"2-5",t:"30",shelf:"strat",i:"🐈",bgg:345972,pn:2,px:5,w:2.10,
@@ -400,8 +398,8 @@ const G=[
  con:["Once you've solved the communication puzzle, replay value drops","Very light for experienced gamers looking for depth","Can feel solvable with an experienced group"]},
 {n:"Harmonies",p:"1-5",t:"30-45",shelf:"strat",i:"🌸",bgg:405996,pn:1,px:5,w:1.97,
  v:"Stack colorful tokens to create landscapes and attract animals to your habitat. Calming nature theme hides genuinely thinky spatial puzzles. Zone out for 40 minutes and emerge smiling.",
- m:["TL"],md:["mid","solo"],
- pro:["Calming, beautiful, and genuinely meditative — perfect end-of-night game","The spatial stacking puzzle is more interesting than it first appears","Excellent solo mode for a relaxing challenge"],
+ m:["TL"],md:["mid"],
+ pro:["Calming, beautiful, and genuinely meditative — perfect end-of-night game","The spatial stacking puzzle is more interesting than it first appears","Quick to teach and just as satisfying with a full table"],
  con:["Very low interaction — essentially a multiplayer solitaire puzzle","Scoring can feel opaque until you've played a few times","May feel too gentle for people who want tension or conflict"]},
 
 // ── GATEWAY & FAMILY ──────────────────────────────────────────────
@@ -447,7 +445,7 @@ const G=[
  con:["Experienced players tend to dominate — the skill gap shows quickly","Can feel like a solitaire puzzle once you know the optimal patterns","Very abstract — quilting theme barely registers"]},
 {n:"Regicide",p:"1-4",t:"30",shelf:"gate",i:"♠️",bgg:307002,pn:1,px:4,w:1.60,
  v:"Use a standard poker deck to cooperatively defeat the Jacks, Queens, and Kings. Each suit has a special power, and you must coordinate without revealing your hand. A free card game that punches way above its weight.",
- m:["CO"],md:["party","solo"],
+ m:["CO"],md:["party"],
  pro:["Uses a standard poker deck — literally free if you have cards","The suit powers create real cooperative strategy in a tiny package","Difficulty scales beautifully from easy to nearly impossible"],
  con:["Very luck-dependent — sometimes the card order makes winning impossible","Limited communication rules can frustrate people who want to strategize openly","The difficulty spike from Kings can feel unfair"]},
 {n:"Land vs Sea",p:"2-4",t:"20-30",shelf:"gate",i:"🗺️",bgg:336929,pn:2,px:4,w:1.50,
@@ -465,11 +463,11 @@ const G=[
  m:["AB"],md:["family"],
  pro:["Stunning cloth mat and acrylic flowers make it a joy to look at","15 minutes of light strategic thinking — perfect filler","The spatial element is satisfying without being overwhelming"],
  con:["Too light for anyone wanting a real strategic challenge","Limited replayability — the decision space is narrow","Niche 2-player-only audience"]},
-{n:"Solstis",p:"1-2",t:"15",shelf:"gate",i:"⛰️",bgg:411255,pn:1,px:2,w:1.35,
- v:"Build a shared mountain landscape from triangular tiles, drafting between two hands to capture spirit cards. Whimsical art, tactile pieces, and a satisfying 15-minute puzzle for two — or solo against yourself.",
- m:["TL","DR"],md:["family","solo"],
- pro:["Gorgeous, tactile components that feel special to set up and play","The drafting tension between two hands creates real decisions in a tiny footprint","Solo mode means it's never a wasted purchase when a partner's not around"],
- con:["Strictly 1-2 players — no group play option","Light on long-term strategy once you've learned the patterns","Easy to mistake for a kids' game at a glance, which undersells the puzzle"]},
+{n:"Solstis",p:"2",t:"15",shelf:"gate",i:"⛰️",bgg:411255,pn:2,px:2,w:1.35,
+ v:"Build a shared mountain landscape from triangular tiles, drafting between two hands to capture spirit cards. Whimsical art, tactile pieces, and a satisfying 15-minute puzzle for two.",
+ m:["TL","DR"],md:["family"],
+ pro:["Gorgeous, tactile components that feel special to set up and play","The drafting tension between two hands creates real decisions in a tiny footprint","Quick enough to fit in right before or after a heavier game"],
+ con:["Strictly 2 players — no group play option","Light on long-term strategy once you've learned the patterns","Easy to mistake for a kids' game at a glance, which undersells the puzzle"]},
 {n:"Sea Salt & Paper",p:"2-4",t:"20-30",shelf:"gate",i:"🌊",bgg:367220,pn:2,px:4,w:1.38,
  v:"Collect card combos with an origami sea theme. When you think you're ahead, you can end the round — but give everyone one last chance to catch up. Gorgeous art, fast play, real decisions every turn.",
  m:["PL"],md:["party","family"],
@@ -482,8 +480,8 @@ const G=[
  con:["Outgrown quickly — once you know drafting, there's not much depth here","The pudding endgame scoring confuses some new players","Better as a teaching tool than a game you return to regularly"]},
 {n:"Spots",p:"1-4",t:"20-30",shelf:"gate",i:"🐕",bgg:369158,pn:1,px:4,w:1.20,
  v:"Roll dice and place them on adorable dog silhouettes — fill all the spots to score the card. Push your luck by rolling extras, but busting means starting over. Cuter than it has any right to be.",
- m:["PL"],md:["family","solo"],
- pro:["The dog art is genuinely delightful — appeals to non-gamers instantly","Push-your-luck tension is perfectly calibrated","Solid solo mode with the burying mechanism"],
+ m:["PL"],md:["family"],
+ pro:["The dog art is genuinely delightful — appeals to non-gamers instantly","Push-your-luck tension is perfectly calibrated","Quick rounds make it easy to fit in one more game"],
  con:["Very light — decisions feel limited for experienced gamers","Dice luck dominates — the better player won't consistently win","Repetitive after several plays"]},
 
 // ── PARTY & SOCIAL ────────────────────────────────────────────────
@@ -549,8 +547,8 @@ const G=[
  con:["Almost no strategic depth — decisions feel arbitrary until the endgame","Early game is essentially random tile placement","Forgettable — serves a function but isn't anyone's favorite game"]},
 {n:"The Game",p:"1-5",t:"20",shelf:"party",i:"💀",bgg:173090,pn:1,px:5,w:1.12,
  v:"Cooperatively play number cards onto four piles — two ascending, two descending. You can barely communicate about your hand. Sounds boring. It is not boring. It is agonizing. The most tension per dollar in gaming.",
- m:["CO"],md:["party","solo"],
- pro:["Creates more tension than games ten times its complexity","The communication restriction forces genuine cooperative agony","Excellent solo game — one of the cheapest, best solo experiences"],
+ m:["CO"],md:["party"],
+ pro:["Creates more tension than games ten times its complexity","The communication restriction forces genuine cooperative agony","One of the cheapest games in the hobby for how much tension it creates"],
  con:["Sometimes the card order makes winning mathematically impossible","Can feel repetitive — the mechanism never changes","The generic name and ugly box art undersell it dramatically"]},
 {n:"Cockroach Poker",p:"2-6",t:"20",shelf:"party",i:"🪳",bgg:11971,pn:2,px:6,w:1.11,
  v:"Pass a card face-down and say what it is — or lie. The receiver must call truth or lie, or pass it on with a new claim. Collect four of a kind and you lose. Pure bluffing with zero complexity and maximum laughter.",
@@ -638,7 +636,6 @@ const MOOD_GROUPS=[
   {id:"mid",name:"Mid-Weight",desc:"Accessible strategy with real depth"},
   {id:"party",name:"Party",desc:"Social energy over strategic depth"},
   {id:"family",name:"Family",desc:"Works for all ages and experience levels"},
-  {id:"solo",name:"Solo",desc:"Excellent alone"},
 ];
 const TIME_GROUPS=[
   {id:"quick",name:"Quick Games",desc:"20 minutes or less",max:20},
@@ -649,12 +646,13 @@ const TIME_GROUPS=[
 
 const PF=[
   {id:"any",l:"Any #",f:()=>true},
-  {id:"solo",l:"Solo",f:g=>g.pn<=1},
   {id:"2p",l:"2p",f:g=>g.pn<=2&&g.px>=2},
   {id:"2ponly",l:"2p Only",f:g=>g.pn===2&&g.px===2},
   {id:"3-4",l:"3-4",f:g=>g.pn<=3&&g.px>=3},
   {id:"5+",l:"5+",f:g=>g.px>=5},
 ];
+
+const TF=[{id:"any",l:"Any time"},...TIME_GROUPS.map(t=>({id:t.id,l:t.name}))];
 
 const GROUPS=[
   {l:"Shelf",id:"shelf"},
@@ -668,7 +666,7 @@ const SORTS=[
   {id:"az",l:"A → Z",f:(a,b)=>a.n.localeCompare(b.n)},
 ];
 
-const DEFAULT_STATE={q:"",pf:"any",mood:null,cmp:[],sort:"lightest",group:"shelf"};
+const DEFAULT_STATE={q:"",pf:"any",mood:null,time:"any",cmp:[],sort:"lightest",group:"shelf"};
 function loadState(){
   try{
     const raw=localStorage.getItem(CONFIG.cache.stateKey);
@@ -677,7 +675,7 @@ function loadState(){
   return{...DEFAULT_STATE};
 }
 function saveState(){
-  try{localStorage.setItem(CONFIG.cache.stateKey,JSON.stringify({q:S.q,pf:S.pf,mood:S.mood,sort:S.sort,group:S.group}));}
+  try{localStorage.setItem(CONFIG.cache.stateKey,JSON.stringify({q:S.q,pf:S.pf,mood:S.mood,time:S.time,sort:S.sort,group:S.group}));}
   catch(e){console.warn('[State] Could not save filters:',e);}
 }
 let S=loadState();
@@ -740,6 +738,7 @@ function getFiltered(){
   let r=[...G];
   const pf=PF.find(f=>f.id===S.pf);if(pf&&S.pf!=="any")r=r.filter(pf.f);
   if(S.mood)r=r.filter(g=>g.md.includes(S.mood));
+  if(S.time&&S.time!=="any")r=r.filter(g=>timeGroup(g.t)===S.time);
   if(S.q){
     const s=S.q.toLowerCase();
     r=r.filter(x=>
@@ -770,6 +769,10 @@ function renderFilters(){
         <span class="flbl">Mood</span>
         ${Object.keys(MOODS).map(k=>`<button class="pill pm-${k}${S.mood===k?' on':''}" onclick="setMood('${k}')">${MOODS[k]}</button>`).join("")}
         ${S.mood?`<button class="pc" onclick="setMood(null)">✕</button>`:""}
+      </div>
+      <div class="frow">
+        <span class="flbl">Time</span>
+        ${TF.map(t=>`<button class="pill${S.time===t.id?' on':''}" onclick="setTime('${t.id}')">${t.l}</button>`).join("")}
       </div>
       <div class="frow">
         <span class="flbl">Group by</span>
@@ -933,6 +936,7 @@ function renderCompare(){
 
 function setPF(id){S.pf=id;saveState();renderFilters();renderShelves();}
 function setMood(m){S.mood=S.mood===m?null:m;saveState();renderFilters();renderShelves();}
+function setTime(id){S.time=id;saveState();renderFilters();renderShelves();}
 function setGroup(id){S.group=id;saveState();renderFilters();renderShelves();}
 function setSort(id){S.sort=id;saveState();renderFilters();renderShelves();}
 
