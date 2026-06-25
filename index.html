@@ -27,7 +27,7 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 
 .fbar{background:var(--card);border:1px solid var(--border);padding:14px 16px;margin-bottom:24px;border-radius:4px}
 .frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.frow+.frow{margin-top:10px;padding-top:10px;border-top:1px solid var(--bordlt)}
+.frow+.frow,.frow+.frow-more .frow:first-child,.frow-more+.frow{margin-top:10px;padding-top:10px;border-top:1px solid var(--bordlt)}
 .flbl{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--txd);font-weight:600;margin-right:4px;flex-shrink:0}
 .si{border:1px solid var(--border);background:rgba(224,216,204,0.05);padding:7px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);width:200px;outline:none;border-radius:3px}
 .si:focus{border-color:rgba(201,162,77,0.5)}.si::placeholder{color:var(--txd)}
@@ -35,12 +35,12 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .pill{padding:5px 12px;border:1px solid var(--border);background:rgba(224,216,204,0.03);font-size:0.72rem;font-family:var(--fb);font-weight:500;cursor:pointer;transition:all 0.12s;white-space:nowrap;color:var(--txd);border-radius:4px}
 .pill:hover{border-color:rgba(224,216,204,0.25);color:var(--txm)}
 .pill.on{background:rgba(201,162,77,0.2);border-color:rgba(201,162,77,0.4);color:var(--gold)}
-.pm-party.on{background:rgba(199,90,48,0.2);border-color:rgba(199,90,48,0.45);color:#e07050}
-.pm-euro.on{background:rgba(90,138,90,0.2);border-color:rgba(90,138,90,0.45);color:#7ab07a}
-.pm-mid.on{background:rgba(90,120,160,0.2);border-color:rgba(90,120,160,0.45);color:#8ab0d0}
-.pm-epic.on{background:rgba(140,80,170,0.2);border-color:rgba(140,80,170,0.45);color:#b88ae0}
-.pm-family.on{background:rgba(60,140,80,0.2);border-color:rgba(60,140,80,0.45);color:#60c080}
-.pm-solo.on{background:rgba(140,120,60,0.2);border-color:rgba(140,120,60,0.45);color:#c0a850}
+.pm-party.on{background:rgba(199,90,48,0.12);border-color:rgba(199,90,48,0.3);color:#e07050}
+.pm-euro.on{background:rgba(90,138,90,0.12);border-color:rgba(90,138,90,0.3);color:#7ab07a}
+.pm-mid.on{background:rgba(90,120,160,0.12);border-color:rgba(90,120,160,0.3);color:#8ab0d0}
+.pm-epic.on{background:rgba(140,80,170,0.12);border-color:rgba(140,80,170,0.3);color:#b88ae0}
+.pm-family.on{background:rgba(60,140,80,0.12);border-color:rgba(60,140,80,0.3);color:#60c080}
+.pm-solo.on{background:rgba(140,120,60,0.12);border-color:rgba(140,120,60,0.3);color:#c0a850}
 .pc{background:none;border:1px solid var(--border);padding:4px 10px;color:var(--txd);font-size:0.68rem;font-family:var(--fb);cursor:pointer;border-radius:4px}
 .pc:hover{color:var(--tx);border-color:rgba(224,216,204,0.25)}
 
@@ -63,11 +63,17 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .card[data-wc="3"]::before{background:var(--forest)}
 .card[data-wc="2"]::before{background:#5a9e7a}
 .card[data-wc="1"]::before{background:#9e9a5e}
+.wdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.card[data-wc="5"] .wdot{background:var(--rust)}
+.card[data-wc="4"] .wdot{background:var(--gold)}
+.card[data-wc="3"] .wdot{background:var(--forest)}
+.card[data-wc="2"] .wdot{background:#5a9e7a}
+.card[data-wc="1"] .wdot{background:#9e9a5e}
 
-.card-thumb{flex-shrink:0;width:56px;height:56px;overflow:hidden;border-radius:3px;position:relative;background:rgba(224,216,204,0.06)}
+.card-thumb{flex-shrink:0;width:64px;height:64px;overflow:hidden;border-radius:3px;position:relative;background:rgba(224,216,204,0.06)}
 .card-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 0.3s}
 .card-thumb img.ld{opacity:1}
-.card-thumb .av{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;position:absolute;inset:0;pointer-events:none;transition:opacity 0.3s}
+.card-thumb .av{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;position:absolute;inset:0;pointer-events:none;transition:opacity 0.3s}
 .card-thumb:has(img.ld) .av{opacity:0}
 
 .card-body{flex:1;min-width:0}
@@ -146,6 +152,7 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .legend-item{display:flex;align-items:center;gap:5px}
 .legend-bar{width:10px;height:10px;flex-shrink:0;border-radius:2px}
 
+.moreToggle{display:none}
 @media(max-width:600px){
   header{flex-direction:column;align-items:flex-start}
   .grid{grid-template-columns:1fr}
@@ -156,6 +163,9 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
   .cpanel table{table-layout:auto;min-width:560px}
   .cpanel th{width:60px}
   .cpanel td{min-width:140px}
+  .moreToggle{display:inline-block}
+  .frow-more{display:none}
+  .frow-more.show{display:block}
 }
 </style>
 </head>
@@ -678,6 +688,13 @@ function avColor(str){
   let h=0;for(let i=0;i<str.length;i++)h=(str.charCodeAt(i)+((h<<5)-h))|0;
   return pal[Math.abs(h)%pal.length];
 }
+function shade(hex,amt){
+  const n=parseInt(hex.slice(1),16);
+  const clamp=v=>Math.max(0,Math.min(255,v));
+  const r=clamp(((n>>16)&255)+amt),g=clamp(((n>>8)&255)+amt),b=clamp((n&255)+amt);
+  return`rgb(${r},${g},${b})`;
+}
+function avGradient(color){return`linear-gradient(135deg, ${shade(color,30)}, ${shade(color,-20)})`;}
 
 async function fetchImages(){
   try{const c=localStorage.getItem(CONFIG.cache.key);if(c){const p=JSON.parse(c);if(p&&Object.keys(p).length>CONFIG.cache.minValidEntries){Object.assign(imgCache,p);updateThumbsInPlace();refreshImages(p);return;}}}catch(e){}
@@ -738,25 +755,30 @@ function getFiltered(){
   return r;
 }
 
+let filtersExpanded=false;
+function toggleMoreFilters(){filtersExpanded=!filtersExpanded;renderFilters();}
 function renderFilters(){
   document.getElementById("filters").innerHTML=`
     <div class="frow">
       <input class="si" id="sb" type="text" placeholder="Search games, vibes, mechanics..." autocomplete="off" value="${S.q.replace(/"/g,'&quot;')}">
       <span class="flbl">Players</span>
       ${PF.map(f=>`<button class="pill${S.pf===f.id?' on':''}" onclick="setPF('${f.id}')">${f.l}</button>`).join("")}
+      <button class="pc moreToggle" onclick="toggleMoreFilters()">${filtersExpanded?'▴':'▾'} More filters</button>
     </div>
-    <div class="frow">
-      <span class="flbl">Mood</span>
-      ${Object.keys(MOODS).map(k=>`<button class="pill pm-${k}${S.mood===k?' on':''}" onclick="setMood('${k}')">${MOODS[k]}</button>`).join("")}
-      ${S.mood?`<button class="pc" onclick="setMood(null)">✕</button>`:""}
-    </div>
-    <div class="frow">
-      <span class="flbl">Group by</span>
-      ${GROUPS.map(g=>`<button class="pill${S.group===g.id?' on':''}" onclick="setGroup('${g.id}')">${g.l}</button>`).join("")}
-      <span style="flex:1"></span>
-      <span class="flbl">Sort</span>
-      ${SORTS.map(s=>`<button class="pill${S.sort===s.id?' on':''}" onclick="setSort('${s.id}')" style="font-size:0.68rem">${s.l}</button>`).join("")}
-      <button class="pc" onclick="pickRandom()" title="Pick a random game from the current filters">🎲 Pick for me</button>
+    <div class="frow-more${filtersExpanded?' show':''}">
+      <div class="frow">
+        <span class="flbl">Mood</span>
+        ${Object.keys(MOODS).map(k=>`<button class="pill pm-${k}${S.mood===k?' on':''}" onclick="setMood('${k}')">${MOODS[k]}</button>`).join("")}
+        ${S.mood?`<button class="pc" onclick="setMood(null)">✕</button>`:""}
+      </div>
+      <div class="frow">
+        <span class="flbl">Group by</span>
+        ${GROUPS.map(g=>`<button class="pill${S.group===g.id?' on':''}" onclick="setGroup('${g.id}')">${g.l}</button>`).join("")}
+        <span style="flex:1"></span>
+        <span class="flbl">Sort</span>
+        ${SORTS.map(s=>`<button class="pill${S.sort===s.id?' on':''}" onclick="setSort('${s.id}')" style="font-size:0.68rem">${s.l}</button>`).join("")}
+        <button class="pc" onclick="pickRandom()" title="Pick a random game from the current filters">🎲 Pick for me</button>
+      </div>
     </div>`;
   document.getElementById("sb").addEventListener("input",function(e){S.q=e.target.value;saveState();renderShelves();});
 }
@@ -819,10 +841,10 @@ function cardHTML(g){
   return`<div class="card${isCmp?' cmp':''}" data-wc="${wc}" data-bgg="${g.bgg}">
     <div class="card-thumb" data-id="${g.bgg}">
       <img src="${cached||''}" alt="${g.n}" onload="this.classList.add('ld')" onerror="this.style.display='none'" ${cached?'':'style="display:none"'}>
-      <div class="av" style="background:${color}">${g.i}</div>
+      <div class="av" style="background:${avGradient(color)}">${g.i}</div>
     </div>
     <div class="card-body">
-      <div class="card-title">${g.n}</div>
+      <div class="card-title"><span class="wdot"></span>${g.n}</div>
       <div class="card-stats">
         <span class="tag tag-p">👥 ${g.p}</span>
         <span class="tag tag-t">⏱ ${g.t}m</span>
@@ -852,7 +874,7 @@ function openModal(g){
   const img=document.getElementById('m-img');img.classList.remove('ld');
   const cached=imgCache[g.bgg];
   if(cached){img.src=cached;img.style.display='';}else{img.src='';img.style.display='none';}
-  document.getElementById('m-av').textContent=g.i;document.getElementById('m-av').style.background=color;
+  document.getElementById('m-av').textContent=g.i;document.getElementById('m-av').style.background=avGradient(color);
   document.getElementById('m-title').textContent=g.n;
   document.getElementById('m-stats').innerHTML=`
     <span class="tag tag-p">👥 ${g.p} players</span>
