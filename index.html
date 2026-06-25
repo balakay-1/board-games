@@ -128,6 +128,7 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .cphdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .cphdr h3{font-family:var(--fd);font-size:0.95rem;font-weight:700}
 .cpclear{font-size:0.7rem;color:var(--txd);cursor:pointer;background:none;border:1px solid var(--border);padding:4px 10px;font-family:var(--fb);border-radius:4px}
+.cptable-wrap{overflow-x:auto}
 .cpanel table{width:100%;border-collapse:collapse;table-layout:fixed}
 .cpanel th,.cpanel td{padding:5px 6px;text-align:left;vertical-align:top;border-bottom:1px solid var(--bordlt)}
 .cpanel th{font-size:0.62rem;color:var(--txd);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;width:70px}
@@ -152,6 +153,9 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
   .shelf-desc{display:none}
   .modal{padding:20px}
   .cpanel{max-height:60vh}
+  .cpanel table{table-layout:auto;min-width:560px}
+  .cpanel th{width:60px}
+  .cpanel td{min-width:140px}
 }
 </style>
 </head>
@@ -214,8 +218,9 @@ const CONFIG = {
     batchDelay: 1500,      // ms between batches
   },
   cache: {
-    key:             "bgs_v8",  // bump suffix to bust the cache
+    key:             "bgs_v8",     // bump suffix to bust the image cache
     minValidEntries: 20,
+    stateKey:        "bgs_state_v1",  // bump suffix to reset saved filters
   },
   weight: {
     heavy:    3.5,   // >= this → category 5 (Heavy)
@@ -435,7 +440,7 @@ const G=[
  m:["CO"],md:["party","solo"],
  pro:["Uses a standard poker deck — literally free if you have cards","The suit powers create real cooperative strategy in a tiny package","Difficulty scales beautifully from easy to nearly impossible"],
  con:["Very luck-dependent — sometimes the card order makes winning impossible","Limited communication rules can frustrate people who want to strategize openly","The difficulty spike from Kings can feel unfair"]},
-{n:"Land vs Sea",p:"2-4",t:"20-30",shelf:"gate",i:"🗺️",bgg:336498,pn:2,px:4,w:1.50,
+{n:"Land vs Sea",p:"2-4",t:"20-30",shelf:"gate",i:"🗺️",bgg:336929,pn:2,px:4,w:1.50,
  v:"Lay hex tiles where one player scores land and the other scores sea. Every tile placement is a negotiation — your mountain is their ocean. Elegant tug-of-war that plays beautifully at 2.",
  m:["TL"],md:["family","mid"],
  pro:["The core scoring duality is brilliant — simple concept, real depth","Plays great at 2 where the tug-of-war is sharpest","Beautiful art and components for the price point"],
@@ -450,6 +455,11 @@ const G=[
  m:["AB"],md:["family"],
  pro:["Stunning cloth mat and acrylic flowers make it a joy to look at","15 minutes of light strategic thinking — perfect filler","The spatial element is satisfying without being overwhelming"],
  con:["Too light for anyone wanting a real strategic challenge","Limited replayability — the decision space is narrow","Niche 2-player-only audience"]},
+{n:"Solstis",p:"1-2",t:"15",shelf:"gate",i:"⛰️",bgg:411255,pn:1,px:2,w:1.35,
+ v:"Build a shared mountain landscape from triangular tiles, drafting between two hands to capture spirit cards. Whimsical art, tactile pieces, and a satisfying 15-minute puzzle for two — or solo against yourself.",
+ m:["TL","DR"],md:["family","solo"],
+ pro:["Gorgeous, tactile components that feel special to set up and play","The drafting tension between two hands creates real decisions in a tiny footprint","Solo mode means it's never a wasted purchase when a partner's not around"],
+ con:["Strictly 1-2 players — no group play option","Light on long-term strategy once you've learned the patterns","Easy to mistake for a kids' game at a glance, which undersells the puzzle"]},
 {n:"Sea Salt & Paper",p:"2-4",t:"20-30",shelf:"gate",i:"🌊",bgg:367220,pn:2,px:4,w:1.38,
  v:"Collect card combos with an origami sea theme. When you think you're ahead, you can end the round — but give everyone one last chance to catch up. Gorgeous art, fast play, real decisions every turn.",
  m:["PL"],md:["party","family"],
@@ -487,6 +497,11 @@ const G=[
  m:["TK"],md:["party","mid"],
  pro:["The 'no rearranging' constraint makes every hand a unique puzzle","Tiny box with genuine strategic depth — exceptional for travel","Plays fast enough to immediately deal another round"],
  con:["The constraint can frustrate people who like optimizing their hand","Scoring can be confusing the first game","At 2 players it loses the group energy that makes it special"]},
+{n:"High Society",p:"3-5",t:"20",shelf:"party",i:"💎",bgg:220,pn:3,px:5,w:1.43,
+ v:"A Knizia classic — bid on luxury cards using your limited cash, but the player with the least money left at the end is eliminated entirely. Sharp, tense bluffing-via-bidding that's done in 20 minutes.",
+ m:["AU"],md:["party","mid"],
+ pro:["Decades-old design that still plays sharper than most modern auction games","The 'poorest player loses' twist makes every bid genuinely risky","Tiny box, fast teach, scales well from 3 to 5"],
+ con:["Auction games can feel mean — someone usually gets squeezed out early","Limited components mean it can feel slight for the price","Repetitive if played back-to-back in the same session"]},
 {n:"Magical Athlete",p:"2-6",t:"30-45",shelf:"party",i:"🧙",bgg:268122,pn:2,px:6,w:1.33,
  v:"Draft a team of fantasy characters, then race them. The Witch teleports, the Demon drags others back, and the Cupid makes people fall in love. Draft strategy meets absurd outcomes. Best experienced loud.",
  m:["RC","DR"],md:["party","family"],
@@ -587,6 +602,11 @@ const G=[
  m:["DX"],md:["party","family"],
  pro:["Tiny box creates disproportionate tension — the tweezers are evil","Plays in minutes and works as a warm-up for any game night","The campfire theme is cute and the components are quality"],
  con:["Player elimination in a 15-minute game can feel abrupt","Very light on strategy — it's almost pure dexterity","The tiny blocks can be frustrating for people with larger hands"]},
+{n:"Barbecubes",p:"2-6",t:"10",shelf:"party",i:"🍖",bgg:393114,pn:2,px:6,w:1.05,
+ v:"The Tinderblox sequel, grill edition — stack pixelated meat and veggies onto the barbecue with tweezers before it tips. Bigger chunkier pieces than its predecessor, same nail-biting dexterity tension.",
+ m:["DX"],md:["party","family"],
+ pro:["Chunkier pieces than Tinderblox make it slightly more forgiving for younger hands","Quick to set up and even quicker to play — great between heavier games","The grill theme and components have a lot of table presence"],
+ con:["If you already own Tinderblox, this feels more like a reskin than a must-have sequel","Same elimination-can-feel-abrupt issue as its predecessor","Pure dexterity — nothing here for strategy-minded players"]},
 ];
 
 const SHELVES=[
@@ -618,12 +638,12 @@ const TIME_GROUPS=[
 ];
 
 const PF=[
-  {l:"Any #",f:()=>true},
-  {l:"Solo",f:g=>g.pn<=1},
-  {l:"2p",f:g=>g.pn<=2&&g.px>=2},
-  {l:"2p Only",f:g=>g.pn===2&&g.px===2},
-  {l:"3-4",f:g=>g.pn<=3&&g.px>=3},
-  {l:"5+",f:g=>g.px>=5},
+  {id:"any",l:"Any #",f:()=>true},
+  {id:"solo",l:"Solo",f:g=>g.pn<=1},
+  {id:"2p",l:"2p",f:g=>g.pn<=2&&g.px>=2},
+  {id:"2ponly",l:"2p Only",f:g=>g.pn===2&&g.px===2},
+  {id:"3-4",l:"3-4",f:g=>g.pn<=3&&g.px>=3},
+  {id:"5+",l:"5+",f:g=>g.px>=5},
 ];
 
 const GROUPS=[
@@ -633,12 +653,24 @@ const GROUPS=[
   {l:"Play Time",id:"time"},
 ];
 const SORTS=[
-  {l:"Lightest first",f:(a,b)=>a.w-b.w},
-  {l:"Heaviest first",f:(a,b)=>b.w-a.w},
-  {l:"A → Z",f:(a,b)=>a.n.localeCompare(b.n)},
+  {id:"lightest",l:"Lightest first",f:(a,b)=>a.w-b.w},
+  {id:"heaviest",l:"Heaviest first",f:(a,b)=>b.w-a.w},
+  {id:"az",l:"A → Z",f:(a,b)=>a.n.localeCompare(b.n)},
 ];
 
-let S={q:"",pf:0,mood:null,cmp:[],sort:0,group:0};
+const DEFAULT_STATE={q:"",pf:"any",mood:null,cmp:[],sort:"lightest",group:"shelf"};
+function loadState(){
+  try{
+    const raw=localStorage.getItem(CONFIG.cache.stateKey);
+    if(raw){const saved=JSON.parse(raw);return{...DEFAULT_STATE,...saved,cmp:[]};}
+  }catch(e){console.warn('[State] Could not load saved filters:',e);}
+  return{...DEFAULT_STATE};
+}
+function saveState(){
+  try{localStorage.setItem(CONFIG.cache.stateKey,JSON.stringify({q:S.q,pf:S.pf,mood:S.mood,sort:S.sort,group:S.group}));}
+  catch(e){console.warn('[State] Could not save filters:',e);}
+}
+let S=loadState();
 const imgCache={};
 
 function avColor(str){
@@ -689,9 +721,20 @@ function updateThumbsInPlace(){
 
 function getFiltered(){
   let r=[...G];
-  const pf=PF[S.pf];if(pf&&S.pf>0)r=r.filter(pf.f);
+  const pf=PF.find(f=>f.id===S.pf);if(pf&&S.pf!=="any")r=r.filter(pf.f);
   if(S.mood)r=r.filter(g=>g.md.includes(S.mood));
-  if(S.q){const s=S.q.toLowerCase();r=r.filter(x=>x.n.toLowerCase().includes(s)||x.v.toLowerCase().includes(s)||x.m.some(m=>ML[m].toLowerCase().includes(s)));}
+  if(S.q){
+    const s=S.q.toLowerCase();
+    r=r.filter(x=>
+      x.n.toLowerCase().includes(s)||
+      x.v.toLowerCase().includes(s)||
+      x.m.some(m=>ML[m].toLowerCase().includes(s))||
+      x.md.some(m=>(MOODS[m]||m).toLowerCase().includes(s))||
+      x.pro.some(p=>p.toLowerCase().includes(s))||
+      x.con.some(c=>c.toLowerCase().includes(s))||
+      (SHELVES.find(sh=>sh.id===x.shelf)||{}).name?.toLowerCase().includes(s)
+    );
+  }
   return r;
 }
 
@@ -700,7 +743,7 @@ function renderFilters(){
     <div class="frow">
       <input class="si" id="sb" type="text" placeholder="Search games, vibes, mechanics..." autocomplete="off" value="${S.q.replace(/"/g,'&quot;')}">
       <span class="flbl">Players</span>
-      ${PF.map((f,i)=>`<button class="pill${S.pf===i?' on':''}" onclick="setPF(${i})">${f.l}</button>`).join("")}
+      ${PF.map(f=>`<button class="pill${S.pf===f.id?' on':''}" onclick="setPF('${f.id}')">${f.l}</button>`).join("")}
     </div>
     <div class="frow">
       <span class="flbl">Mood</span>
@@ -709,16 +752,24 @@ function renderFilters(){
     </div>
     <div class="frow">
       <span class="flbl">Group by</span>
-      ${GROUPS.map((g,i)=>`<button class="pill${S.group===i?' on':''}" onclick="setGroup(${i})">${g.l}</button>`).join("")}
+      ${GROUPS.map(g=>`<button class="pill${S.group===g.id?' on':''}" onclick="setGroup('${g.id}')">${g.l}</button>`).join("")}
       <span style="flex:1"></span>
       <span class="flbl">Sort</span>
-      ${SORTS.map((s,i)=>`<button class="pill${S.sort===i?' on':''}" onclick="setSort(${i})" style="font-size:0.68rem">${s.l}</button>`).join("")}
+      ${SORTS.map(s=>`<button class="pill${S.sort===s.id?' on':''}" onclick="setSort('${s.id}')" style="font-size:0.68rem">${s.l}</button>`).join("")}
+      <button class="pc" onclick="pickRandom()" title="Pick a random game from the current filters">🎲 Pick for me</button>
     </div>`;
-  document.getElementById("sb").addEventListener("input",function(e){S.q=e.target.value;renderShelves();});
+  document.getElementById("sb").addEventListener("input",function(e){S.q=e.target.value;saveState();renderShelves();});
+}
+
+function pickRandom(){
+  const list=getFiltered();
+  if(!list.length)return;
+  const g=list[Math.floor(Math.random()*list.length)];
+  openModal(g);
 }
 
 function getGroups(list){
-  const gid=GROUPS[S.group].id;
+  const gid=S.group;
   if(gid==="shelf"){
     return SHELVES.map(s=>({name:s.name,desc:s.desc,games:list.filter(g=>g.shelf===s.id)})).filter(s=>s.games.length);
   }
@@ -746,7 +797,7 @@ function renderShelves(){
   }
 
   const groups=getGroups(list);
-  const sortFn=SORTS[S.sort].f;
+  const sortFn=(SORTS.find(s=>s.id===S.sort)||SORTS[0]).f;
   let html='';
   groups.forEach(grp=>{
     const sorted=[...grp.games].sort(sortFn);
@@ -844,7 +895,7 @@ function renderCompare(){
   function tr(lbl,fn){return`<tr><th>${lbl}</th>${games.map(g=>`<td>${fn(g)}</td>`).join("")}</tr>`;}
   panel.innerHTML=`
     <div class="cphdr"><h3>Compare ${games.length} game${games.length>1?'s':''}</h3><button class="cpclear" onclick="clearCmp()">✕ Clear</button></div>
-    <table>
+    <div class="cptable-wrap"><table>
       <tr><th></th>${games.map(g=>`<td><div class="cpname">${g.n}</div><div class="cpvibe">${g.v.slice(0,80)}...</div></td>`).join("")}</tr>
       ${tr("Players",g=>g.p)}
       ${tr("Time",g=>g.t+"m")}
@@ -853,15 +904,15 @@ function renderCompare(){
       ${tr("Mood",g=>g.md.map(d=>MOODS[d]||d).join(", "))}
       ${tr("Shelf",g=>{const s=SHELVES.find(c=>c.id===g.shelf);return s?s.name:g.shelf;})}
       <tr><th></th>${games.map(g=>`<td><a class="cpbgg" href="https://boardgamegeek.com/boardgame/${g.bgg}" target="_blank">BGG ↗</a></td>`).join("")}</tr>
-    </table>`;
+    </table></div>`;
   panel.classList.add("show");
   document.querySelector('.wrap').style.paddingBottom=(panel.offsetHeight+20)+'px';
 }
 
-function setPF(i){S.pf=i;renderFilters();renderShelves();}
-function setMood(m){S.mood=S.mood===m?null:m;renderFilters();renderShelves();}
-function setGroup(i){S.group=i;renderFilters();renderShelves();}
-function setSort(i){S.sort=i;renderFilters();renderShelves();}
+function setPF(id){S.pf=id;saveState();renderFilters();renderShelves();}
+function setMood(m){S.mood=S.mood===m?null:m;saveState();renderFilters();renderShelves();}
+function setGroup(id){S.group=id;saveState();renderFilters();renderShelves();}
+function setSort(id){S.sort=id;saveState();renderFilters();renderShelves();}
 
 document.getElementById("total").textContent=G.length;
 renderFilters();renderShelves();fetchImages();
