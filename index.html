@@ -14,6 +14,10 @@
   --fd:'Bitter',Georgia,serif;--fb:'DM Sans',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+html{scrollbar-color:rgba(224,216,204,0.2) transparent;scrollbar-width:thin}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:rgba(224,216,204,0.15);border-radius:5px;border:2px solid var(--bg)}
+::-webkit-scrollbar-track{background:transparent}
 body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-weight:400;min-height:100vh;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
 .wrap{max-width:1120px;margin:0 auto;padding:0 20px 80px}
@@ -25,15 +29,21 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .badge{background:rgba(224,216,204,0.06);border:1px solid var(--border);font-family:var(--fd);font-size:2rem;font-weight:700;padding:10px 20px;text-align:center;line-height:1;color:var(--gold);border-radius:4px}
 .badge small{display:block;font-family:var(--fb);font-size:0.6rem;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;color:var(--txd)}
 
-.fbar{background:var(--card);border:1px solid var(--border);padding:14px 16px;margin-bottom:24px;border-radius:4px}
+.fbar{background:var(--card);border:1px solid var(--border);padding:14px 16px;margin-bottom:24px;border-radius:4px;position:sticky;top:0;z-index:50;box-shadow:0 6px 18px rgba(0,0,0,0.35)}
 .frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .frow+.frow,.frow+.frow-more .frow:first-child,.frow-more+.frow{margin-top:10px;padding-top:10px;border-top:1px solid var(--bordlt)}
 .flbl{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--txd);font-weight:600;margin-right:4px;flex-shrink:0}
-.si{border:1px solid var(--border);background:rgba(224,216,204,0.05);padding:7px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);width:200px;outline:none;border-radius:3px}
+.sw{position:relative;display:inline-flex}
+.si{border:1px solid var(--border);background:rgba(224,216,204,0.05);padding:7px 26px 7px 12px;color:var(--tx);font-size:13px;font-family:var(--fb);width:200px;outline:none;border-radius:3px}
 .si:focus{border-color:rgba(201,162,77,0.5)}.si::placeholder{color:var(--txd)}
+.sx{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--txd);cursor:pointer;font-size:0.85rem;padding:2px 6px}
+.sx:hover{color:var(--tx)}
 
 .pill{padding:5px 12px;border:1px solid var(--border);background:rgba(224,216,204,0.03);font-size:0.72rem;font-family:var(--fb);font-weight:500;cursor:pointer;transition:all 0.12s;white-space:nowrap;color:var(--txd);border-radius:4px}
 .pill:hover{border-color:rgba(224,216,204,0.25);color:var(--txm)}
+.pill:active,.pc:active{transform:scale(0.96)}
+.pill.zero{opacity:0.35}
+.pill .pn{opacity:0.55;font-weight:400;margin-left:4px;font-size:0.65rem}
 .pill.on{background:rgba(201,162,77,0.2);border-color:rgba(201,162,77,0.4);color:var(--gold)}
 .pm-party.on{background:rgba(199,90,48,0.12);border-color:rgba(199,90,48,0.3);color:#e07050}
 .pm-euro.on{background:rgba(90,138,90,0.12);border-color:rgba(90,138,90,0.3);color:#7ab07a}
@@ -43,7 +53,14 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .pc{background:none;border:1px solid var(--border);padding:4px 10px;color:var(--txd);font-size:0.68rem;font-family:var(--fb);cursor:pointer;border-radius:4px}
 .pc:hover{color:var(--tx);border-color:rgba(224,216,204,0.25)}
 
-.status{font-size:0.78rem;color:var(--txd);margin-bottom:20px;min-height:18px}
+.status{font-size:0.78rem;color:var(--txd);margin-bottom:20px;min-height:18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fchip{display:inline-flex;align-items:center;gap:5px;font-size:0.68rem;font-family:var(--fb);padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--txm);background:rgba(224,216,204,0.04);cursor:pointer;transition:all 0.12s}
+.fchip:hover{border-color:rgba(224,216,204,0.3);color:var(--tx)}
+.fchip .x{color:var(--txd);font-size:0.6rem}
+.empty .echips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+@keyframes cardIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes diceShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}50%{transform:rotate(12deg)}75%{transform:rotate(-6deg)}}
+.diceBtn.anim{animation:diceShake 0.4s ease}
 
 .shelf{margin-bottom:32px}
 .shelf-hdr{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
@@ -53,7 +70,7 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
 
-.card{background:var(--card);border:1px solid var(--border);padding:12px 12px 12px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.12s,box-shadow 0.12s,border-color 0.12s;border-radius:4px}
+.card{background:var(--card);border:1px solid var(--border);padding:12px 12px 12px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.12s,box-shadow 0.12s,border-color 0.12s;border-radius:4px;animation:cardIn 0.18s ease both}
 .card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
 .card:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,0.4);border-color:rgba(224,216,204,0.15)}
 .card.cmp{box-shadow:0 0 0 2px var(--slate);border-color:transparent}
@@ -92,7 +109,8 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(10,8,5,0.75);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.2s}
 .overlay.on{opacity:1}
-.modal{background:var(--bg2);border:1px solid rgba(224,216,204,0.15);max-width:540px;width:100%;max-height:85vh;overflow-y:auto;padding:28px;position:relative;transform:translateY(8px);transition:transform 0.2s;border-radius:6px}
+.modal{background:var(--bg2);border:1px solid rgba(224,216,204,0.15);max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:28px;position:relative;transform:translateY(8px);transition:transform 0.2s;border-radius:6px}
+.mroll{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:6px 10px;font-size:0.72rem;color:var(--txd);border:1px dashed var(--border);border-radius:4px}
 .overlay.on .modal{transform:translateY(0)}
 .modal-x{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--txd);padding:4px 8px;z-index:5}
 .modal-x:hover{color:var(--tx)}
@@ -118,6 +136,7 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .chip-epic{background:rgba(140,80,170,0.15);color:#b88ae0}
 .chip-family{background:rgba(60,140,80,0.15);color:#60c080}
 .likedis{margin-top:4px}
+.ld-cols{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px}
 .likedis .ld-title{font-size:0.76rem;font-weight:700;margin-bottom:4px;color:var(--txm)}
 .likedis .ld-title.like{color:#7ab07a}
 .likedis .ld-title.dislike{color:#d08070}
@@ -154,7 +173,9 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 @media(max-width:600px){
   header{flex-direction:column;align-items:flex-start}
   .grid{grid-template-columns:1fr}
+  .sw{width:100%}
   .si{width:100%}
+  .ld-cols{grid-template-columns:1fr}
   .shelf-desc{display:none}
   .modal{padding:20px}
   .cpanel{max-height:60vh}
@@ -193,6 +214,10 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="mroll" id="m-roll" style="display:none">
+      <span>🎲 Random pick from your current filters</span>
+      <button class="pc" onclick="pickRandom()">Roll again</button>
+    </div>
     <div class="modal-top">
       <div class="modal-thumb" id="m-thumb">
         <img id="m-img" src="" alt="" onload="this.classList.add('ld')">
@@ -244,6 +269,7 @@ const CONFIG = {
   ui: {
     maxCompare:      3,    // max games in compare panel at once
     modalCloseDelay: 200,  // ms for fade-out before display:none
+    searchDebounce:  150,  // ms of idle typing before the grid re-renders
   },
   avatarColors: [
     '#9e4e28','#b87820','#2d5a2d','#4a6080',
@@ -618,30 +644,30 @@ const G=[
 ];
 
 const SHELVES=[
-  {id:"epic",name:"Epic Strategy",desc:"Heavy hitters and brain-burning depth"},
-  {id:"strat",name:"Strategy",desc:"Thinky games for a focused game night"},
-  {id:"gate",name:"Gateway & Family",desc:"Accessible crowd-pleasers for any group"},
-  {id:"party",name:"Party & Social",desc:"Quick energy, big laughs, no rules headaches"},
+  {id:"epic",name:"Epic Strategy",desc:"Heavy hitters and brain-burning depth",icon:"🏔️"},
+  {id:"strat",name:"Strategy",desc:"Thinky games for a focused game night",icon:"♟️"},
+  {id:"gate",name:"Gateway & Family",desc:"Accessible crowd-pleasers for any group",icon:"🌱"},
+  {id:"party",name:"Party & Social",desc:"Quick energy, big laughs, no rules headaches",icon:"🎉"},
 ];
 const WEIGHT_GROUPS=[
-  {id:5,name:"Heavy",desc:"Plan your evening around these"},
-  {id:4,name:"Medium-Heavy",desc:"Meaty but manageable"},
-  {id:3,name:"Medium",desc:"The sweet spot for most game nights"},
-  {id:2,name:"Medium-Light",desc:"Easy to teach, satisfying to play"},
-  {id:1,name:"Light",desc:"Grab-and-go with zero rules overhead"},
+  {id:5,name:"Heavy",desc:"Plan your evening around these",icon:"🪨"},
+  {id:4,name:"Medium-Heavy",desc:"Meaty but manageable",icon:"⚙️"},
+  {id:3,name:"Medium",desc:"The sweet spot for most game nights",icon:"⚖️"},
+  {id:2,name:"Medium-Light",desc:"Easy to teach, satisfying to play",icon:"🍃"},
+  {id:1,name:"Light",desc:"Grab-and-go with zero rules overhead",icon:"🪶"},
 ];
 const MOOD_GROUPS=[
-  {id:"epic",name:"Epic",desc:"Big commitment, big payoff"},
-  {id:"euro",name:"Thinky Euro",desc:"Elegant systems and economic puzzles"},
-  {id:"mid",name:"Mid-Weight",desc:"Accessible strategy with real depth"},
-  {id:"party",name:"Party",desc:"Social energy over strategic depth"},
-  {id:"family",name:"Family",desc:"Works for all ages and experience levels"},
+  {id:"epic",name:"Epic",desc:"Big commitment, big payoff",icon:"🏔️"},
+  {id:"euro",name:"Thinky Euro",desc:"Elegant systems and economic puzzles",icon:"🧠"},
+  {id:"mid",name:"Mid-Weight",desc:"Accessible strategy with real depth",icon:"🎯"},
+  {id:"party",name:"Party",desc:"Social energy over strategic depth",icon:"🎉"},
+  {id:"family",name:"Family",desc:"Works for all ages and experience levels",icon:"👨‍👩‍👧‍👦"},
 ];
 const TIME_GROUPS=[
-  {id:"quick",name:"Quick Games",desc:"20 minutes or less",max:20},
-  {id:"short",name:"Short Games",desc:"Under 45 minutes",max:45},
-  {id:"medium",name:"Medium Games",desc:"45-90 minutes",max:90},
-  {id:"long",name:"Long Games",desc:"90+ minute commitment",max:999},
+  {id:"quick",name:"Quick Games",desc:"20 minutes or less",max:20,icon:"⚡"},
+  {id:"short",name:"Short Games",desc:"Under 45 minutes",max:45,icon:"⏱️"},
+  {id:"medium",name:"Medium Games",desc:"45-90 minutes",max:90,icon:"🕰️"},
+  {id:"long",name:"Long Games",desc:"90+ minute commitment",max:999,icon:"🌙"},
 ];
 
 const PF=[
@@ -734,13 +760,14 @@ function updateThumbsInPlace(){
   });
 }
 
-function getFiltered(){
+function getFiltered(over){
+  const st=over?{...S,...over}:S;
   let r=[...G];
-  const pf=PF.find(f=>f.id===S.pf);if(pf&&S.pf!=="any")r=r.filter(pf.f);
-  if(S.mood)r=r.filter(g=>g.md.includes(S.mood));
-  if(S.time&&S.time!=="any")r=r.filter(g=>timeGroup(g.t)===S.time);
-  if(S.q){
-    const s=S.q.toLowerCase();
+  const pf=PF.find(f=>f.id===st.pf);if(pf&&st.pf!=="any")r=r.filter(pf.f);
+  if(st.mood)r=r.filter(g=>g.md.includes(st.mood));
+  if(st.time&&st.time!=="any")r=r.filter(g=>timeGroup(g.t)===st.time);
+  if(st.q){
+    const s=st.q.toLowerCase();
     r=r.filter(x=>
       x.n.toLowerCase().includes(s)||
       x.v.toLowerCase().includes(s)||
@@ -753,26 +780,43 @@ function getFiltered(){
   }
   return r;
 }
+const countFor=(key,id)=>getFiltered({[key]:id}).length;
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 
 let filtersExpanded=false;
 function toggleMoreFilters(){filtersExpanded=!filtersExpanded;renderFilters();}
+function countPill(key,id,cls,label,onclick){
+  const c=countFor(key,id);
+  return`<button class="pill${cls}${c===0?' zero':''}" data-key="${key}" data-val="${id}" onclick="${onclick}">${label}<span class="pn">${c}</span></button>`;
+}
+function updatePillCounts(){
+  document.querySelectorAll('.pill[data-key]').forEach(p=>{
+    const c=countFor(p.dataset.key,p.dataset.val);
+    p.querySelector('.pn').textContent=c;
+    p.classList.toggle('zero',c===0);
+  });
+}
 function renderFilters(){
   document.getElementById("filters").innerHTML=`
     <div class="frow">
-      <input class="si" id="sb" type="text" placeholder="Search games, vibes, mechanics..." autocomplete="off" value="${S.q.replace(/"/g,'&quot;')}">
+      <span class="sw">
+        <input class="si" id="sb" type="text" placeholder="Search games, vibes, mechanics..." autocomplete="off" value="${esc(S.q)}">
+        <button class="sx" id="sx" style="display:${S.q?'':'none'}" onclick="clearSearch()" title="Clear search">✕</button>
+      </span>
       <span class="flbl">Players</span>
-      ${PF.map(f=>`<button class="pill${S.pf===f.id?' on':''}" onclick="setPF('${f.id}')">${f.l}</button>`).join("")}
+      ${PF.map(f=>countPill('pf',f.id,S.pf===f.id?' on':'',f.l,`setPF('${f.id}')`)).join("")}
+      <button class="pc diceBtn" onclick="pickRandom()" title="Pick a random game from the current filters">🎲 Pick for me</button>
       <button class="pc moreToggle" onclick="toggleMoreFilters()">${filtersExpanded?'▴':'▾'} More filters</button>
     </div>
     <div class="frow-more${filtersExpanded?' show':''}">
       <div class="frow">
         <span class="flbl">Mood</span>
-        ${Object.keys(MOODS).map(k=>`<button class="pill pm-${k}${S.mood===k?' on':''}" onclick="setMood('${k}')">${MOODS[k]}</button>`).join("")}
+        ${Object.keys(MOODS).map(k=>countPill('mood',k,` pm-${k}${S.mood===k?' on':''}`,MOODS[k],`setMood('${k}')`)).join("")}
         ${S.mood?`<button class="pc" onclick="setMood(null)">✕</button>`:""}
       </div>
       <div class="frow">
         <span class="flbl">Time</span>
-        ${TF.map(t=>`<button class="pill${S.time===t.id?' on':''}" onclick="setTime('${t.id}')">${t.l}</button>`).join("")}
+        ${TF.map(t=>countPill('time',t.id,S.time===t.id?' on':'',t.l,`setTime('${t.id}')`)).join("")}
       </div>
       <div class="frow">
         <span class="flbl">Group by</span>
@@ -780,32 +824,53 @@ function renderFilters(){
         <span style="flex:1"></span>
         <span class="flbl">Sort</span>
         ${SORTS.map(s=>`<button class="pill${S.sort===s.id?' on':''}" onclick="setSort('${s.id}')" style="font-size:0.68rem">${s.l}</button>`).join("")}
-        <button class="pc" onclick="pickRandom()" title="Pick a random game from the current filters">🎲 Pick for me</button>
       </div>
     </div>`;
-  document.getElementById("sb").addEventListener("input",function(e){S.q=e.target.value;saveState();renderShelves();});
+  let searchTimer=null;
+  document.getElementById("sb").addEventListener("input",function(e){
+    S.q=e.target.value;saveState();
+    document.getElementById("sx").style.display=S.q?'':'none';
+    clearTimeout(searchTimer);
+    searchTimer=setTimeout(()=>{renderShelves();updatePillCounts();},CONFIG.ui.searchDebounce);
+  });
+}
+function clearSearch(){S.q="";saveState();renderFilters();renderShelves();}
+function clearAll(){S.q=DEFAULT_STATE.q;S.pf=DEFAULT_STATE.pf;S.mood=DEFAULT_STATE.mood;S.time=DEFAULT_STATE.time;saveState();renderFilters();renderShelves();}
+function chipsHTML(){
+  const chips=[];
+  if(S.q)chips.push({l:`“${esc(S.q)}”`,fn:"clearSearch()"});
+  if(S.pf!=="any"){const f=PF.find(x=>x.id===S.pf);if(f)chips.push({l:`👥 ${f.l}`,fn:"setPF('any')"});}
+  if(S.mood)chips.push({l:MOODS[S.mood]||S.mood,fn:"setMood(null)"});
+  if(S.time!=="any"){const t=TF.find(x=>x.id===S.time);if(t)chips.push({l:`⏱ ${t.l}`,fn:"setTime('any')"});}
+  let html=chips.map(c=>`<button class="fchip" onclick="${c.fn}" title="Remove this filter">${c.l}<span class="x">✕</span></button>`).join("");
+  if(chips.length>=2)html+=`<button class="fchip" onclick="clearAll()">Clear all</button>`;
+  return html;
 }
 
+let lastPick=null;
 function pickRandom(){
-  const list=getFiltered();
+  let list=getFiltered();
   if(!list.length)return;
+  if(list.length>1)list=list.filter(g=>g.bgg!==lastPick);
   const g=list[Math.floor(Math.random()*list.length)];
-  openModal(g);
+  lastPick=g.bgg;
+  document.querySelectorAll('.diceBtn').forEach(b=>{b.classList.remove('anim');void b.offsetWidth;b.classList.add('anim');});
+  openModal(g,true);
 }
 
 function getGroups(list){
   const gid=S.group;
   if(gid==="shelf"){
-    return SHELVES.map(s=>({name:s.name,desc:s.desc,games:list.filter(g=>g.shelf===s.id)})).filter(s=>s.games.length);
+    return SHELVES.map(s=>({name:s.name,desc:s.desc,icon:s.icon,games:list.filter(g=>g.shelf===s.id)})).filter(s=>s.games.length);
   }
   if(gid==="weight"){
-    return WEIGHT_GROUPS.map(w=>({name:w.name,desc:w.desc,games:list.filter(g=>wCat(g.w)===w.id)})).filter(s=>s.games.length);
+    return WEIGHT_GROUPS.map(w=>({name:w.name,desc:w.desc,icon:w.icon,games:list.filter(g=>wCat(g.w)===w.id)})).filter(s=>s.games.length);
   }
   if(gid==="mood"){
-    return MOOD_GROUPS.map(m=>({name:m.name,desc:m.desc,games:list.filter(g=>g.md.includes(m.id))})).filter(s=>s.games.length);
+    return MOOD_GROUPS.map(m=>({name:m.name,desc:m.desc,icon:m.icon,games:list.filter(g=>g.md.includes(m.id))})).filter(s=>s.games.length);
   }
   if(gid==="time"){
-    return TIME_GROUPS.map(t=>({name:t.name,desc:t.desc,games:list.filter(g=>timeGroup(g.t)===t.id)})).filter(s=>s.games.length);
+    return TIME_GROUPS.map(t=>({name:t.name,desc:t.desc,icon:t.icon,games:list.filter(g=>timeGroup(g.t)===t.id)})).filter(s=>s.games.length);
   }
   return [{name:"All Games",desc:"",games:list}];
 }
@@ -814,10 +879,11 @@ function renderShelves(){
   const list=getFiltered();
   const container=document.getElementById("shelves");
   const st=document.getElementById("status");
-  st.textContent=list.length===G.length?`Showing all ${G.length} games`:`Showing ${list.length} of ${G.length} games`;
+  const countText=list.length===G.length?`Showing all ${G.length} games`:`Showing ${list.length} of ${G.length} games`;
+  st.innerHTML=`<span>${countText}</span>${chipsHTML()}`;
 
   if(!list.length){
-    container.innerHTML='<div class="empty"><h3>No games found</h3><p>Try adjusting your filters</p></div>';
+    container.innerHTML=`<div class="empty"><h3>No games found</h3><p>Remove a filter to see games:</p><div class="echips">${chipsHTML()}</div></div>`;
     renderCompare();return;
   }
 
@@ -828,7 +894,7 @@ function renderShelves(){
     const sorted=[...grp.games].sort(sortFn);
     html+=`<div class="shelf">
       <div class="shelf-hdr">
-        <div class="shelf-title">${grp.name}</div>
+        <div class="shelf-title">${grp.icon?grp.icon+' ':''}${grp.name}</div>
         <div class="shelf-count">${sorted.length} game${sorted.length!==1?'s':''}</div>
         ${grp.desc?`<div class="shelf-desc">${grp.desc}</div>`:''}
       </div>
@@ -872,8 +938,9 @@ function attachCardListeners(){
   });
 }
 
-function openModal(g){
+function openModal(g,isRandom){
   const color=avColor(g.n);const wc=wCat(g.w);const shelf=SHELVES.find(s=>s.id===g.shelf);
+  document.getElementById('m-roll').style.display=isRandom?'flex':'none';
   const img=document.getElementById('m-img');img.classList.remove('ld');
   const cached=imgCache[g.bgg];
   if(cached){img.src=cached;img.style.display='';}else{img.src='';img.style.display='none';}
@@ -886,12 +953,12 @@ function openModal(g){
   document.getElementById('m-shelf').textContent=shelf?`📚 ${shelf.name}`:'';
   document.getElementById('m-vibe').textContent=g.v;
   // Like / Dislike
-  let ldHTML='<h3>What Players Say</h3><div class="likedis">';
+  let ldHTML='<h3>What Players Say</h3><div class="likedis ld-cols">';
   if(g.pro&&g.pro.length){
-    ldHTML+=`<div class="ld-title like">👍 You might like this game if...</div><ul>${g.pro.map(p=>`<li>${p}</li>`).join('')}</ul>`;
+    ldHTML+=`<div><div class="ld-title like">👍 You might like this game if...</div><ul>${g.pro.map(p=>`<li>${p}</li>`).join('')}</ul></div>`;
   }
   if(g.con&&g.con.length){
-    ldHTML+=`<div class="ld-title dislike">👎 You might not like this game if...</div><ul>${g.con.map(c=>`<li>${c}</li>`).join('')}</ul>`;
+    ldHTML+=`<div><div class="ld-title dislike">👎 You might not like this game if...</div><ul>${g.con.map(c=>`<li>${c}</li>`).join('')}</ul></div>`;
   }
   ldHTML+='</div>';
   document.getElementById('m-ld-section').innerHTML=ldHTML;
