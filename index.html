@@ -169,6 +169,42 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 .legend-item{display:flex;align-items:center;gap:5px}
 .legend-bar{width:10px;height:10px;flex-shrink:0;border-radius:2px}
 
+.hdr-r{display:flex;align-items:flex-end;gap:12px}
+.gn-open{background:rgba(201,162,77,0.12);border:1px solid rgba(201,162,77,0.4);color:var(--gold);font-family:var(--fb);font-size:0.8rem;font-weight:600;padding:12px 16px;border-radius:4px;cursor:pointer;transition:background 0.15s}
+.gn-open:hover{background:rgba(201,162,77,0.22)}
+
+/* Game night picker */
+#gnov{z-index:190}
+.gn-h{font-family:var(--fd);font-size:1.3rem;font-weight:800;margin-bottom:2px}
+.gn-sub{font-size:0.8rem;color:var(--txd);margin-bottom:18px}
+.gn-q{margin-bottom:16px}
+.gn-q .flbl{display:block;margin-bottom:7px}
+.gn-opts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gn-step{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.gn-step button{background:rgba(224,216,204,0.05);border:none;color:var(--tx);width:40px;height:38px;font-size:1.1rem;cursor:pointer;font-family:var(--fb)}
+.gn-step button:hover:not(:disabled){background:rgba(201,162,77,0.18);color:var(--gold)}
+.gn-step button:disabled{opacity:0.3;cursor:default}
+.gn-step output{min-width:92px;text-align:center;font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--gold)}
+.gn-step output small{font-family:var(--fb);font-size:0.7rem;font-weight:400;color:var(--txd);margin-left:4px}
+.gn-res{border-top:1px solid var(--border);padding-top:14px;margin-top:4px}
+.gn-rhdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.gn-rhdr strong{font-family:var(--fd);font-size:1rem}
+.gn-roll{background:var(--gold);color:var(--bg);border:none;padding:9px 16px;font-family:var(--fb);font-size:0.8rem;font-weight:700;border-radius:4px;cursor:pointer}
+.gn-roll:hover{background:#d4ad58}
+.gn-roll:disabled{opacity:0.35;cursor:default}
+.gn-list{display:flex;flex-direction:column;gap:6px}
+.gn-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:6px 10px 6px 6px;cursor:pointer;color:var(--tx);font-family:var(--fb);transition:border-color 0.12s,box-shadow 0.12s}
+.gn-row:hover{border-color:rgba(224,216,204,0.25)}
+.gn-row.hit{box-shadow:0 0 0 2px var(--gold);border-color:transparent}
+.gn-thumb{flex-shrink:0;width:40px;height:40px;border-radius:3px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.gn-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gn-name{font-family:var(--fd);font-weight:700;font-size:0.86rem;line-height:1.2;flex:1;min-width:0}
+.gn-name .card-stats{margin:3px 0 0}
+.gn-name .tag{font-family:var(--fb)}
+.gn-sec{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--txd);font-weight:600;margin:14px 0 6px}
+.gn-none{color:var(--txd);font-size:0.82rem;padding:14px 0}
+.pill .wdot{margin-right:5px;width:7px;height:7px}
+
 .moreToggle{display:none}
 @media(max-width:600px){
   header{flex-direction:column;align-items:flex-start}
@@ -195,7 +231,10 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
       <h1>Blake's <span>Game Shelf</span></h1>
       <p>Browse · Filter · Pick something to play</p>
     </div>
-    <div class="badge"><span id="total">0</span><small>games owned</small></div>
+    <div class="hdr-r">
+      <button class="gn-open" onclick="openGN()">🌙 Game night picker</button>
+      <div class="badge"><span id="total">0</span><small>games owned</small></div>
+    </div>
   </header>
   <div class="fbar" id="filters"></div>
   <div class="status" id="status"></div>
@@ -211,12 +250,21 @@ header{padding:40px 0 28px;border-bottom:1px solid rgba(224,216,204,0.15);margin
 </div>
 <div class="cpanel" id="cpanel"></div>
 
+<div class="overlay" id="gnov" onclick="if(event.target===this)closeGN()">
+  <div class="modal">
+    <button class="modal-x" onclick="closeGN()">✕</button>
+    <h2 class="gn-h">🌙 Game Night Picker</h2>
+    <p class="gn-sub">Who's coming, how long you've got, and how much brain you want to spend.</p>
+    <div id="gn-body"></div>
+  </div>
+</div>
+
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <button class="modal-x" onclick="closeModal()">✕</button>
     <div class="mroll" id="m-roll" style="display:none">
-      <span>🎲 Random pick from your current filters</span>
-      <button class="pc" onclick="pickRandom()">Roll again</button>
+      <span id="m-roll-lbl">🎲 Random pick from your current filters</span>
+      <button class="pc" onclick="rollAgain()">Roll again</button>
     </div>
     <div class="modal-top">
       <div class="modal-thumb" id="m-thumb">
@@ -262,6 +310,12 @@ const CONFIG = {
     medium:   2.1,   // >= this → category 3 (Medium)
     medLight: 1.5,   // >= this → category 2 (Med-Light)
   },
+  gameNight: {
+    defaultPlayers: 4,
+    defaultMinutes: 60,
+    maxPlayers:     12,   // stepper upper limit
+    minutes: [20, 30, 45, 60, 90, 120, 180, 999],  // 999 = "All night"
+  },
   time: {
     quick:  20,   // <= this minutes → "quick"
     short:  45,   // <= this minutes → "short"
@@ -281,6 +335,7 @@ const ML=MECHANICS;
 function wCat(w){const t=CONFIG.weight;return w>=t.heavy?5:w>=t.medHeavy?4:w>=t.medium?3:w>=t.medLight?2:1;}
 const WLABELS={5:"Heavy",4:"Med-Heavy",3:"Medium",2:"Med-Light",1:"Light"};
 function maxTime(t){const n=t.match(/\d+/g);return n?Math.max(...n.map(Number)):30;}
+function minTime(t){const n=t.match(/\d+/g);return n?Math.min(...n.map(Number)):30;}
 function timeGroup(t){const m=maxTime(t),thr=CONFIG.time;return m<=thr.quick?"quick":m<=thr.short?"short":m<=thr.medium?"medium":"long";}
 
 // Game data lives in games.js. Map its readable field names to the short
@@ -336,16 +391,17 @@ const SORTS=[
   {id:"az",l:"A → Z",f:(a,b)=>a.n.localeCompare(b.n)},
 ];
 
-const DEFAULT_STATE={q:"",pf:"any",mood:null,time:"any",cmp:[],sort:"lightest",group:"shelf"};
+const DEFAULT_GN={p:CONFIG.gameNight.defaultPlayers,t:CONFIG.gameNight.defaultMinutes,w:[]};
+const DEFAULT_STATE={q:"",pf:"any",mood:null,time:"any",cmp:[],sort:"lightest",group:"shelf",gn:DEFAULT_GN};
 function loadState(){
   try{
     const raw=localStorage.getItem(CONFIG.cache.stateKey);
-    if(raw){const saved=JSON.parse(raw);return{...DEFAULT_STATE,...saved,cmp:[]};}
+    if(raw){const saved=JSON.parse(raw);return{...DEFAULT_STATE,...saved,cmp:[],gn:{...DEFAULT_GN,...(saved.gn||{})}};}
   }catch(e){console.warn('[State] Could not load saved filters:',e);}
   return{...DEFAULT_STATE};
 }
 function saveState(){
-  try{localStorage.setItem(CONFIG.cache.stateKey,JSON.stringify({q:S.q,pf:S.pf,mood:S.mood,time:S.time,sort:S.sort,group:S.group}));}
+  try{localStorage.setItem(CONFIG.cache.stateKey,JSON.stringify({q:S.q,pf:S.pf,mood:S.mood,time:S.time,sort:S.sort,group:S.group,gn:S.gn}));}
   catch(e){console.warn('[State] Could not save filters:',e);}
 }
 let S=loadState();
@@ -499,8 +555,87 @@ function pickRandom(){
   const g=list[Math.floor(Math.random()*list.length)];
   lastPick=g.id;
   document.querySelectorAll('.diceBtn').forEach(b=>{b.classList.remove('anim');void b.offsetWidth;b.classList.add('anim');});
-  openModal(g,true);
+  openModal(g,'shelf');
 }
+let rollCtx='shelf';
+function rollAgain(){rollCtx==='gn'?gnRoll():pickRandom();}
+
+// ── Game night picker ─────────────────────────────────────────────
+// A game "fits" when the exact head count is in its player range, its
+// longest listed time fits the time you have, and its weight category
+// is one of the selected ones (none selected = any weight). Games whose
+// shortest listed time fits, but not their longest, go in "If you play fast".
+const minLabel=m=>m>=999?"All night":m<60?`${m}m`:`${m/60}h`;
+function gnMatch(over){
+  const st={...S.gn,...over};
+  const base=G.filter(g=>g.pn<=st.p&&g.px>=st.p&&(!st.w.length||st.w.includes(wCat(g.w))));
+  const fit=base.filter(g=>maxTime(g.t)<=st.t);
+  const tight=base.filter(g=>maxTime(g.t)>st.t&&minTime(g.t)<=st.t);
+  // Longest games first so the list leads with what fills the evening.
+  const ord=(a,b)=>maxTime(b.t)-maxTime(a.t)||b.w-a.w||a.n.localeCompare(b.n);
+  return{fit:fit.sort(ord),tight:tight.sort(ord)};
+}
+const WDOT={5:'var(--rust)',4:'var(--gold)',3:'var(--forest)',2:'#5a9e7a',1:'#9e9a5e'};
+function gnRowHTML(g){
+  const wc=wCat(g.w),cached=g.bgg&&imgCache[g.bgg];
+  return`<button class="gn-row" data-gid="${g.id}" onclick="openGame('${g.id}')">
+    <span class="gn-thumb" style="background:${avGradient(avColor(g.n))}">${g.i}${cached?`<img src="${cached}" alt="" onerror="this.remove()">`:''}</span>
+    <span class="gn-name"><span class="wdot" style="background:${WDOT[wc]}"></span>${esc(g.n)}
+      <span class="card-stats"><span class="tag tag-p">👥 ${g.p}</span><span class="tag tag-t">⏱ ${g.t}m</span><span class="tag tag-w">${WLABELS[wc]} · ${g.w.toFixed(1)}</span></span>
+    </span>
+  </button>`;
+}
+function renderGN(){
+  const gn=S.gn,{fit,tight}=gnMatch(),cfg=CONFIG.gameNight;
+  const cnt=over=>gnMatch(over).fit.length;
+  const pill=(on,label,n,fn)=>`<button class="pill${on?' on':''}${n===0?' zero':''}" onclick="${fn}">${label}<span class="pn">${n}</span></button>`;
+  document.getElementById('gn-body').innerHTML=`
+    <div class="gn-q"><span class="flbl">Players</span>
+      <div class="gn-step">
+        <button onclick="gnSet('p',${gn.p-1})" ${gn.p<=2?'disabled':''} aria-label="Fewer players">−</button>
+        <output>${gn.p}<small>player${gn.p>1?'s':''}</small></output>
+        <button onclick="gnSet('p',${gn.p+1})" ${gn.p>=cfg.maxPlayers?'disabled':''} aria-label="More players">+</button>
+      </div>
+    </div>
+    <div class="gn-q"><span class="flbl">Time we have</span>
+      <div class="gn-opts">${cfg.minutes.map(m=>pill(gn.t===m,minLabel(m),cnt({t:m}),`gnSet('t',${m})`)).join('')}</div>
+    </div>
+    <div class="gn-q"><span class="flbl">Weight <span style="text-transform:none;letter-spacing:0;font-weight:400">(pick any; none = all)</span></span>
+      <div class="gn-opts">
+        ${pill(!gn.w.length,'Any',cnt({w:[]}),"gnSet('w',[])")}
+        ${[1,2,3,4,5].map(c=>pill(gn.w.includes(c),`<span class="wdot" style="background:${WDOT[c]}"></span>${WLABELS[c]}`,cnt({w:[c]}),`gnToggleW(${c})`)).join('')}
+      </div>
+    </div>
+    <div class="gn-res">
+      <div class="gn-rhdr">
+        <strong>${fit.length} game${fit.length!==1?'s':''} fit tonight</strong>
+        <button class="gn-roll diceBtn" onclick="gnRoll()" ${fit.length?'':'disabled'}>🎲 Pick one for us</button>
+      </div>
+      ${fit.length?`<div class="gn-list">${fit.map(gnRowHTML).join('')}</div>`
+        :`<div class="gn-none">Nothing fits all three. ${tight.length?'Check the games below, or ':''}Try more time, another weight, or a different head count.</div>`}
+      ${tight.length?`<div class="gn-sec">If you play fast (${tight.length})</div><div class="gn-list">${tight.map(gnRowHTML).join('')}</div>`:''}
+    </div>`;
+}
+function gnSet(k,v){
+  if(k==='p')v=Math.max(2,Math.min(CONFIG.gameNight.maxPlayers,v));
+  S.gn={...S.gn,[k]:v};saveState();renderGN();
+}
+function gnToggleW(c){const w=S.gn.w.includes(c)?S.gn.w.filter(x=>x!==c):[...S.gn.w,c].sort();gnSet('w',w);}
+let gnLast=null;
+function gnRoll(){
+  let list=gnMatch().fit;if(!list.length)return;
+  if(list.length>1)list=list.filter(g=>g.id!==gnLast);
+  const g=list[Math.floor(Math.random()*list.length)];gnLast=g.id;
+  document.querySelectorAll('#gn-body .gn-row').forEach(r=>r.classList.toggle('hit',r.dataset.gid===g.id));
+  const row=document.querySelector(`#gn-body .gn-row[data-gid="${g.id}"]`);if(row)row.scrollIntoView({block:'nearest'});
+  openModal(g,'gn');
+}
+function openGame(id){const g=G.find(x=>x.id===id);if(g)openModal(g);}
+function openGN(){
+  renderGN();const ov=document.getElementById('gnov');ov.style.display='flex';
+  requestAnimationFrame(()=>ov.classList.add('on'));
+}
+function closeGN(){const ov=document.getElementById('gnov');ov.classList.remove('on');setTimeout(()=>{ov.style.display='none';},CONFIG.ui.modalCloseDelay);}
 
 function getGroups(list){
   const gid=S.group;
@@ -582,9 +717,11 @@ function attachCardListeners(){
   });
 }
 
-function openModal(g,isRandom){
+function openModal(g,rollFrom){
   const color=avColor(g.n);const wc=wCat(g.w);const shelf=SHELVES.find(s=>s.id===g.shelf);
-  document.getElementById('m-roll').style.display=isRandom?'flex':'none';
+  if(rollFrom)rollCtx=rollFrom;
+  document.getElementById('m-roll').style.display=rollFrom?'flex':'none';
+  document.getElementById('m-roll-lbl').textContent=rollFrom==='gn'?'🎲 Random pick for your game night':'🎲 Random pick from your current filters';
   const img=document.getElementById('m-img');img.classList.remove('ld');
   const cached=g.bgg&&imgCache[g.bgg];
   if(cached){img.src=cached;img.style.display='';}else{img.src='';img.style.display='none';}
@@ -614,7 +751,11 @@ function openModal(g,isRandom){
 }
 
 function closeModal(){const ov=document.getElementById('overlay');ov.classList.remove('on');setTimeout(()=>{ov.style.display='none';},CONFIG.ui.modalCloseDelay);}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  if(document.getElementById('overlay').classList.contains('on'))closeModal();
+  else if(document.getElementById('gnov').classList.contains('on'))closeGN();
+});
 
 function toggleCmp(id){
   if(S.cmp.includes(id))S.cmp=S.cmp.filter(x=>x!==id);
