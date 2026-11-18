@@ -24,6 +24,10 @@ All game data lives in **`games.js`**. You never need to touch `index.html` to a
 - `weight` is the BGG complexity score (1 to 5). It decides the weight category and sort order.
 - Valid `mechanics`, `moods` and `shelf` codes are defined at the top of `games.js`. Add a new code there if you need one.
 
+### Game night picker
+
+The 🌙 button in the header opens a picker: set the exact head count, the time you have, and which weight categories you want. A game fits when the head count is inside its player range and its *longest* listed time fits. Games whose shortest time fits but longest doesn't show under "If you play fast". "Pick one for us" rolls randomly among the fits. Choices are remembered in the browser.
+
 ### Changing site behavior
 
-Thresholds (weight categories, time buckets, compare limit, BGG fetch settings) live in the `CONFIG` object at the top of the script in `index.html`.
+Thresholds (weight categories, time buckets, game night picker defaults, compare limit, BGG fetch settings) live in the `CONFIG` object at the top of the script in `index.html`.
